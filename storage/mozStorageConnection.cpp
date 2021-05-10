@@ -1991,6 +1991,28 @@ Connection::EnableModule(const nsACString& aModuleName)
   return NS_ERROR_FAILURE;
 }
 
+struct sqlite3_quota_file {
+  // Overloaded struct for sqlite file and quota object.
+  // XXX: We can probably get rid of quota management here altogether but this
+  // is a quick fix to work around issues with Quota Exceeded handling (#1768).
+  
+  // Base class.  Must be first
+  sqlite3_file base;
+
+  // Quota object for this file
+  RefPtr<QuotaObject> quotaObject;
+};
+
+already_AddRefed<QuotaObject>
+GetQuotaObjectForFile(sqlite3_file *pFile)
+{
+  MOZ_ASSERT(pFile);
+
+  sqlite3_quota_file *p = (sqlite3_quota_file *)pFile;
+  RefPtr<QuotaObject> result = p->quotaObject;
+  return result.forget();
+}
+
 NS_IMETHODIMP
 Connection::GetQuotaObjects(QuotaObject** aDatabaseQuotaObject,
                             QuotaObject** aJournalQuotaObject)
@@ -2011,6 +2033,11 @@ Connection::GetQuotaObjects(QuotaObject** aDatabaseQuotaObject,
     return convertResultCode(srv);
   }
 
+  RefPtr<QuotaObject> databaseQuotaObject = GetQuotaObjectForFile(file);
+  if (NS_WARN_IF(!databaseQuotaObject)) {
+    return NS_ERROR_FAILURE;
+  }
+
   srv = ::sqlite3_file_control(mDBConn,
                                nullptr,
                                SQLITE_FCNTL_JOURNAL_POINTER,
@@ -2018,6 +2045,14 @@ Connection::GetQuotaObjects(QuotaObject** aDatabaseQuotaObject,
   if (srv != SQLITE_OK) {
     return convertResultCode(srv);
   }
+
+  RefPtr<QuotaObject> journalQuotaObject = GetQuotaObjectForFile(file);
+  if (NS_WARN_IF(!journalQuotaObject)) {
+    return NS_ERROR_FAILURE;
+  }
+
+  databaseQuotaObject.forget(aDatabaseQuotaObject);
+  journalQuotaObject.forget(aJournalQuotaObject);
 
   return NS_OK;
 }
