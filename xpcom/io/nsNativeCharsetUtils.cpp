@@ -139,7 +139,7 @@ NS_CopyNativeToUnicode(const nsACString& aInput, nsAString& aOutput)
 nsresult
 NS_CopyUnicodeToNative(const nsAString& aInput, nsACString& aOutput)
 {
-  LossyCopyUTF16toUTF8(aInput, aOutput);
+  CopyUTF16toUTF8(aInput, aOutput);
   return NS_OK;
 }
 
