@@ -701,7 +701,8 @@ protected:
   void PlaceChild(TableReflowInput&  aReflowInput,
                   nsIFrame*            aKidFrame,
                   const ReflowInput&   aKidReflowInput,
-                  nsPoint              aKidPosition,
+                  const mozilla::LogicalPoint& aKidPosition,
+                  const nsSize&        aContainerSize,
                   ReflowOutput& aKidDesiredSize,
                   const nsRect&        aOriginalKidRect,
                   const nsRect&        aOriginalKidVisualOverflow);
