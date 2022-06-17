@@ -961,9 +961,11 @@ nsTableRowFrame::ReflowChildren(nsPresContext*           aPresContext,
       // Place the child
       desiredSize.ISize(wm) = availCellISize;
 
+      ReflowChildFlags flags = ReflowChildFlags::Default;
+
       if (kidReflowInput) {
         // We reflowed. Apply relative positioning in the normal way.
-        kidReflowInput->ApplyRelativePositioning(&kidPosition, containerSize);
+        flags = ReflowChildFlags::ApplyRelativePositioning;
       } else if (kidFrame->IsRelativelyPositioned()) {
         // We didn't reflow.  Do the positioning part of what
         // MovePositionBy does internally.  (This codepath should really
@@ -981,7 +983,7 @@ nsTableRowFrame::ReflowChildren(nsPresContext*           aPresContext,
       // because ComputedWidth() was NS_UNCONSTRAINEDSIZE.
       // For cases where that's wrong, we will fix up the position later.
       FinishReflowChild(kidFrame, aPresContext, desiredSize, kidReflowInput.ptrOr(nullptr),
-                        wm, kidPosition, containerSize, ReflowChildFlags::Default);
+                        wm, kidPosition, containerSize, flags);
 
       nsTableFrame::InvalidateTableFrame(kidFrame, kidRect, kidVisualOverflow,
                                          firstReflow);
