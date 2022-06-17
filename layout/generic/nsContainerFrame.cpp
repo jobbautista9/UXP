@@ -1178,6 +1178,10 @@ nsContainerFrame::FinishReflowChild(nsIFrame*                  aKidFrame,
                                     const nsSize&              aContainerSize,
                                     nsIFrame::ReflowChildFlags aFlags)
 {
+  MOZ_ASSERT(!aReflowInput || aReflowInput->mFrame == aKidFrame);
+  MOZ_ASSERT(aReflowInput || aKidFrame->IsFrameOfType(eMathML) ||
+                 aKidFrame->IsTableCellFrame(),
+                 "aReflowInput should be passed in almost all cases");
   if (aWM.IsVerticalRL() || (!aWM.IsVertical() && !aWM.IsBidiLTR())) {
     NS_ASSERTION(aContainerSize.width != NS_UNCONSTRAINEDSIZE,
                  "FinishReflowChild with unconstrained container width!");

@@ -705,7 +705,7 @@ nsHTMLFramesetFrame::ReflowPlaceChild(nsIFrame*                aChild,
   // Place and size the child
   reflowOutput.Width() = aSize.width;
   reflowOutput.Height() = aSize.height;
-  FinishReflowChild(aChild, aPresContext, reflowOutput, nullptr, aOffset.x,
+  FinishReflowChild(aChild, aPresContext, reflowOutput, &reflowInput, aOffset.x,
                     aOffset.y, ReflowChildFlags::Default);
 }
 

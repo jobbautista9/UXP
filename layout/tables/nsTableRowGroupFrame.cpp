@@ -269,6 +269,7 @@ void
 nsTableRowGroupFrame::PlaceChild(nsPresContext*         aPresContext,
                                  TableRowGroupReflowInput& aReflowInput,
                                  nsIFrame*              aKidFrame,
+                                 const ReflowInput&     aKidReflowInput,
                                  WritingMode            aWM,
                                  const LogicalPoint&    aKidPosition,
                                  const nsSize&          aContainerSize,
@@ -279,7 +280,7 @@ nsTableRowGroupFrame::PlaceChild(nsPresContext*         aPresContext,
   bool isFirstReflow = aKidFrame->HasAnyStateBits(NS_FRAME_FIRST_REFLOW);
 
   // Place and size the child
-  FinishReflowChild(aKidFrame, aPresContext, aDesiredSize, nullptr, aWM,
+  FinishReflowChild(aKidFrame, aPresContext, aDesiredSize, &aKidReflowInput, aWM,
                     aKidPosition, aContainerSize, ReflowChildFlags::Default);
 
   nsTableFrame::InvalidateTableFrame(aKidFrame, aOriginalKidRect,
@@ -417,7 +418,7 @@ nsTableRowGroupFrame::ReflowChildren(nsPresContext*         aPresContext,
       kidReflowInput.ApplyRelativePositioning(&kidPosition, containerSize);
 
       // Place the child
-      PlaceChild(aPresContext, aReflowInput, kidFrame,
+      PlaceChild(aPresContext, aReflowInput, kidFrame, kidReflowInput,
                  wm, kidPosition, containerSize,
                  desiredSize, oldKidRect.GetPhysicalRect(wm, containerSize),
                  oldKidVisualOverflow);

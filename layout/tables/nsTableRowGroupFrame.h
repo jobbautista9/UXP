@@ -331,6 +331,7 @@ protected:
   void PlaceChild(nsPresContext*         aPresContext,
                   TableRowGroupReflowInput& aReflowInput,
                   nsIFrame*              aKidFrame,
+                  const ReflowInput&     aKidReflowInput,
                   mozilla::WritingMode   aWM,
                   const mozilla::LogicalPoint& aKidPosition,
                   const nsSize&          aContainerSize,
