@@ -81,7 +81,8 @@ DecoderFactory::GetDecoderType(const char* aMimeType)
     type = DecoderType::WEBP;
   }
 #ifdef MOZ_JXL
-  else if (!strcmp(aMimeType, IMAGE_JXL) && StaticPrefs::image_jxl_enabled()) {
+    else if (!strcmp(aMimeType, IMAGE_JXL) &&
+             gfxPrefs::ImageJXLEnabled()) {
     type = DecoderType::JXL;
   }
 #endif
