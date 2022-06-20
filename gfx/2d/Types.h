@@ -8,6 +8,7 @@
 
 #include "mozilla/EndianUtils.h"
 
+#include <iosfwd>  // for ostream
 #include <stddef.h>
 #include <stdint.h>
 
@@ -17,18 +18,26 @@ namespace gfx {
 typedef float Float;
 
 enum class SurfaceType : int8_t {
-  DATA, /* Data surface - bitmap in memory */
-  D2D1_BITMAP, /* Surface wrapping a ID2D1Bitmap */
-  D2D1_DRAWTARGET, /* Surface made from a D2D draw target */
-  CAIRO, /* Surface wrapping a cairo surface */
-  CAIRO_IMAGE, /* Data surface wrapping a cairo image surface */
-  COREGRAPHICS_IMAGE, /* Surface wrapping a CoreGraphics Image */
+  DATA,                   /* Data surface - bitmap in memory */
+  D2D1_BITMAP,            /* Surface wrapping a ID2D1Bitmap */
+  D2D1_DRAWTARGET,        /* Surface made from a D2D draw target */
+  CAIRO,                  /* Surface wrapping a cairo surface */
+  CAIRO_IMAGE,            /* Data surface wrapping a cairo image surface */
+  COREGRAPHICS_IMAGE,     /* Surface wrapping a CoreGraphics Image */
   COREGRAPHICS_CGCONTEXT, /* Surface wrapping a CG context */
-  SKIA, /* Surface wrapping a Skia bitmap */
-  DUAL_DT, /* Snapshot of a dual drawtarget */
-  D2D1_1_IMAGE, /* A D2D 1.1 ID2D1Image SourceSurface */
-  RECORDING, /* Surface used for recording */
-  TILED /* Surface from a tiled DrawTarget */
+  SKIA,                   /* Surface wrapping a Skia bitmap */
+  DUAL_DT,                /* Snapshot of a dual drawtarget */
+  D2D1_1_IMAGE,           /* A D2D 1.1 ID2D1Image SourceSurface */
+  RECORDING,              /* Surface used for recording */
+  TILED                   /* Surface from a tiled DrawTarget */
+  DATA_SHARED,            /* Data surface using shared memory */
+  DATA_RECYCLING_SHARED,  /* Data surface using shared memory */
+  OFFSET,                 /* Offset */
+  DATA_ALIGNED,           /* Data surface using aligned heap memory */
+  DATA_SHARED_WRAPPER,    /* Shared memory mapped in from another process */
+  BLOB_IMAGE,             /* Recorded blob image */
+  DATA_MAPPED,            /* Data surface wrapping a ScopedMap */
+  WEBGL,                  /* Surface wrapping a DrawTargetWebgl texture */
 };
 
 enum class SurfaceFormat : int8_t {
@@ -53,11 +62,21 @@ enum class SurfaceFormat : int8_t {
 
   // This one is a single-byte, so endianness isn't an issue.
   A8,
+  A16,
+
+  R8G8,
+  R16G16,
 
   // These ones are their own special cases.
   YUV,
-  NV12,
-  YUV422,
+  NV12,    // YUV 4:2:0 image with a plane of 8 bit Y samples followed by
+           // an interleaved U/V plane containing 8 bit 2x2 subsampled
+           // colour difference samples.
+  P016,    // Similar to NV12, but with 16 bits plane values
+  P010,    // Identical to P016 but the 6 least significant bits are 0.
+           // With DXGI in theory entirely compatible, however practice has
+           // shown that it's not the case.
+  YUV422,  // Single plane YUV 4:2:2 interleaved as Y`0 Cb Y`1 Cr.
   HSV,
   Lab,
   Depth,
@@ -65,22 +84,111 @@ enum class SurfaceFormat : int8_t {
   // This represents the unknown format.
   UNKNOWN,
 
+// The following values are endian-independent synonyms. The _UINT32 suffix
+// indicates that the name reflects the layout when viewed as a uint32_t
+// value.
+#if MOZ_LITTLE_ENDIAN()
   A8R8G8B8_UINT32 = B8G8R8A8,       // 0xAARRGGBB
-  X8R8G8B8_UINT32 = B8G8R8X8        // 0x00RRGGBB
+  X8R8G8B8_UINT32 = B8G8R8X8,       // 0x00RRGGBB
+#elif MOZ_BIG_ENDIAN()
+  A8R8G8B8_UINT32 = A8R8G8B8,       // 0xAARRGGBB
+  X8R8G8B8_UINT32 = X8R8G8B8,       // 0x00RRGGBB
+#else
+#  error "bad endianness"
+#endif
+
+  // The following values are OS and endian-independent synonyms.
+  //
+  // TODO(aosmond): When everything blocking bug 1581828 has been resolved, we
+  // can make this use R8B8G8A8 and R8B8G8X8 for non-Windows platforms.
+  OS_RGBA = A8R8G8B8_UINT32,
+  OS_RGBX = X8R8G8B8_UINT32
 };
+
+std::ostream& operator<<(std::ostream& aOut, const SurfaceFormat& aFormat);
+
+// Represents the bit-shifts required to access color channels when the layout
+// is viewed as a uint32_t value.
+enum class SurfaceFormatBit : uint32_t {
+#if MOZ_LITTLE_ENDIAN()
+  R8G8B8A8_R = 0,
+  R8G8B8A8_G = 8,
+  R8G8B8A8_B = 16,
+  R8G8B8A8_A = 24,
+#elif MOZ_BIG_ENDIAN()
+  R8G8B8A8_A = 0,
+  R8G8B8A8_B = 8,
+  R8G8B8A8_G = 16,
+  R8G8B8A8_R = 24,
+#else
+#  error "bad endianness"
+#endif
+
+  // The following values are endian-independent for A8R8G8B8_UINT32.
+  A8R8G8B8_UINT32_B = 0,
+  A8R8G8B8_UINT32_G = 8,
+  A8R8G8B8_UINT32_R = 16,
+  A8R8G8B8_UINT32_A = 24,
+
+  // The following values are OS and endian-independent.
+  //
+  // TODO(aosmond): When everything blocking bug 1581828 has been resolved, we
+  // can make this use R8G8B8A8_X for non-Windows platforms.
+  OS_R = A8R8G8B8_UINT32_R,
+  OS_G = A8R8G8B8_UINT32_G,
+  OS_B = A8R8G8B8_UINT32_B,
+  OS_A = A8R8G8B8_UINT32_A,
+};
+
+inline uint32_t operator<<(uint8_t a, SurfaceFormatBit b) {
+  return a << static_cast<uint32_t>(b);
+}
+
+inline uint32_t operator>>(uint32_t a, SurfaceFormatBit b) {
+  return a >> static_cast<uint32_t>(b);
+}
+
+static inline int BytesPerPixel(SurfaceFormat aFormat) {
+  switch (aFormat) {
+    case SurfaceFormat::A8:
+      return 1;
+    case SurfaceFormat::R5G6B5_UINT16:
+    case SurfaceFormat::A16:
+      return 2;
+    case SurfaceFormat::R8G8B8:
+    case SurfaceFormat::B8G8R8:
+      return 3;
+    case SurfaceFormat::HSV:
+    case SurfaceFormat::Lab:
+      return 3 * sizeof(float);
+    case SurfaceFormat::Depth:
+      return sizeof(uint16_t);
+    default:
+      return 4;
+  }
+}
 
 inline bool IsOpaque(SurfaceFormat aFormat)
 {
   switch (aFormat) {
-  case SurfaceFormat::B8G8R8X8:
-  case SurfaceFormat::R8G8B8X8:
-  case SurfaceFormat::R5G6B5_UINT16:
-  case SurfaceFormat::YUV:
-  case SurfaceFormat::NV12:
-  case SurfaceFormat::YUV422:
-    return true;
-  default:
-    return false;
+    case SurfaceFormat::B8G8R8X8:
+    case SurfaceFormat::R8G8B8X8:
+    case SurfaceFormat::X8R8G8B8:
+    case SurfaceFormat::R5G6B5_UINT16:
+    case SurfaceFormat::R8G8B8:
+    case SurfaceFormat::B8G8R8:
+    case SurfaceFormat::R8G8:
+    case SurfaceFormat::HSV:
+    case SurfaceFormat::Lab:
+    case SurfaceFormat::Depth:
+    case SurfaceFormat::YUV:
+    case SurfaceFormat::NV12:
+    case SurfaceFormat::P010:
+    case SurfaceFormat::P016:
+    case SurfaceFormat::YUV422:
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -110,7 +218,8 @@ enum class FilterType : int8_t {
   DISTANT_SPECULAR,
   CROP,
   PREMULTIPLY,
-  UNPREMULTIPLY
+  UNPREMULTIPLY,
+  OPACITY
 };
 
 enum class DrawTargetType : int8_t {
