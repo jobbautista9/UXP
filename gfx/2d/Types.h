@@ -53,11 +53,21 @@ enum class SurfaceFormat : int8_t {
 
   // This one is a single-byte, so endianness isn't an issue.
   A8,
+  A16,
+
+  R8G8,
+  R16G16,
 
   // These ones are their own special cases.
   YUV,
-  NV12,
-  YUV422,
+  NV12,    // YUV 4:2:0 image with a plane of 8 bit Y samples followed by
+           // an interleaved U/V plane containing 8 bit 2x2 subsampled
+           // colour difference samples.
+  P016,    // Similar to NV12, but with 16 bits plane values
+  P010,    // Identical to P016 but the 6 least significant bits are 0.
+           // With DXGI in theory entirely compatible, however practice has
+           // shown that it's not the case.
+  YUV422,  // Single plane YUV 4:2:2 interleaved as Y`0 Cb Y`1 Cr.
   HSV,
   Lab,
   Depth,
@@ -65,22 +75,48 @@ enum class SurfaceFormat : int8_t {
   // This represents the unknown format.
   UNKNOWN,
 
+// The following values are endian-independent synonyms. The _UINT32 suffix
+// indicates that the name reflects the layout when viewed as a uint32_t
+// value.
+#if MOZ_LITTLE_ENDIAN
   A8R8G8B8_UINT32 = B8G8R8A8,       // 0xAARRGGBB
-  X8R8G8B8_UINT32 = B8G8R8X8        // 0x00RRGGBB
+  X8R8G8B8_UINT32 = B8G8R8X8,       // 0x00RRGGBB
+#elif MOZ_BIG_ENDIAN
+  A8R8G8B8_UINT32 = A8R8G8B8,       // 0xAARRGGBB
+  X8R8G8B8_UINT32 = X8R8G8B8,       // 0x00RRGGBB
+#else
+#  error "bad endianness"
+#endif
+
+  // The following values are OS and endian-independent synonyms.
+  //
+  // TODO(aosmond): When everything blocking bug 1581828 has been resolved, we
+  // can make this use R8B8G8A8 and R8B8G8X8 for non-Windows platforms.
+  OS_RGBA = A8R8G8B8_UINT32,
+  OS_RGBX = X8R8G8B8_UINT32
 };
 
 inline bool IsOpaque(SurfaceFormat aFormat)
 {
   switch (aFormat) {
-  case SurfaceFormat::B8G8R8X8:
-  case SurfaceFormat::R8G8B8X8:
-  case SurfaceFormat::R5G6B5_UINT16:
-  case SurfaceFormat::YUV:
-  case SurfaceFormat::NV12:
-  case SurfaceFormat::YUV422:
-    return true;
-  default:
-    return false;
+    case SurfaceFormat::B8G8R8X8:
+    case SurfaceFormat::R8G8B8X8:
+    case SurfaceFormat::X8R8G8B8:
+    case SurfaceFormat::R5G6B5_UINT16:
+    case SurfaceFormat::R8G8B8:
+    case SurfaceFormat::B8G8R8:
+    case SurfaceFormat::R8G8:
+    case SurfaceFormat::HSV:
+    case SurfaceFormat::Lab:
+    case SurfaceFormat::Depth:
+    case SurfaceFormat::YUV:
+    case SurfaceFormat::NV12:
+    case SurfaceFormat::P010:
+    case SurfaceFormat::P016:
+    case SurfaceFormat::YUV422:
+      return true;
+    default:
+      return false;
   }
 }
 
