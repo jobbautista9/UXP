@@ -3315,6 +3315,9 @@ BytecodeEmitter::checkSideEffects(ParseNode* pn, bool* answer)
       case PNK_ASSIGN:
       case PNK_ADDASSIGN:
       case PNK_SUBASSIGN:
+      case PNK_COALESCE:
+      case PNK_OR:
+      case PNK_AND:
       case PNK_BITORASSIGN:
       case PNK_BITXORASSIGN:
       case PNK_BITANDASSIGN:

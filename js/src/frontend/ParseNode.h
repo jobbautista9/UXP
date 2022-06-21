@@ -166,6 +166,9 @@ class ObjectBox;
     F(ASSIGN) \
     F(ADDASSIGN) \
     F(SUBASSIGN) \
+    F(COALESCEASSIGN) \
+    F(ORASSIGN) \
+    F(ANDASSIGN) \
     F(BITORASSIGN) \
     F(BITXORASSIGN) \
     F(BITANDASSIGN) \
