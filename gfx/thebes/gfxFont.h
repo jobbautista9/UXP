@@ -619,6 +619,8 @@ public:
     typedef mozilla::gfx::DrawTarget DrawTarget;
     typedef mozilla::unicode::Script Script;
 
+    enum class RoundingFlags : uint8_t { kRoundX = 0x01, kRoundY = 0x02 };
+
     explicit gfxFontShaper(gfxFont *aFont)
         : mFont(aFont)
     {
@@ -2048,12 +2050,12 @@ protected:
         int32_t          mAppUnitsPerDevUnit;
         PLDHashNumber    mHashKey;
         bool             mTextIs8Bit;
-        RoundingFlags    mRounding;
+        gfxFontShaper::RoundingFlags    mRounding;
 
         CacheHashKey(const uint8_t *aText, uint32_t aLength,
-                     uint32_t aStringHash,
-                     Script aScriptCode, int32_t aAppUnitsPerDevUnit,
-                     uint32_t aFlags, RoundingFlags aRounding)
+                     uint32_t aStringHash, Script aScriptCode,
+                     int32_t aAppUnitsPerDevUnit, uint32_t aFlags,
+                     gfxFontShaper::RoundingFlags aRounding)
             : mLength(aLength),
               mFlags(aFlags),
               mScript(aScriptCode),
@@ -2063,7 +2065,7 @@ protected:
                        aAppUnitsPerDevUnit * 0x100 +
                        aFlags * 0x10000 +
                        int(aRounding)),
-              mTextIs8Bit(true)
+              mTextIs8Bit(true),
               mRounding(aRounding)
         {
             NS_ASSERTION(aFlags & gfxTextRunFactory::TEXT_IS_8BIT,
@@ -2072,9 +2074,9 @@ protected:
         }
 
         CacheHashKey(const char16_t *aText, uint32_t aLength,
-                     uint32_t aStringHash,
-                     Script aScriptCode, int32_t aAppUnitsPerDevUnit,
-                     uint32_t aFlags, RoundingFlags aRounding)
+                     uint32_t aStringHash, Script aScriptCode,
+                     int32_t aAppUnitsPerDevUnit, uint32_t aFlags,
+                     gfxFontShaper::RoundingFlags aRounding)
             : mLength(aLength),
               mFlags(aFlags),
               mScript(aScriptCode),
@@ -2084,7 +2086,7 @@ protected:
                        aAppUnitsPerDevUnit * 0x100 +
                        aFlags * 0x10000 +
                        int(aRounding)),
-              mTextIs8Bit(false)
+              mTextIs8Bit(false),
               mRounding(aRounding)
         {
             // We can NOT assert that TEXT_IS_8BIT is false in aFlags here,

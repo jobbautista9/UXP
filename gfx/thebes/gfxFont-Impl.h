@@ -6,6 +6,7 @@
 #ifndef GFX_FONT_IMPL_H
 #define GFX_FONT_IMPL_H
 
+#include "gfxFont.h"            // aRounding
 #include "mozilla/DebugOnly.h"
 using mozilla::DebugOnly;
 
@@ -25,6 +26,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
                        bool        aVertical,
                        int32_t     aAppUnitsPerDevUnit,
                        uint32_t    aFlags,
+                       gfxFontShaper::RoundingFlags aRounding,
                        gfxTextPerfMetrics *aTextPerf GFX_MAYBE_UNUSED)
 {
     // if the cache is getting too big, flush it and start over
