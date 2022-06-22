@@ -39,7 +39,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
     CacheHashKey key(aText, aLength, aHash,
                      aRunScript,
                      aAppUnitsPerDevUnit,
-                     aFlags);
+                     aFlags, aRounding);
 
     CacheHashEntry *entry = mWordCache->PutEntry(key);
     if (!entry) {
@@ -54,7 +54,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
     }
 
     sw = gfxShapedWord::Create(aText, aLength, aRunScript, aAppUnitsPerDevUnit,
-                               aFlags);
+                               aFlags, aRounding);
     entry->mShapedWord.reset(sw);
     if (!sw) {
         NS_WARNING("failed to create gfxShapedWord - expect missing text");

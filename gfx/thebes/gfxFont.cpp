@@ -2552,6 +2552,7 @@ gfxFont::CacheHashEntry::KeyEquals(const KeyTypePointer aKey) const
     }
     if (sw->GetLength() != aKey->mLength ||
         sw->GetFlags() != aKey->mFlags ||
+        sw->GetRounding() != aKey->mRounding ||
         sw->GetAppUnitsPerDevUnit() != aKey->mAppUnitsPerDevUnit ||
         sw->GetScript() != aKey->mScript) {
         return false;
