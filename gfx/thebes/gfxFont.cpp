@@ -561,23 +561,28 @@ gfxFontShaper::MergeFontFeatures(
 // This ensures that the drawing backend snaps all of the word's glyphs in the
 // same direction and so inter-glyph spacing remains the same.
 //
-/* static */ void
+gfxFont::RoundingFlags
 gfxFontShaper::GetRoundOffsetsToPixels(DrawTarget* aDrawTarget,
                                        bool* aRoundX, bool* aRoundY)
 {
-    *aRoundX = false;
+    RoundingFlags result = RoundingFlags(0);
+
     // Could do something fancy here for ScaleFactors of
     // AxisAlignedTransforms, but we leave things simple.
     // Not much point rounding if a matrix will mess things up anyway.
     // Also return false for non-cairo contexts.
     if (aDrawTarget->GetTransform().HasNonTranslation()) {
-        *aRoundY = false;
-        return;
+        return result;
     }
 
     // All raster backends snap glyphs to pixels vertically.
     // Print backends set CAIRO_HINT_METRICS_OFF.
-    *aRoundY = true;
+    result |= RoundingFlags::kRoundY;
+
+    // If we can't set up the cairo font, bail out.
+    if (!SetupCairoFont(aDrawTarget)) {
+        return result;
+    }
 
     cairo_t* cr = gfxFont::RefCairo(aDrawTarget);
     cairo_scaled_font_t *scaled_font = cairo_get_scaled_font(cr);
@@ -586,8 +591,8 @@ gfxFontShaper::GetRoundOffsetsToPixels(DrawTarget* aDrawTarget,
     NS_ASSERTION(scaled_font, "null cairo scaled font should never be returned "
                  "by cairo_get_scaled_font");
     if (!scaled_font) {
-        *aRoundX = true; // default to the same as the fallback path below
-        return;
+        result |= RoundingFlags::kRoundX; // default to the same as the fallback path below
+        return result;
     }
 
     // Sometimes hint metrics gets set for us, most notably for printing.
@@ -596,8 +601,8 @@ gfxFontShaper::GetRoundOffsetsToPixels(DrawTarget* aDrawTarget,
 
     switch (hint_metrics) {
     case CAIRO_HINT_METRICS_OFF:
-        *aRoundY = false;
-        return;
+        result &= ~RoundingFlags::kRoundY;
+        return result;
     case CAIRO_HINT_METRICS_DEFAULT:
         // Here we mimic what cairo surface/font backends do.  Printing
         // surfaces have already been handled by hint_metrics.  The
@@ -621,7 +626,7 @@ gfxFontShaper::GetRoundOffsetsToPixels(DrawTarget* aDrawTarget,
             // Quartz surfaces implement show_glyphs for Quartz fonts
             if (cairo_surface_get_type(cairo_get_target(cr)) ==
                 CAIRO_SURFACE_TYPE_QUARTZ) {
-                return;
+                return result;
             }
             break;
         default:
@@ -631,7 +636,8 @@ gfxFontShaper::GetRoundOffsetsToPixels(DrawTarget* aDrawTarget,
     case CAIRO_HINT_METRICS_ON:
         break;
     }
-    *aRoundX = true;
+    result |= RoundingFlags::kRoundX;
+    return result;
 }
 
 void
@@ -2553,6 +2559,7 @@ gfxFont::CacheHashEntry::KeyEquals(const KeyTypePointer aKey) const
     }
     if (sw->GetLength() != aKey->mLength ||
         sw->GetFlags() != aKey->mFlags ||
+        sw->GetRounding() != aKey->mRounding ||
         sw->GetAppUnitsPerDevUnit() != aKey->mAppUnitsPerDevUnit ||
         sw->GetScript() != aKey->mScript) {
         return false;
@@ -2588,6 +2595,7 @@ gfxFont::ShapeText(DrawTarget    *aDrawTarget,
                    uint32_t       aLength,
                    Script         aScript,
                    bool           aVertical,
+                   RoundingFlags  aRounding,
                    gfxShapedText *aShapedText)
 {
     nsDependentCSubstring ascii((const char*)aText, aLength);
@@ -2602,11 +2610,12 @@ gfxFont::ShapeText(DrawTarget    *aDrawTarget,
 
 bool
 gfxFont::ShapeText(DrawTarget      *aDrawTarget,
-                   const char16_t *aText,
+                   const char16_t  *aText,
                    uint32_t         aOffset,
                    uint32_t         aLength,
                    Script           aScript,
                    bool             aVertical,
+                   RoundingFlags    aRounding,
                    gfxShapedText   *aShapedText)
 {
     bool ok = false;
@@ -2672,6 +2681,7 @@ gfxFont::ShapeFragmentWithoutWordCache(DrawTarget *aDrawTarget,
                                        uint32_t    aLength,
                                        Script      aScript,
                                        bool        aVertical,
+                                       RoundingFlags aRounding,
                                        gfxTextRun *aTextRun)
 {
     aTextRun->SetupClusterBoundaries(aOffset, aText, aLength);
@@ -2737,6 +2747,7 @@ gfxFont::ShapeTextWithoutWordCache(DrawTarget *aDrawTarget,
                                    uint32_t    aLength,
                                    Script      aScript,
                                    bool        aVertical,
+                                   RoundingFlags aRounding,
                                    gfxTextRun *aTextRun)
 {
     uint32_t fragStart = 0;
@@ -2825,6 +2836,7 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
     }
 
     gfxTextPerfMetrics *tp = nullptr;
+    RoundingFlags rounding = GetRoundOffsetsToPixels(aDrawTarget);
 
 #ifdef DEBUG
     tp = aTextRun->GetFontGroup()->GetTextPerfMetrics();
@@ -2855,7 +2867,7 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
             return ShapeTextWithoutWordCache(aDrawTarget, aString,
                                              aRunStart, aRunLength,
                                              aRunScript, aVertical,
-                                             aTextRun);
+                                             rounding, aTextRun);
         }
     }
 
@@ -2908,6 +2920,7 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
                                                     length,
                                                     aRunScript,
                                                     aVertical,
+                                                    rounding,
                                                     aTextRun);
             if (!ok) {
                 return false;
@@ -2926,7 +2939,7 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
                                               aString + wordStart, length,
                                               hash, aRunScript, aVertical,
                                               appUnitsPerDevUnit,
-                                              wordFlags, tp);
+                                              wordFlags, rounding, tp);
             if (sw) {
                 aTextRun->CopyGlyphDataFrom(sw, aRunStart + wordStart);
             } else {
@@ -2956,7 +2969,8 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
                     GetShapedWord(aDrawTarget, &boundary, 1,
                                   gfxShapedWord::HashMix(0, boundary),
                                   aRunScript, aVertical, appUnitsPerDevUnit,
-                                  flags | gfxTextRunFactory::TEXT_IS_8BIT, tp);
+                                  flags | gfxTextRunFactory::TEXT_IS_8BIT,
+                                  rounding, tp);
                 if (sw) {
                     aTextRun->CopyGlyphDataFrom(sw, aRunStart + i);
                 } else {
@@ -2988,7 +3002,8 @@ gfxFont::SplitAndInitTextRun(DrawTarget *aDrawTarget,
             if (GetFontEntry()->IsUserFont() && HasCharacter(ch)) {
                 ShapeFragmentWithoutWordCache(aDrawTarget, aString + i,
                                               aRunStart + i, 1,
-                                              aRunScript, aVertical, aTextRun);
+                                              aRunScript, aVertical,
+                                              rounding, aTextRun);
             } else {
                 aTextRun->SetMissingGlyph(aRunStart + i, ch, this);
             }

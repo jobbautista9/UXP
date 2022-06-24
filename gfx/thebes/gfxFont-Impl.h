@@ -25,6 +25,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
                        bool        aVertical,
                        int32_t     aAppUnitsPerDevUnit,
                        uint32_t    aFlags,
+                       RoundingFlags aRounding,
                        gfxTextPerfMetrics *aTextPerf GFX_MAYBE_UNUSED)
 {
     // if the cache is getting too big, flush it and start over
@@ -39,7 +40,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
     CacheHashKey key(aText, aLength, aHash,
                      aRunScript,
                      aAppUnitsPerDevUnit,
-                     aFlags);
+                     aFlags, aRounding);
 
     CacheHashEntry *entry = mWordCache->PutEntry(key);
     if (!entry) {
@@ -54,7 +55,7 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
     }
 
     sw = gfxShapedWord::Create(aText, aLength, aRunScript, aAppUnitsPerDevUnit,
-                               aFlags);
+                               aFlags, aRounding);
     entry->mShapedWord.reset(sw);
     if (!sw) {
         NS_WARNING("failed to create gfxShapedWord - expect missing text");
@@ -62,7 +63,8 @@ gfxFont::GetShapedWord(DrawTarget *aDrawTarget,
     }
 
     DebugOnly<bool> ok =
-        ShapeText(aDrawTarget, aText, 0, aLength, aRunScript, aVertical, sw);
+        ShapeText(aDrawTarget, aText, 0, aLength, aRunScript, aVertical,
+                  aRounding, sw);
 
     NS_WARNING_ASSERTION(ok, "failed to shape word - expect garbled text");
 
