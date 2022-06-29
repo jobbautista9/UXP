@@ -1115,11 +1115,21 @@ gfxUtils::Get4x3YuvColorMatrix(YUVColorSpace aYUVColorSpace)
                                                1.16438f, -0.21325f, -0.53291f, 0.0f,
                                                1.16438f,  2.11240f,  0.0f,     0.0f,
                                              };
+  static const float yuv_to_rgb_rec2020[12] = { 1.16781f,  0.0f,      1.68361f, 0.0f,
+                                                1.16781f, -0.18788f, -0.65234f, 0.0f,
+                                                1.16781f,  2.14807f,  0.0f,     0.0f,
+                                              };
 
-  if (aYUVColorSpace == YUVColorSpace::BT709) {
-    return const_cast<float*>(yuv_to_rgb_rec709);
-  } else {
-    return const_cast<float*>(yuv_to_rgb_rec601);
+  switch (aYUVColorSpace) {
+    case YUVColorSpace::BT601:
+      return const_cast<float*>(yuv_to_rgb_rec601);
+    case YUVColorSpace::BT709:
+      return const_cast<float*>(yuv_to_rgb_rec709);
+    case YUVColorSpace::BT2020:
+      return const_cast<float*>(yuv_to_rgb_rec2020);
+    default:
+      MOZ_ASSERT(false, "unknown aYUVColorSpace");
+      return const_cast<float*>(yuv_to_rgb_rec601);
   }
 }
 
@@ -1132,11 +1142,20 @@ gfxUtils::Get3x3YuvColorMatrix(YUVColorSpace aYUVColorSpace)
   static const float yuv_to_rgb_rec709[9] = {
     1.16438f, 1.16438f, 1.16438f, 0.0f, -0.21325f, 2.11240f, 1.79274f, -0.53291f, 0.0f,
   };
+  static const float yuv_to_rgb_rec2020[9] = {
+    1.16781f, 1.16781f, 1.16781f, 0.0f, -0.18788f, 2.14807f, 1.68361f, -0.65234f, 0.0f,
+  };
 
-  if (aYUVColorSpace == YUVColorSpace::BT709) {
-    return const_cast<float*>(yuv_to_rgb_rec709);
-  } else {
-    return const_cast<float*>(yuv_to_rgb_rec601);
+  switch (aYUVColorSpace) {
+    case YUVColorSpace::BT601:
+      return const_cast<float*>(yuv_to_rgb_rec601);
+    case YUVColorSpace::BT709:
+      return const_cast<float*>(yuv_to_rgb_rec709);
+    case YUVColorSpace::BT2020:
+      return const_cast<float*>(yuv_to_rgb_rec2020);
+    default:
+      MOZ_ASSERT(false, "unknown aYUVColorSpace");
+      return const_cast<float*>(yuv_to_rgb_rec601);
   }
 }
 
