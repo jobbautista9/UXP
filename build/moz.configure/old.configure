@@ -298,6 +298,8 @@ def old_configure_options(*options):
     '--enable-ldap',
     '--enable-mapi',
     '--enable-calendar',
+    '--enable-irc',
+    '--enable-dominspector',
     '--enable-incomplete-external-linkage',
     '--enable-mailnews',
     '--enable-mailnews-oauth2',
