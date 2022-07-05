@@ -983,6 +983,14 @@ class TreeMetadataEmitter(LoggingMixin):
         for name, jar in context.get('JAVA_JAR_TARGETS', {}).items():
             yield ContextWrapped(context, jar)
 
+        if context.get('USE_NASM') is True:
+            nasm = context.config.substs.get('NASM')
+            if not nasm:
+                raise SandboxValidationError('nasm is not available', context)
+            passthru.variables['AS'] = nasm
+            passthru.variables['ASFLAGS'] = context.config.substs.get('NASM_ASFLAGS')
+            passthru.variables['AS_DASH_C_FLAG'] = ''
+
         if context.get('USE_YASM') is True:
             yasm = context.config.substs.get('YASM')
             if not yasm:
