@@ -110,6 +110,7 @@ private:
 #endif
 #ifdef MOZ_AV1
   DECL_MEDIA_PREF("media.av1.enabled",                        AV1Enabled, bool, false);
+  DECL_MEDIA_PREF("media.av1.use-dav1d",                      AV1UseDav1d, bool, false);
 #endif
 #ifdef XP_WIN
   DECL_MEDIA_PREF("media.wmf.enabled",                        PDMWMFEnabled, bool, true);

@@ -567,6 +567,7 @@ pref("media.mediasource.webm.audio.enabled", true);
 
 #ifdef MOZ_AV1
 pref("media.av1.enabled", false);
+pref("media.av1.use-dav1d", false);
 #endif
 
 // Use new MediaFormatReader architecture for plain ogg.
