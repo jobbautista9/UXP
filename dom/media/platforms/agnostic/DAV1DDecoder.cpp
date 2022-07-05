@@ -8,7 +8,7 @@
 
 #include "gfxUtils.h"
 #include "ImageContainer.h"
-#include "mozilla/StaticPrefs_media.h"
+#include "MediaPrefs.h"
 #include "mozilla/TaskQueue.h"
 #include "mozilla/gfx/gfxVars.h"
 #include "nsThreadUtils.h"
@@ -75,14 +75,14 @@ RefPtr<MediaDataDecoder::InitPromise> DAV1DDecoder::Init() {
   } else if (mInfo.mDisplay.width >= 1024) {
     decoder_threads = 4;
   }
-  if (StaticPrefs::media_av1_new_thread_count_strategy()) {
+  if (MediaPrefs::AV1NewThreadCountStrategy()) {
     decoder_threads = GetDecodingThreadCount(mInfo.mImage.Height());
   }
   // Still need to consider the amount of physical cores in order to achieve
   // best performance.
   settings.n_threads =
       static_cast<int>(std::min(decoder_threads, GetNumberOfProcessors()));
-  if (int32_t count = StaticPrefs::media_av1_force_thread_count(); count > 0) {
+  if (int32_t count = MediaPrefs::AV1ForceThreadCount; count > 0) {
     settings.n_threads = count;
   }
 
