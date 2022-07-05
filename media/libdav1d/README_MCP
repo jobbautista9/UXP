@@ -1,0 +1,16 @@
+This directory contains build files for dav1d. The actual library
+source is in the "upstream" subdirectory.
+
+Any patches or additional configuration to be applied to the
+upstream source should be kept here in the media/libdav1d
+directory.
+
+To update the library source and build config files, execute
+
+    ./update.sh /path/to/dav1d-source
+
+The upstream dav1d git repository is:
+
+    https://code.videolan.org/videolan/dav1d
+
+The version used was tagged 1.0.0.

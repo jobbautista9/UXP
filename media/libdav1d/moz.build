@@ -1,0 +1,208 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Library('dav1d')
+
+LOCAL_INCLUDES += [
+    '/media/libdav1d/upstream',
+    '/media/libdav1d/upstream/include',
+    '/media/libdav1d/upstream/include/dav1d',
+    '/media/libdav1d/upstream/src',
+]
+
+EXPORTS.dav1d += [
+    'config.h',
+    'version.h',
+]
+
+# entrypoint source files
+entrypoint_source_files = [
+    '/media/libdav1d/upstream/src/lib.c',
+    '/media/libdav1d/upstream/src/thread_task.c',
+]
+SOURCES += [f for f in entrypoint_source_files]
+
+# Don't export DAV1D_API symbols from libxul
+# see: third_party/dav1d/include/dav1d/common.h
+DEFINES['DAV1D_API'] = ''
+
+if CONFIG['MOZ_DAV1D_ASM']:
+    DIRS += ['asm']
+
+    # Store the stack alignment that will be used.
+    stack_alignment = 0
+
+    # Default stack alignment can be 4 bytes on x86.
+    if CONFIG['CPU_ARCH'] == 'x86':
+        if CONFIG['OS_TARGET'] == 'WINNT':
+            # Allow the default to avoid crashes
+            stack_alignment = 4
+        else:
+            # Update stack alignment to 16 bytes.
+            stack_alignment = 16
+            if CONFIG['CC_TYPE'] == 'clang':
+                CFLAGS += ['-mstack-alignment=16']
+                for ep in entrypoint_source_files:
+                    SOURCES[ep].flags += ['-mstackrealign']
+            elif CONFIG['CC_TYPE'] == 'gcc':
+                CFLAGS += ['-mpreferred-stack-boundary=4']
+                for ep in entrypoint_source_files:
+                    SOURCES[ep].flags += ['-mincoming-stack-boundary=2']
+    elif CONFIG['CPU_ARCH'] in ('x86_64', 'aarch64'):
+        # The default stack alignment is 16 bytes.
+        stack_alignment = 16
+    else:
+        error('Cpu arch %s is not expected' % CONFIG['CPU_ARCH'])
+
+    # Set the macro here instead of config.h
+    if stack_alignment == 0:
+        error('Stack alignment cannot be zero.')
+    DEFINES['STACK_ALIGNMENT'] = stack_alignment
+
+# common sources
+SOURCES += [
+    '/media/libdav1d/upstream/src/cdf.c',
+    '/media/libdav1d/upstream/src/cpu.c',
+    '/media/libdav1d/upstream/src/data.c',
+    '/media/libdav1d/upstream/src/decode.c',
+    '/media/libdav1d/upstream/src/dequant_tables.c',
+    '/media/libdav1d/upstream/src/getbits.c',
+    '/media/libdav1d/upstream/src/intra_edge.c',
+    '/media/libdav1d/upstream/src/itx_1d.c',
+    '/media/libdav1d/upstream/src/lf_mask.c',
+    '/media/libdav1d/upstream/src/log.c',
+    '/media/libdav1d/upstream/src/mem.c',
+    '/media/libdav1d/upstream/src/msac.c',
+    '/media/libdav1d/upstream/src/obu.c',
+    '/media/libdav1d/upstream/src/picture.c',
+    '/media/libdav1d/upstream/src/qm.c',
+    '/media/libdav1d/upstream/src/ref.c',
+    '/media/libdav1d/upstream/src/refmvs.c',
+    '/media/libdav1d/upstream/src/scan.c',
+    '/media/libdav1d/upstream/src/tables.c',
+    '/media/libdav1d/upstream/src/warpmv.c',
+    '/media/libdav1d/upstream/src/wedge.c',
+]
+
+# includes src
+EXPORTS.dav1d.src += [
+    '/media/libdav1d/upstream/src/cdf.h',
+    '/media/libdav1d/upstream/src/cpu.h',
+    '/media/libdav1d/upstream/src/ctx.h',
+    '/media/libdav1d/upstream/src/data.h',
+    '/media/libdav1d/upstream/src/decode.h',
+    '/media/libdav1d/upstream/src/dequant_tables.h',
+    '/media/libdav1d/upstream/src/filmgrain.h',
+    '/media/libdav1d/upstream/src/getbits.h',
+    '/media/libdav1d/upstream/src/intra_edge.h',
+    '/media/libdav1d/upstream/src/lf_mask.h',
+    '/media/libdav1d/upstream/src/log.h',
+    '/media/libdav1d/upstream/src/mem.h',
+    '/media/libdav1d/upstream/src/msac.h',
+    '/media/libdav1d/upstream/src/obu.h',
+    '/media/libdav1d/upstream/src/picture.h',
+    '/media/libdav1d/upstream/src/qm.h',
+    '/media/libdav1d/upstream/src/ref.h',
+    '/media/libdav1d/upstream/src/refmvs.h',
+    '/media/libdav1d/upstream/src/scan.h',
+    '/media/libdav1d/upstream/src/tables.h',
+    '/media/libdav1d/upstream/src/thread.h',
+    '/media/libdav1d/upstream/src/warpmv.h',
+    '/media/libdav1d/upstream/src/wedge.h',
+]
+
+# common BITDEPTH 8, 16
+# All the files here should be *_tmpl.c, and they should not appear in SOURCES,
+# since they require BITDEPTH to be defined
+relative_path = '/media/libdav1d/upstream/src/'
+bitdepth_basenames = [
+    'cdef_apply_tmpl.c',
+    'cdef_tmpl.c',
+    'fg_apply_tmpl.c',
+    'filmgrain_tmpl.c',
+    'ipred_prepare_tmpl.c',
+    'ipred_tmpl.c',
+    'itx_tmpl.c',
+    'lf_apply_tmpl.c',
+    'loopfilter_tmpl.c',
+    'looprestoration_tmpl.c',
+    'lr_apply_tmpl.c',
+    'mc_tmpl.c',
+    'recon_tmpl.c'
+]
+
+GENERATED_FILES += [
+    '16bd_%s' % p for p in bitdepth_basenames
+]
+
+for f in bitdepth_basenames:
+    a = GENERATED_FILES['16bd_%s' % f]
+    a.script = 'generate_source.py:add_define'
+    a.inputs = [relative_path + f]
+    a.flags = ['BITDEPTH', '16']
+
+GENERATED_FILES += [
+    '8bd_%s' % p for p in bitdepth_basenames
+]
+
+for f in bitdepth_basenames:
+    a = GENERATED_FILES['8bd_%s' % f]
+    a.script = 'generate_source.py:add_define'
+    a.inputs = [relative_path + f]
+    a.flags = ['BITDEPTH', '8']
+
+SOURCES += [
+    '!%s' % p for p in GENERATED_FILES if p.endswith('.c')
+]
+
+EXPORTS.dav1d.src += [
+    '/media/libdav1d/upstream/src/cdef.h',
+    '/media/libdav1d/upstream/src/cdef_apply.h',
+    '/media/libdav1d/upstream/src/fg_apply.h',
+    '/media/libdav1d/upstream/src/ipred.h',
+    '/media/libdav1d/upstream/src/ipred_prepare.h',
+    '/media/libdav1d/upstream/src/itx.h',
+    '/media/libdav1d/upstream/src/itx_1d.h',
+    '/media/libdav1d/upstream/src/lf_apply.h',
+    '/media/libdav1d/upstream/src/loopfilter.h',
+    '/media/libdav1d/upstream/src/looprestoration.h',
+    '/media/libdav1d/upstream/src/lr_apply.h',
+    '/media/libdav1d/upstream/src/mc.h',
+    '/media/libdav1d/upstream/src/recon.h',
+]
+
+# include/common
+EXPORTS.dav1d += [
+    '/media/libdav1d/upstream/include/common/attributes.h',
+    '/media/libdav1d/upstream/include/common/bitdepth.h',
+    '/media/libdav1d/upstream/include/common/dump.h',
+    '/media/libdav1d/upstream/include/common/frame.h',
+    '/media/libdav1d/upstream/include/common/intops.h',
+    '/media/libdav1d/upstream/include/common/validate.h',
+]
+
+# include/dav1d
+EXPORTS.dav1d += [
+   '/media/libdav1d/upstream/include/dav1d/common.h',
+   '/media/libdav1d/upstream/include/dav1d/data.h',
+   '/media/libdav1d/upstream/include/dav1d/dav1d.h',
+   '/media/libdav1d/upstream/include/dav1d/headers.h',
+   '/media/libdav1d/upstream/include/dav1d/picture.h',
+]
+
+if CONFIG['OS_TARGET'] == 'WINNT':
+    SOURCES += [
+        '/media/libdav1d/upstream/src/win32/thread.c'
+    ]
+
+if CONFIG['CC_TYPE'] == 'gcc':
+    LOCAL_INCLUDES += ['/media/libdav1d/upstream/include/compat/gcc/']
+    EXPORTS.dav1d += ['/media/libdav1d/upstream/include/compat/gcc/stdatomic.h']
+
+FINAL_LIBRARY = 'gkmedias'
+
+# We allow warnings for third-party code that can be updated from upstream.
+ALLOW_COMPILER_WARNINGS = True
