@@ -99,6 +99,7 @@ DAV1DDecoder::Init()
 
 RefPtr<DecodePromise>
 DAV1DDecoder::Input(MediaRawData* aSample)
+{
   return InvokeAsync<MediaRawData*>(mTaskQueue, this, __func__,
                                     &DAV1DDecoder::InvokeDecode, aSample);
 }
