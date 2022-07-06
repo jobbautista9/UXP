@@ -253,7 +253,10 @@ protected:
 
 public:
   typedef TrackInfo::TrackType TrackType;
+  typedef nsTArray<RefPtr<MediaData>> DecodedData;
   typedef MozPromise<TrackType, MediaResult, /* IsExclusive = */ true> InitPromise;
+  typedef MozPromise<DecodedData, MediaResult, /* IsExclusive = */ true> DecodePromise;
+  typedef MozPromise<bool, MediaResult, /* IsExclusive = */ true> FlushPromise;
 
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(MediaDataDecoder)
 

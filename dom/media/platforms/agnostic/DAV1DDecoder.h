@@ -3,37 +3,37 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-#if !defined(DAV1DDecoder_h_)
-#  define DAV1DDecoder_h_
 
-#  include "PlatformDecoderModule.h"
-#  include "dav1d/dav1d.h"
-#  include "nsRefPtrHashtable.h"
+#if !defined(DAV1DDecoder_h_)
+#define DAV1DDecoder_h_
+
+#include "PlatformDecoderModule.h"
+#include "dav1d/dav1d.h"
+#include "nsRefPtrHashtable.h"
 
 namespace mozilla {
-
-DDLoggedTypeDeclNameAndBase(DAV1DDecoder, MediaDataDecoder);
 
 typedef nsRefPtrHashtable<nsPtrHashKey<const uint8_t>, MediaRawData>
     MediaRawDataHashtable;
 
-class DAV1DDecoder : public MediaDataDecoder,
-                     public DecoderDoctorLifeLogger<DAV1DDecoder> {
- public:
+class DAV1DDecoder : public MediaDataDecoder
+{
+public:
   explicit DAV1DDecoder(const CreateDecoderParams& aParams);
 
   RefPtr<InitPromise> Init() override;
-  RefPtr<DecodePromise> Decode(MediaRawData* aSample) override;
+  RefPtr<DecodePromise> Input(MediaRawData* aSample) override;
   RefPtr<DecodePromise> Drain() override;
   RefPtr<FlushPromise> Flush() override;
   RefPtr<ShutdownPromise> Shutdown() override;
-  nsCString GetDescriptionName() const override {
-    return "av1 libdav1d video decoder"_ns;
+  const char* GetDescriptionName() const override
+  {
+    return "av1 libdav1d video decoder";
   }
 
   void ReleaseDataBuffer(const uint8_t* buf);
 
-  static Maybe<gfx::YUVColorSpace> GetColorSpace(const Dav1dPicture& aPicture,
+  static Maybe<YUVColorSpace> GetColorSpace(const Dav1dPicture& aPicture,
                                                  LazyLogModule& aLogger);
 
  private:

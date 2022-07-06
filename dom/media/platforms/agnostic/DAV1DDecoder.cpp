@@ -15,13 +15,13 @@
 #include "VideoUtils.h"
 
 #undef LOG
-#define LOG(arg, ...)                                                  \
-  DDMOZ_LOG(sPDMLog, mozilla::LogLevel::Debug, "::%s: " arg, __func__, \
-            ##__VA_ARGS__)
+#define LOG(arg, ...) MOZ_LOG(sPDMLog, mozilla::LogLevel::Debug, ("DAV1DDecoder(%p)::%s: " arg, this, __func__, ##__VA_ARGS__))
 
 namespace mozilla {
 
-static int GetDecodingThreadCount(uint32_t aCodedHeight) {
+static int
+GetDecodingThreadCount(uint32_t aCodedHeight)
+{
   /**
    * Based on the result we print out from the dav1decoder [1], the
    * following information shows the number of tiles for AV1 videos served on
@@ -40,7 +40,7 @@ static int GetDecodingThreadCount(uint32_t aCodedHeight) {
    * Besides the tile thread count, the frame thread count also needs to be
    * considered. As we didn't find anything about what the best number is for
    * the count of frame thread, just simply use 2 for parallel jobs, which
-   * is similar with Chromium's implementation. They uses 3 frame threads for
+   * is similar with Chromium's implementation. They use 3 frame threads for
    * 720p+ but less tile threads, so we will still use more total threads. In
    * addition, their data is measured on 2019, our data should be closer to the
    * current real world situation.
@@ -60,13 +60,13 @@ static int GetDecodingThreadCount(uint32_t aCodedHeight) {
 
 DAV1DDecoder::DAV1DDecoder(const CreateDecoderParams& aParams)
     : mInfo(aParams.VideoConfig()),
-      mTaskQueue(TaskQueue::Create(
-          GetMediaThreadPool(MediaThreadType::PLATFORM_DECODER),
-          "Dav1dDecoder")),
+      mTaskQueue(aParams.mTaskQueue),
       mImageContainer(aParams.mImageContainer),
       mImageAllocator(aParams.mKnowsCompositor) {}
 
-RefPtr<MediaDataDecoder::InitPromise> DAV1DDecoder::Init() {
+RefPtr<MediaDataDecoder::InitPromise>
+DAV1DDecoder::Init()
+{
   Dav1dSettings settings;
   dav1d_default_settings(&settings);
   size_t decoder_threads = 2;
@@ -76,12 +76,12 @@ RefPtr<MediaDataDecoder::InitPromise> DAV1DDecoder::Init() {
     decoder_threads = 4;
   }
   if (MediaPrefs::AV1NewThreadCountStrategy()) {
-    decoder_threads = GetDecodingThreadCount(mInfo.mImage.Height());
+    decoder_threads = GetDecodingThreadCount(mInfo.mImage.height);
   }
   // Still need to consider the amount of physical cores in order to achieve
   // best performance.
   settings.n_threads =
-      static_cast<int>(std::min(decoder_threads, GetNumberOfProcessors()));
+      static_cast<int>(std::min(decoder_threads, PR_GetNumberOfProcessors()));
   if (int32_t count = MediaPrefs::AV1ForceThreadCount; count > 0) {
     settings.n_threads = count;
   }
@@ -97,20 +97,24 @@ RefPtr<MediaDataDecoder::InitPromise> DAV1DDecoder::Init() {
                                                      __func__);
 }
 
-RefPtr<MediaDataDecoder::DecodePromise> DAV1DDecoder::Decode(
-    MediaRawData* aSample) {
+RefPtr<DecodePromise>
+DAV1DDecoder::Input(MediaRawData* aSample)
   return InvokeAsync<MediaRawData*>(mTaskQueue, this, __func__,
                                     &DAV1DDecoder::InvokeDecode, aSample);
 }
 
-void ReleaseDataBuffer_s(const uint8_t* buf, void* user_data) {
+void
+ReleaseDataBuffer_s(const uint8_t* buf, void* user_data)
+{
   MOZ_ASSERT(user_data);
   MOZ_ASSERT(buf);
   DAV1DDecoder* d = static_cast<DAV1DDecoder*>(user_data);
   d->ReleaseDataBuffer(buf);
 }
 
-void DAV1DDecoder::ReleaseDataBuffer(const uint8_t* buf) {
+void
+DAV1DDecoder::ReleaseDataBuffer(const uint8_t* buf)
+{
   // The release callback may be called on a different thread defined by the
   // third party dav1d execution. In that case post a task into TaskQueue to
   // ensure that mDecodingBuffers is only ever accessed on the TaskQueue.
@@ -131,8 +135,9 @@ void DAV1DDecoder::ReleaseDataBuffer(const uint8_t* buf) {
   }
 }
 
-RefPtr<MediaDataDecoder::DecodePromise> DAV1DDecoder::InvokeDecode(
-    MediaRawData* aSample) {
+RefPtr<DecodePromise>
+DAV1DDecoder::InvokeDecode(MediaRawData* aSample)
+{
   MOZ_ASSERT(mTaskQueue->IsCurrentThreadIn());
   MOZ_ASSERT(aSample);
 
@@ -187,7 +192,9 @@ RefPtr<MediaDataDecoder::DecodePromise> DAV1DDecoder::InvokeDecode(
   return DecodePromise::CreateAndResolve(std::move(results), __func__);
 }
 
-int DAV1DDecoder::GetPicture(DecodedData& aData, MediaResult& aResult) {
+int
+DAV1DDecoder::GetPicture(DecodedData& aData, MediaResult& aResult)
+{
   class Dav1dPictureWrapper {
    public:
     Dav1dPicture* operator&() { return &p; }
@@ -210,13 +217,6 @@ int DAV1DDecoder::GetPicture(DecodedData& aData, MediaResult& aResult) {
     return 0;
   }
 
-#ifdef ANDROID
-  if (!gfxVars::UseWebRender() && (*picture).p.bpc != 8) {
-    aResult = MediaResult(NS_ERROR_DOM_MEDIA_NOT_SUPPORTED_ERR, __func__);
-    return -1;
-  }
-#endif
-
   RefPtr<VideoData> v = ConstructImage(*picture);
   if (!v) {
     LOG("Image allocation error: %ux%u"
@@ -231,7 +231,7 @@ int DAV1DDecoder::GetPicture(DecodedData& aData, MediaResult& aResult) {
 }
 
 // When returning Nothing(), the caller chooses the appropriate default
-/* static */ Maybe<gfx::YUVColorSpace> DAV1DDecoder::GetColorSpace(
+/* static */ Maybe<YUVColorSpace> DAV1DDecoder::GetColorSpace(
     const Dav1dPicture& aPicture, LazyLogModule& aLogger) {
   if (!aPicture.seq_hdr || !aPicture.seq_hdr->color_description_present) {
     return Nothing();
@@ -242,8 +242,9 @@ int DAV1DDecoder::GetPicture(DecodedData& aData, MediaResult& aResult) {
       static_cast<gfx::CICP::ColourPrimaries>(aPicture.seq_hdr->pri), aLogger);
 }
 
-already_AddRefed<VideoData> DAV1DDecoder::ConstructImage(
-    const Dav1dPicture& aPicture) {
+already_AddRefed<VideoData>
+DAV1DDecoder::ConstructImage(const Dav1dPicture& aPicture)
+{
   VideoData::YCbCrBuffer b;
   if (aPicture.p.bpc == 10) {
     b.mColorDepth = gfx::ColorDepth::COLOR_10;
@@ -304,7 +305,9 @@ already_AddRefed<VideoData> DAV1DDecoder::ConstructImage(
       mInfo.ScaledImageRect(aPicture.p.w, aPicture.p.h), mImageAllocator);
 }
 
-RefPtr<MediaDataDecoder::DecodePromise> DAV1DDecoder::Drain() {
+RefPtr<DecodePromise>
+DAV1DDecoder::Drain()
+{
   RefPtr<DAV1DDecoder> self = this;
   return InvokeAsync(mTaskQueue, __func__, [self, this] {
     int res = 0;
@@ -320,7 +323,9 @@ RefPtr<MediaDataDecoder::DecodePromise> DAV1DDecoder::Drain() {
   });
 }
 
-RefPtr<MediaDataDecoder::FlushPromise> DAV1DDecoder::Flush() {
+RefPtr<FlushPromise>
+DAV1DDecoder::Flush()
+{
   RefPtr<DAV1DDecoder> self = this;
   return InvokeAsync(mTaskQueue, __func__, [self]() {
     dav1d_flush(self->mContext);
@@ -328,7 +333,9 @@ RefPtr<MediaDataDecoder::FlushPromise> DAV1DDecoder::Flush() {
   });
 }
 
-RefPtr<ShutdownPromise> DAV1DDecoder::Shutdown() {
+RefPtr<ShutdownPromise>
+DAV1DDecoder::Shutdown()
+{
   RefPtr<DAV1DDecoder> self = this;
   return InvokeAsync(mTaskQueue, __func__, [self]() {
     dav1d_close(&self->mContext);
