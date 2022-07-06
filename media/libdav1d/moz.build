@@ -119,35 +119,35 @@ EXPORTS.dav1d.src += [
 # Do not use the *_tmpl.c files from the upstream subdirectory
 # directly, because they don't have BITDEPTH defined.
 SOURCES += [
-    '/media/libdav1d/tmpl/16bd/cdef_apply_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/cdef_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/fg_apply_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/filmgrain_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/ipred_prepare_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/ipred_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/itx_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/lf_apply_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/loopfilter_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/looprestoration_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/lr_apply_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/mc_tmpl.c',
-    '/media/libdav1d/tmpl/16bd/recon_tmpl.c'
+    '/media/libdav1d/tmpl/16bd_cdef_apply_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_cdef_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_fg_apply_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_filmgrain_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_ipred_prepare_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_ipred_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_itx_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_lf_apply_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_loopfilter_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_looprestoration_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_lr_apply_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_mc_tmpl.c',
+    '/media/libdav1d/tmpl/16bd_recon_tmpl.c'
 ]
 
 SOURCES += [
-    '/media/libdav1d/tmpl/8bd/cdef_apply_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/cdef_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/fg_apply_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/filmgrain_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/ipred_prepare_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/ipred_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/itx_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/lf_apply_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/loopfilter_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/looprestoration_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/lr_apply_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/mc_tmpl.c',
-    '/media/libdav1d/tmpl/8bd/recon_tmpl.c'
+    '/media/libdav1d/tmpl/8bd_cdef_apply_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_cdef_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_fg_apply_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_filmgrain_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_ipred_prepare_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_ipred_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_itx_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_lf_apply_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_loopfilter_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_looprestoration_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_lr_apply_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_mc_tmpl.c',
+    '/media/libdav1d/tmpl/8bd_recon_tmpl.c'
 ]
 
 EXPORTS.dav1d.src += [

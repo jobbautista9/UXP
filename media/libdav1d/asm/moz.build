@@ -140,23 +140,23 @@ if CONFIG['CPU_ARCH'] in ('x86', 'x86_64'):
     # Do not use the *_tmpl.c files from the upstream subdirectory
     # directly, because they don't have BITDEPTH defined.
     SOURCES += [
-        '/media/libdav1d/tmpl/16bd/x86/cdef_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/filmgrain_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/ipred_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/itx_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/loopfilter_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/looprestoration_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/x86/mc_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_cdef_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_filmgrain_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_ipred_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_itx_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_loopfilter_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_looprestoration_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/16bd_mc_init_tmpl.c',
     ]
 
     SOURCES += [
-        '/media/libdav1d/tmpl/8bd/x86/cdef_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/filmgrain_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/ipred_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/itx_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/loopfilter_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/looprestoration_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/x86/mc_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_cdef_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_filmgrain_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_ipred_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_itx_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_loopfilter_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_looprestoration_init_tmpl.c',
+        '/media/libdav1d/tmpl/x86/8bd_mc_init_tmpl.c',
     ]
 
 elif CONFIG['CPU_ARCH'] == 'arm' or CONFIG['CPU_ARCH'] == 'aarch64':
@@ -175,23 +175,23 @@ elif CONFIG['CPU_ARCH'] == 'arm' or CONFIG['CPU_ARCH'] == 'aarch64':
     # Do not use the *_tmpl.c files from the upstream subdirectory
     # directly, because they don't have BITDEPTH defined.
     SOURCES += [
-        '/media/libdav1d/tmpl/16bd/arm/cdef_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/filmgrain_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/ipred_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/itx_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/loopfilter_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/looprestoration_init_tmpl.c',
-        '/media/libdav1d/tmpl/16bd/arm/mc_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_cdef_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_filmgrain_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_ipred_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_itx_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_loopfilter_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_looprestoration_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/16bd_mc_init_tmpl.c',
     ]
 
     SOURCES += [
-        '/media/libdav1d/tmpl/8bd/arm/cdef_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/filmgrain_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/ipred_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/itx_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/loopfilter_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/looprestoration_init_tmpl.c',
-        '/media/libdav1d/tmpl/8bd/arm/mc_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_cdef_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_filmgrain_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_ipred_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_itx_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_loopfilter_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_looprestoration_init_tmpl.c',
+        '/media/libdav1d/tmpl/arm/8bd_mc_init_tmpl.c',
     ]
 
     # BITDEPTH .S files

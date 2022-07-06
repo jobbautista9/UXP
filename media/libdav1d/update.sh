@@ -25,24 +25,20 @@ cp $1/THANKS.md upstream/THANKS.md
 
 # Define bitdepth for *_tmpl.c files
 mkdir -p tmpl
-mkdir -p tmpl/16bd
-mkdir -p tmpl/16bd/x86
-mkdir -p tmpl/16bd/arm
-mkdir -p tmpl/8bd
-mkdir -p tmpl/8bd/x86
-mkdir -p tmpl/8bd/arm
+mkdir -p tmpl/x86
+mkdir -p tmpl/arm
 
 bitdepth_basenames="cdef_apply_tmpl.c cdef_tmpl.c fg_apply_tmpl.c filmgrain_tmpl.c ipred_prepare_tmpl.c ipred_tmpl.c itx_tmpl.c lf_apply_tmpl.c loopfilter_tmpl.c looprestoration_tmpl.c lr_apply_tmpl.c mc_tmpl.c recon_tmpl.c"
 bitdepth_basenames_archspecific="cdef_init_tmpl.c filmgrain_init_tmpl.c ipred_init_tmpl.c itx_init_tmpl.c loopfilter_init_tmpl.c looprestoration_init_tmpl.c mc_init_tmpl.c"
 
 echo "$bitdepth_basenames" | tr ' ' '\n' | while read item; do
- echo "#define BITDEPTH 16" | cat - upstream/src/$item > tmpl/16bd/$item
- echo "#define BITDEPTH 8" | cat - upstream/src/$item > tmpl/8bd/$item
+ echo "#define BITDEPTH 16" | cat - upstream/src/$item > tmpl/16bd_$item
+ echo "#define BITDEPTH 8" | cat - upstream/src/$item > tmpl/8bd_$item
 done
 
 echo "$bitdepth_basenames_archspecific" | tr ' ' '\n' | while read item; do
- echo "#define BITDEPTH 16" | cat - upstream/src/x86/$item > tmpl/16bd/x86/$item
- echo "#define BITDEPTH 16" | cat - upstream/src/arm/$item > tmpl/16bd/arm/$item
- echo "#define BITDEPTH 8" | cat - upstream/src/x86/$item > tmpl/8bd/x86/$item
- echo "#define BITDEPTH 8" | cat - upstream/src/arm/$item > tmpl/8bd/arm/$item
+ echo "#define BITDEPTH 16" | cat - upstream/src/x86/$item > tmpl/x86/16bd_$item
+ echo "#define BITDEPTH 16" | cat - upstream/src/arm/$item > tmpl/arm/16bd_$item
+ echo "#define BITDEPTH 8" | cat - upstream/src/x86/$item > tmpl/x86/8bd_$item
+ echo "#define BITDEPTH 8" | cat - upstream/src/arm/$item > tmpl/arm/8bd_$item
 done
