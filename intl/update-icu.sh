@@ -72,6 +72,7 @@ for patch in \
  bug-1198952-workaround-make-3.82-bug.diff \
  bug-1228227-bug-1263325-libc++-gcc_hidden.diff \
  bug-1504656-relativetimeformat-plural-other-fallback.diff \
+ issue-1969-udat-rel-unit-quarter.diff \
  ucol_getKeywordValuesForLocale-ulist_resetList.diff \
  unum_formatDoubleForFields.diff \
 ; do

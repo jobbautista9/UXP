@@ -165,6 +165,24 @@ typedef enum UDateAbsoluteUnit {
      */
     UDAT_ABSOLUTE_NOW,
 
+    /**
+     * Quarter
+     * @stable ICU 63
+     */
+    UDAT_ABSOLUTE_QUARTER,
+
+     /**
+      * Hour
+      * @stable ICU 65
+      */
+     UDAT_ABSOLUTE_HOUR,
+
+     /**
+      * Minute
+      * @stable ICU 65
+      */
+     UDAT_ABSOLUTE_MINUTE,
+
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal UDateAbsoluteUnit value.

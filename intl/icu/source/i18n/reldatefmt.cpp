@@ -221,23 +221,35 @@ struct RelDateTimeFmtDataSink : public ResourceSink {
         // Converts the generic units to UDAT_RELATIVE version.
         switch (genUnit) {
             case SECOND:
-                return UDAT_RELATIVE_SECONDS;
+                return UDAT_REL_UNIT_SECOND;
             case MINUTE:
-                return UDAT_RELATIVE_MINUTES;
+                return UDAT_REL_UNIT_MINUTE;
             case HOUR:
-                return UDAT_RELATIVE_HOURS;
+                return UDAT_REL_UNIT_HOUR;
             case DAY:
-                return UDAT_RELATIVE_DAYS;
+                return UDAT_REL_UNIT_DAY;
             case WEEK:
-                return UDAT_RELATIVE_WEEKS;
+                return UDAT_REL_UNIT_WEEK;
             case MONTH:
-                return UDAT_RELATIVE_MONTHS;
-            /*
-             * case QUARTER:
-             * return UDATE_RELATIVE_QUARTERS;
-             */
+                return UDAT_REL_UNIT_MONTH;
+            case QUARTER:
+                return UDAT_REL_UNIT_QUARTER;
             case YEAR:
-                return UDAT_RELATIVE_YEARS;
+                return UDAT_REL_UNIT_YEAR;
+            case SUNDAY:
+                return UDAT_REL_UNIT_SUNDAY;
+            case MONDAY:
+                return UDAT_REL_UNIT_MONDAY;
+            case TUESDAY:
+                return UDAT_REL_UNIT_TUESDAY;
+            case WEDNESDAY:
+                return UDAT_REL_UNIT_WEDNESDAY;
+            case THURSDAY:
+                return UDAT_REL_UNIT_THURSDAY;
+            case FRIDAY:
+                return UDAT_REL_UNIT_FRIDAY;
+            case SATURDAY:
+                return UDAT_REL_UNIT_SATURDAY;
             default:
                 return -1;
         }
@@ -252,10 +264,8 @@ struct RelDateTimeFmtDataSink : public ResourceSink {
                 return UDAT_ABSOLUTE_WEEK;
             case MONTH:
                 return UDAT_ABSOLUTE_MONTH;
-            /* TODO: Add in QUARTER
-             *  case QUARTER:
-             * return UDAT_ABSOLUTE_QUARTER;
-             */
+            case QUARTER:
+                return UDAT_ABSOLUTE_QUARTER;
             case YEAR:
                 return UDAT_ABSOLUTE_YEAR;
             case SUNDAY:
@@ -272,6 +282,10 @@ struct RelDateTimeFmtDataSink : public ResourceSink {
                 return UDAT_ABSOLUTE_FRIDAY;
             case SATURDAY:
                 return UDAT_ABSOLUTE_SATURDAY;
+            case HOUR:
+                return UDAT_ABSOLUTE_HOUR;
+            case MINUTE:
+                return UDAT_ABSOLUTE_MINUTE;
             default:
                 return -1;
         }
@@ -912,6 +926,7 @@ UnicodeString& RelativeDateTimeFormatter::format(
     UDateAbsoluteUnit absunit = UDAT_ABSOLUTE_UNIT_COUNT;
     switch (unit) {
         case UDAT_REL_UNIT_YEAR:    absunit = UDAT_ABSOLUTE_YEAR; break;
+        case UDAT_REL_UNIT_QUARTER: absunit = UDAT_ABSOLUTE_QUARTER; break;
         case UDAT_REL_UNIT_MONTH:   absunit = UDAT_ABSOLUTE_MONTH; break;
         case UDAT_REL_UNIT_WEEK:    absunit = UDAT_ABSOLUTE_WEEK; break;
         case UDAT_REL_UNIT_DAY:     absunit = UDAT_ABSOLUTE_DAY; break;
@@ -921,13 +936,15 @@ UnicodeString& RelativeDateTimeFormatter::format(
                 direction = UDAT_DIRECTION_PLAIN;
             }
             break;
-        case UDAT_REL_UNIT_SUNDAY:  absunit = UDAT_ABSOLUTE_SUNDAY; break;
-        case UDAT_REL_UNIT_MONDAY:  absunit = UDAT_ABSOLUTE_MONDAY; break;
-        case UDAT_REL_UNIT_TUESDAY:  absunit = UDAT_ABSOLUTE_TUESDAY; break;
-        case UDAT_REL_UNIT_WEDNESDAY:  absunit = UDAT_ABSOLUTE_WEDNESDAY; break;
+        case UDAT_REL_UNIT_SUNDAY:    absunit = UDAT_ABSOLUTE_SUNDAY; break;
+        case UDAT_REL_UNIT_MONDAY:    absunit = UDAT_ABSOLUTE_MONDAY; break;
+        case UDAT_REL_UNIT_TUESDAY:   absunit = UDAT_ABSOLUTE_TUESDAY; break;
+        case UDAT_REL_UNIT_WEDNESDAY: absunit = UDAT_ABSOLUTE_WEDNESDAY; break;
         case UDAT_REL_UNIT_THURSDAY:  absunit = UDAT_ABSOLUTE_THURSDAY; break;
-        case UDAT_REL_UNIT_FRIDAY:  absunit = UDAT_ABSOLUTE_FRIDAY; break;
+        case UDAT_REL_UNIT_FRIDAY:    absunit = UDAT_ABSOLUTE_FRIDAY; break;
         case UDAT_REL_UNIT_SATURDAY:  absunit = UDAT_ABSOLUTE_SATURDAY; break;
+        case UDAT_REL_UNIT_HOUR:      absunit = UDAT_ABSOLUTE_HOUR; break;
+        case UDAT_REL_UNIT_MINUTE:    absunit = UDAT_ABSOLUTE_MINUTE; break;
         default: break;
     }
     if (direction != UDAT_DIRECTION_COUNT && absunit != UDAT_ABSOLUTE_UNIT_COUNT) {

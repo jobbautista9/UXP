@@ -1,0 +1,139 @@
+Add UDAT_REL_UNIT_QUARTER so that inputting "quarter" as option unit of
+ Intl.RelativeTimeFormat.format doesn't output blank.
+Also backport a newer relUnitFromGeneric and absUnitFromGeneric
+ from ICU 71.
+
+https://repo.palemoon.org/MoonchildProductions/UXP/issues/1969
+
+diff --git a/intl/icu/source/i18n/reldatefmt.cpp b/intl/icu/source/i18n/reldatefmt.cpp
+--- a/intl/icu/source/i18n/reldatefmt.cpp
++++ b/intl/icu/source/i18n/reldatefmt.cpp
+@@ -221,23 +221,35 @@
+         // Converts the generic units to UDAT_RELATIVE version.
+         switch (genUnit) {
+             case SECOND:
+-                return UDAT_RELATIVE_SECONDS;
++                return UDAT_REL_UNIT_SECOND;
+             case MINUTE:
+-                return UDAT_RELATIVE_MINUTES;
++                return UDAT_REL_UNIT_MINUTE;
+             case HOUR:
+-                return UDAT_RELATIVE_HOURS;
++                return UDAT_REL_UNIT_HOUR;
+             case DAY:
+-                return UDAT_RELATIVE_DAYS;
++                return UDAT_REL_UNIT_DAY;
+             case WEEK:
+-                return UDAT_RELATIVE_WEEKS;
++                return UDAT_REL_UNIT_WEEK;
+             case MONTH:
+-                return UDAT_RELATIVE_MONTHS;
+-            /*
+-             * case QUARTER:
+-             * return UDATE_RELATIVE_QUARTERS;
+-             */
++                return UDAT_REL_UNIT_MONTH;
++            case QUARTER:
++                return UDAT_REL_UNIT_QUARTER;
+             case YEAR:
+-                return UDAT_RELATIVE_YEARS;
++                return UDAT_REL_UNIT_YEAR;
++            case SUNDAY:
++                return UDAT_REL_UNIT_SUNDAY;
++            case MONDAY:
++                return UDAT_REL_UNIT_MONDAY;
++            case TUESDAY:
++                return UDAT_REL_UNIT_TUESDAY;
++            case WEDNESDAY:
++                return UDAT_REL_UNIT_WEDNESDAY;
++            case THURSDAY:
++                return UDAT_REL_UNIT_THURSDAY;
++            case FRIDAY:
++                return UDAT_REL_UNIT_FRIDAY;
++            case SATURDAY:
++                return UDAT_REL_UNIT_SATURDAY;
+             default:
+                 return -1;
+         }
+@@ -252,10 +264,8 @@
+                 return UDAT_ABSOLUTE_WEEK;
+             case MONTH:
+                 return UDAT_ABSOLUTE_MONTH;
+-            /* TODO: Add in QUARTER
+-             *  case QUARTER:
+-             * return UDAT_ABSOLUTE_QUARTER;
+-             */
++            case QUARTER:
++                return UDAT_ABSOLUTE_QUARTER;
+             case YEAR:
+                 return UDAT_ABSOLUTE_YEAR;
+             case SUNDAY:
+@@ -272,6 +282,10 @@
+                 return UDAT_ABSOLUTE_FRIDAY;
+             case SATURDAY:
+                 return UDAT_ABSOLUTE_SATURDAY;
++            case HOUR:
++                return UDAT_ABSOLUTE_HOUR;
++            case MINUTE:
++                return UDAT_ABSOLUTE_MINUTE;
+             default:
+                 return -1;
+         }
+@@ -912,6 +926,7 @@
+     UDateAbsoluteUnit absunit = UDAT_ABSOLUTE_UNIT_COUNT;
+     switch (unit) {
+         case UDAT_REL_UNIT_YEAR:    absunit = UDAT_ABSOLUTE_YEAR; break;
++        case UDAT_REL_UNIT_QUARTER: absunit = UDAT_ABSOLUTE_QUARTER; break;
+         case UDAT_REL_UNIT_MONTH:   absunit = UDAT_ABSOLUTE_MONTH; break;
+         case UDAT_REL_UNIT_WEEK:    absunit = UDAT_ABSOLUTE_WEEK; break;
+         case UDAT_REL_UNIT_DAY:     absunit = UDAT_ABSOLUTE_DAY; break;
+@@ -921,13 +936,15 @@
+                 direction = UDAT_DIRECTION_PLAIN;
+             }
+             break;
+-        case UDAT_REL_UNIT_SUNDAY:  absunit = UDAT_ABSOLUTE_SUNDAY; break;
+-        case UDAT_REL_UNIT_MONDAY:  absunit = UDAT_ABSOLUTE_MONDAY; break;
+-        case UDAT_REL_UNIT_TUESDAY:  absunit = UDAT_ABSOLUTE_TUESDAY; break;
+-        case UDAT_REL_UNIT_WEDNESDAY:  absunit = UDAT_ABSOLUTE_WEDNESDAY; break;
++        case UDAT_REL_UNIT_SUNDAY:    absunit = UDAT_ABSOLUTE_SUNDAY; break;
++        case UDAT_REL_UNIT_MONDAY:    absunit = UDAT_ABSOLUTE_MONDAY; break;
++        case UDAT_REL_UNIT_TUESDAY:   absunit = UDAT_ABSOLUTE_TUESDAY; break;
++        case UDAT_REL_UNIT_WEDNESDAY: absunit = UDAT_ABSOLUTE_WEDNESDAY; break;
+         case UDAT_REL_UNIT_THURSDAY:  absunit = UDAT_ABSOLUTE_THURSDAY; break;
+-        case UDAT_REL_UNIT_FRIDAY:  absunit = UDAT_ABSOLUTE_FRIDAY; break;
++        case UDAT_REL_UNIT_FRIDAY:    absunit = UDAT_ABSOLUTE_FRIDAY; break;
+         case UDAT_REL_UNIT_SATURDAY:  absunit = UDAT_ABSOLUTE_SATURDAY; break;
++        case UDAT_REL_UNIT_HOUR:      absunit = UDAT_ABSOLUTE_HOUR; break;
++        case UDAT_REL_UNIT_MINUTE:    absunit = UDAT_ABSOLUTE_MINUTE; break;
+         default: break;
+     }
+     if (direction != UDAT_DIRECTION_COUNT && absunit != UDAT_ABSOLUTE_UNIT_COUNT) {
+
+diff --git a/intl/icu/source/i18n/unicode/reldatefmt.h b/intl/icu/source/i18n/unicode/reldatefmt.h
+--- a/intl/icu/source/i18n/unicode/reldatefmt.h
++++ b/intl/icu/source/i18n/unicode/reldatefmt.h
+@@ -165,6 +165,24 @@
+      */
+     UDAT_ABSOLUTE_NOW,
+ 
++    /**
++     * Quarter
++     * @stable ICU 63
++     */
++    UDAT_ABSOLUTE_QUARTER,
++
++     /**
++      * Hour
++      * @stable ICU 65
++      */
++     UDAT_ABSOLUTE_HOUR,
++
++     /**
++      * Minute
++      * @stable ICU 65
++      */
++     UDAT_ABSOLUTE_MINUTE,
++
+ #ifndef U_HIDE_DEPRECATED_API
+     /**
+      * One more than the highest normal UDateAbsoluteUnit value.
