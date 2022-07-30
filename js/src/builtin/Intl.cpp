@@ -1246,8 +1246,6 @@ intl_FormatNumber(JSContext* cx, UNumberFormat* nf, double x, MutableHandleValue
     return true;
 }
 
-using FieldType = ImmutablePropertyNamePtr JSAtomState::*;
-
 static FieldType
 GetFieldTypeForNumberField(UNumberFormatFields fieldName, double d)
 {
@@ -1314,68 +1312,25 @@ GetFieldTypeForNumberField(UNumberFormatFields fieldName, double d)
     return nullptr;
 }
 
-static bool
-intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHandleValue result)
+bool
+js::NumberFormatFields::append(int32_t field, int32_t begin, int32_t end)
 {
-    UErrorCode status = U_ZERO_ERROR;
+  MOZ_ASSERT(begin >= 0);
+  MOZ_ASSERT(end >= 0);
+  MOZ_ASSERT(begin < end, "erm, aren't fields always non-empty?");
+  FieldType type = GetFieldTypeForNumberField(UNumberFormatFields(field), number_);
+  return fields_.emplaceBack(uint32_t(begin), uint32_t(end), type);
+}
 
-    UFieldPositionIterator* fpositer = ufieldpositer_open(&status);
-    if (U_FAILURE(status)) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_INTERNAL_INTL_ERROR);
-        return false;
+ArrayObject*
+js::NumberFormatFields::toArray(JSContext* cx, HandleString overallResult, FieldType unitType)
+{
+    // Merge sort the fields vector.  Expand the vector to have scratch space for
+    // performing the sort.
+    size_t fieldsLen = fields_.length();
+    if (!fields_.resizeUninitialized(fieldsLen * 2)) {
+      return nullptr;
     }
-
-    MOZ_ASSERT(fpositer);
-    ScopedICUObject<UFieldPositionIterator, ufieldpositer_close> toClose(fpositer);
-
-    FormattedNumberChars chars(cx);
-    if (!PartitionNumberPattern(cx, nf, &x, fpositer, chars))
-        return false;
-
-    RootedArrayObject partsArray(cx, NewDenseEmptyArray(cx));
-    if (!partsArray)
-        return false;
-
-    RootedString overallResult(cx, NewStringCopyN<CanGC>(cx, chars.begin(), chars.length()));
-    if (!overallResult)
-        return false;
-
-    // First, vacuum up fields in the overall formatted string.
-
-    struct Field
-    {
-        uint32_t begin;
-        uint32_t end;
-        FieldType type;
-
-        // Needed for vector-resizing scratch space.
-        Field() = default;
-
-        Field(uint32_t begin, uint32_t end, FieldType type)
-          : begin(begin), end(end), type(type)
-        {}
-    };
-
-    using FieldsVector = Vector<Field, 16>;
-    FieldsVector fields(cx);
-
-    int32_t fieldInt, beginIndexInt, endIndexInt;
-    while ((fieldInt = ufieldpositer_next(fpositer, &beginIndexInt, &endIndexInt)) >= 0) {
-        MOZ_ASSERT(beginIndexInt >= 0);
-        MOZ_ASSERT(endIndexInt >= 0);
-        MOZ_ASSERT(beginIndexInt < endIndexInt,
-                   "erm, aren't fields always non-empty?");
-
-        FieldType type = GetFieldTypeForNumberField(UNumberFormatFields(fieldInt), x);
-        if (!fields.emplaceBack(uint32_t(beginIndexInt), uint32_t(endIndexInt), type))
-            return false;
-    }
-
-    // Second, merge sort the fields vector.  Expand the vector to have scratch
-    // space for performing the sort.
-    size_t fieldsLen = fields.length();
-    if (!fields.resizeUninitialized(fieldsLen * 2))
-        return false;
 
     MOZ_ALWAYS_TRUE(MergeSort(fields.begin(), fieldsLen, fields.begin() + fieldsLen,
                               [](const Field& left, const Field& right,
@@ -1390,12 +1345,13 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
                               }));
 
     // Deallocate the scratch space.
-    if (!fields.resize(fieldsLen))
-        return false;
+    if (!fields_.resize(fieldsLen)) {
+      return nullptr;
+    }
 
-    // Third, iterate over the sorted field list to generate a sequence of
-    // parts (what ECMA-402 actually exposes).  A part is a maximal character
-    // sequence entirely within no field or a single most-nested field.
+    // Then iterate over the sorted field list to generate a sequence of parts
+    // (what ECMA-402 actually exposes).  A part is a maximal character sequence
+    // entirely within no field or a single most-nested field.
     //
     // Diagrams may be helpful to illustrate how fields map to parts.  Consider
     // formatting -28,114,774,228,750.32, the US national surplus (negative
@@ -1470,8 +1426,9 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
             MOZ_ASSERT_IF(enclosingFields.length() > 0,
                           fields[enclosingFields.back()].end >= end);
 
-            while (enclosingFields.length() > 0 && fields[enclosingFields.back()].end == end)
+            while (enclosingFields.length() > 0 && fields[enclosingFields.back()].end == end) {
                 enclosingFields.popBack();
+            }
         }
 
         bool nextPartInternal(Part* part) {
@@ -1544,8 +1501,9 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
                 // enclosing field.  (If there are no nested fields, don't
                 // bother pushing a field that'd be immediately popped.)
                 if (current->end > next->begin) {
-                    if (!enclosingFields.append(index - 1))
+                    if (!enclosingFields.append(index - 1)) {
                         return false;
+                    }
                 }
 
                 // Do so until the next field begins after this one.
@@ -1580,8 +1538,9 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
                 return true;
             }
 
-            if (!nextPartInternal(part))
+            if (!nextPartInternal(part)) {
                 return false;
+            }
 
             *hasPart = true;
             lastEnd = part->end;
@@ -1595,15 +1554,22 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
     RootedObject singlePart(cx);
     RootedValue propVal(cx);
 
-    PartGenerator gen(cx, fields, chars.length());
+    RootedArrayObject partsArray(cx, NewDenseEmptyArray(cx));
+    if (!partsArray) {
+      return nullptr;
+    }
+
+    PartGenerator gen(cx, fields_, overallResult->length());
     do {
         bool hasPart;
         Part part;
-        if (!gen.nextPart(&hasPart, &part))
-            return false;
+        if (!gen.nextPart(&hasPart, &part)) {
+            return nullptr;
+        }
 
-        if (!hasPart)
+        if (!hasPart) {
             break;
+        }
 
         FieldType type = part.type;
         size_t endIndex = part.end;
@@ -1611,32 +1577,78 @@ intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHand
         MOZ_ASSERT(lastEndIndex < endIndex);
 
         singlePart = NewBuiltinClassInstance<PlainObject>(cx);
-        if (!singlePart)
-            return false;
+        if (!singlePart) {
+            return nullptr;
+        }
 
         propVal.setString(cx->names().*type);
-        if (!DefineProperty(cx, singlePart, cx->names().type, propVal))
-            return false;
+        if (!DefineProperty(cx, singlePart, cx->names().type, propVal)) {
+            return nullptr;
+        }
 
         JSLinearString* partSubstr =
             NewDependentString(cx, overallResult, lastEndIndex, endIndex - lastEndIndex);
-        if (!partSubstr)
-            return false;
+        if (!partSubstr) {
+            return nullptr;
+        }
 
         propVal.setString(partSubstr);
-        if (!DefineProperty(cx, singlePart, cx->names().value, propVal))
-            return false;
+        if (!DefineProperty(cx, singlePart, cx->names().value, propVal)) {
+            return nullptr;
+        }
 
         propVal.setObject(*singlePart);
-        if (!DefineElement(cx, partsArray, partIndex, propVal))
-            return false;
+        if (!DefineElement(cx, partsArray, partIndex, propVal)) {
+            return nullptr;
+        }
 
         lastEndIndex = endIndex;
         partIndex++;
     } while (true);
 
-    MOZ_ASSERT(lastEndIndex == chars.length(),
+    MOZ_ASSERT(lastEndIndex == overallResult->length(),
                "result array must partition the entire string");
+
+    return partsArray;
+}
+
+static bool
+intl_FormatNumberToParts(JSContext* cx, UNumberFormat* nf, double x, MutableHandleValue result)
+{
+    UErrorCode status = U_ZERO_ERROR;
+
+    UFieldPositionIterator* fpositer = ufieldpositer_open(&status);
+    if (U_FAILURE(status)) {
+        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_INTERNAL_INTL_ERROR);
+        return false;
+    }
+
+    MOZ_ASSERT(fpositer);
+    ScopedICUObject<UFieldPositionIterator, ufieldpositer_close> toClose(fpositer);
+
+    FormattedNumberChars chars(cx);
+    if (!PartitionNumberPattern(cx, nf, &x, fpositer, chars))
+        return false;
+
+    RootedString overallResult(cx, NewStringCopyN<CanGC>(cx, chars.begin(), chars.length()));
+    if (!overallResult)
+        return false;
+
+    // Vacuum up fields in the overall formatted string.
+
+    NumberFormatFields fields(cx, x);
+
+    int32_t field, beginIndex, endIndex;
+    while ((field = ufieldpositer_next(fpositer, &beginIndex, &endIndex)) >= 0) {
+      if (!fields.append(field, beginIndex, endIndex)) {
+        return false;
+      }
+    }
+
+    ArrayObject* array = fields.toArray(cx, overallResult, nullptr);
+    if (!array) {
+      return false;
+    }
 
     result.setObject(*partsArray);
     return true;
