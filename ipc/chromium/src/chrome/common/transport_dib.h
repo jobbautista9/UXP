@@ -8,7 +8,7 @@
 
 #include "base/basictypes.h"
 
-#if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_BSD)
+#if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_BSD) || defined(OS_HURD)
 #include "base/shared_memory.h"
 #endif
 
@@ -63,7 +63,7 @@ class TransportDIB {
     uint32_t sequence_num;
   };
   typedef HandleAndSequenceNum Id;
-#elif defined(OS_MACOSX) || defined(OS_BSD)
+#elif defined(OS_MACOSX) || defined(OS_HURD) || defined(OS_BSD)
   typedef base::SharedMemoryHandle Handle;
   // On Mac, the inode number of the backing file is used as an id.
   typedef base::SharedMemoryId Id;
@@ -105,7 +105,7 @@ class TransportDIB {
 
  private:
   TransportDIB();
-#if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_BSD)
+#if defined(OS_WIN) || defined(OS_MACOSX) || defined(OS_HURD) || defined(OS_BSD)
   explicit TransportDIB(base::SharedMemoryHandle dib);
   base::SharedMemory shared_memory_;
 #elif defined(OS_LINUX) || defined(OS_SOLARIS)

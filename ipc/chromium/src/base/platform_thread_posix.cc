@@ -48,7 +48,7 @@ PlatformThreadId PlatformThread::CurrentId() {
   return port;
 #elif defined(OS_LINUX)
   return syscall(__NR_gettid);
-#elif defined(OS_OPENBSD) || defined(OS_SOLARIS) || defined(__GLIBC__)
+#elif defined(OS_OPENBSD) || defined(OS_SOLARIS) || defined(OS_HURD) || defined(__GLIBC__)
   return (intptr_t) (pthread_self());
 #elif defined(OS_NETBSD)
   return _lwp_self();

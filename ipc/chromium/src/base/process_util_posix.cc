@@ -120,6 +120,10 @@ void CloseSuperfluousFds(const base::InjectiveMultimap& saved_mapping) {
   static const rlim_t kSystemDefaultMaxFds = 1024;
   // at least /dev/fd will exist
   static const char kFDDir[] = "/dev/fd";
+#elif defined(OS_HURD)
+  static const rlim_t kSystemDefaultMaxFds = 1024;
+  // Currently always empty, but it exists
+  static const char kFDDir[] = "/dev/fd";
 #endif
 
   // Get the maximum number of FDs possible.
@@ -203,7 +207,7 @@ void CloseSuperfluousFds(const base::InjectiveMultimap& saved_mapping) {
 void SetAllFDsToCloseOnExec() {
 #if defined(OS_LINUX) || defined(OS_SOLARIS)
   const char fd_dir[] = "/proc/self/fd";
-#elif defined(OS_MACOSX) || defined(OS_BSD)
+#elif defined(OS_MACOSX) || defined(OS_BSD) || defined(OS_HURD)
   const char fd_dir[] = "/dev/fd";
 #endif
   ScopedDIR dir_closer(opendir(fd_dir));
