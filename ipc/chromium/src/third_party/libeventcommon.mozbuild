@@ -27,6 +27,7 @@ else:
         libevent_include_suffix = 'solaris'
     elif CONFIG['OS_ARCH'] == 'GNU':
         os_hurd = 1
+        libevent_include_suffix = 'hurd'
     else:
         os_linux = 1
         libevent_include_suffix = 'linux'
