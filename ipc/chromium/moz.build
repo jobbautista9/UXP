@@ -124,13 +124,20 @@ if os_linux:
         'src/base/time_posix.cc',
     ]
 
-if os_bsd or os_linux or os_solaris:
+if os_bsd or os_linux or os_solaris or os_hurd:
     if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
         SOURCES += [
             'src/base/message_pump_glib.cc',
         ]
 
 if os_solaris:
+    SOURCES += [
+       'src/base/atomicops_internals_x86_gcc.cc',
+       'src/base/process_util_linux.cc',
+       'src/base/time_posix.cc',
+    ]
+
+if os_hurd:
     SOURCES += [
        'src/base/atomicops_internals_x86_gcc.cc',
        'src/base/process_util_linux.cc',

@@ -23,6 +23,8 @@
 #define OS_MACOSX 1
 #elif defined(__linux__)
 #define OS_LINUX 1
+#elif defined(__GNU__)
+#define OS_HURD 1
 #elif defined(__DragonFly__)
 #define OS_DRAGONFLY 1
 #elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
@@ -48,7 +50,7 @@
 
 // For access to standard POSIX features, use OS_POSIX instead of a more
 // specific macro.
-#if defined(OS_MACOSX) || defined(OS_LINUX) || defined(OS_BSD) || defined(OS_SOLARIS)
+#if defined(OS_MACOSX) || defined(OS_LINUX) || defined(OS_BSD) || defined(OS_SOLARIS) || defined(OS_HURD)
 #define OS_POSIX 1
 #endif
 

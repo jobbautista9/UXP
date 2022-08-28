@@ -362,6 +362,23 @@
           'cflags_mozilla': [
           ],
         }],
+       ['OS=="gnu"', {
+         'include_dirs': [
+         ],
+         'defines': [
+           'OS_HURD',
+           'WEBRTC_POSIX',
+           'SIP_OS_HURD',
+           'HURD',
+           '_GNU_SOURCE',
+           'GIPS_VER=3510',
+           'SECLIB_OPENSSL',
+
+         ],
+
+         'cflags_mozilla': [
+         ],
+       }],
       ],
     },
   ],

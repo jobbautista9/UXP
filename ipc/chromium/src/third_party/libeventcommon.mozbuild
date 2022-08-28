@@ -7,6 +7,7 @@ os_win = 0
 os_posix = 0
 os_macosx = 0
 os_bsd = 0
+os_hurd = 0
 os_linux = 0
 os_solaris = 0
 
@@ -22,8 +23,10 @@ else:
         os_bsd = 1
         libevent_include_suffix = 'bsd'
     elif CONFIG['OS_ARCH'] in ['SunOS']:
-         os_solaris = 1 
-         libevent_include_suffix = 'solaris'
+        os_solaris = 1 
+        libevent_include_suffix = 'solaris'
+    elif CONFIG['OS_ARCH'] == 'GNU':
+        os_hurd = 1
     else:
         os_linux = 1
         libevent_include_suffix = 'linux'
