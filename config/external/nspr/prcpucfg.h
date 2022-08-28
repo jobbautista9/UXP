@@ -20,7 +20,7 @@
 #include "md/_netbsd.cfg"
 #elif defined(__OpenBSD__)
 #include "md/_openbsd.cfg"
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__GNU__)
 #include "md/_linux.cfg"
 #elif defined(__sun__)
 #include "md/_solaris.cfg"
