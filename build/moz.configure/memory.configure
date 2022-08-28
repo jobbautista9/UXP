@@ -59,6 +59,8 @@ def jemalloc_os_define(jemalloc, target):
             return 'MOZ_MEMORY_BSD'
         if target.kernel == 'SunOS':
             return 'MOZ_MEMORY_SOLARIS'
+        if target.kernel == 'GNU':
+            return 'MOZ_MEMORY_HURD'
 
         die('--enable-jemalloc is not supported on %s', target.kernel)
 

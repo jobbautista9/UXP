@@ -169,7 +169,7 @@
 #  define MALLOC_SYSV
 #endif
 
-#ifdef MOZ_MEMORY_LINUX
+#if defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
 #define	_GNU_SOURCE /* For mremap(2). */
 #endif
 
@@ -329,7 +329,8 @@ typedef long ssize_t;
  * calls with 6 arguments
  */
 #if (defined(MOZ_MEMORY_LINUX) && !defined(__alpha__)) || \
-    (defined(MOZ_MEMORY_BSD) && defined(__GLIBC__))
+    (defined(MOZ_MEMORY_BSD) && defined(__GLIBC__)) ||    \
+    (defined(MOZ_MEMORY_HURD) && defined(__GLIBC__))
 #include <sys/syscall.h>
 #if defined(SYS_mmap) || defined(SYS_mmap2)
 static inline
@@ -495,7 +496,7 @@ static volatile bool malloc_initialized = false;
 /* No init lock for Windows nor FreeBSD. */
 #elif defined(MOZ_MEMORY_DARWIN)
 static malloc_mutex_t init_lock = {OS_SPINLOCK_INIT};
-#elif defined(MOZ_MEMORY_LINUX)
+#elif defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
 static malloc_mutex_t init_lock = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
 #else
 static malloc_mutex_t init_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -1400,7 +1401,7 @@ malloc_mutex_init(malloc_mutex_t *mutex)
     InitializeSRWLock(mutex);
 #elif defined(MOZ_MEMORY_DARWIN)
 	mutex->lock = OS_SPINLOCK_INIT;
-#elif defined(MOZ_MEMORY_LINUX)
+#elif defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
 	pthread_mutexattr_t attr;
 	if (pthread_mutexattr_init(&attr) != 0)
 		return (true);
@@ -1466,7 +1467,7 @@ malloc_spin_init(malloc_spinlock_t *lock)
 	InitializeSRWLock(lock);
 #elif defined(MOZ_MEMORY_DARWIN)
 	lock->lock = OS_SPINLOCK_INIT;
-#elif defined(MOZ_MEMORY_LINUX)
+#elif defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
 	pthread_mutexattr_t attr;
 	if (pthread_mutexattr_init(&attr) != 0)
 		return (true);
@@ -2361,7 +2362,7 @@ pages_purge(void *addr, size_t length)
 	}
 	unzeroed = true;
 #  else
-#    ifdef MOZ_MEMORY_LINUX
+#    if defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
 #      define JEMALLOC_MADV_PURGE MADV_DONTNEED
 #      define JEMALLOC_MADV_ZEROS true
 #    else /* FreeBSD and Darwin. */
@@ -4762,7 +4763,7 @@ huge_dalloc(void *ptr)
  * Platform-specific methods to determine the number of CPUs in a system.
  * This will be used to determine the desired number of arenas.
  */
-#if (defined(MOZ_MEMORY_LINUX))
+#if (defined(MOZ_MEMORY_LINUX)) || (defined(MOZ_MEMORY_HURD))
 #include <fcntl.h>
 
 static inline unsigned
