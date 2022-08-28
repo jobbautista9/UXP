@@ -67,13 +67,13 @@ elif CONFIG['OS_TARGET'] == 'SunOS':
 elif CONFIG['OS_TARGET'] == 'GNU':
     OS_LIBS += CONFIG['REALTIME_LIBS']
     DEFINES.update(
-        HURD=True,
+        LINUX=True,
         HAVE_FCNTL_FILE_LOCKING=True,
         _GNU_SOURCE=True,
     )
-    SOURCES += ['/nsprpub/pr/src/md/unix/hurd.c']
+    SOURCES += ['/nsprpub/pr/src/md/unix/linux.c']
     DEFINES['i386'] = True
-    SOURCES += ['/nsprpub/pr/src/md/unix/os_Hurd_x86.s']
+    SOURCES += ['/nsprpub/pr/src/md/unix/os_Linux_x86.s']
 elif CONFIG['OS_TARGET'] == 'WINNT':
     OS_LIBS += [
         'advapi32',
