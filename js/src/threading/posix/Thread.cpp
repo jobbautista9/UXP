@@ -158,10 +158,13 @@ js::ThisThread::SetName(const char* name)
   rv = 0;
 #elif defined(__NetBSD__)
   rv = pthread_setname_np(pthread_self(), "%s", (void*)name);
-#else
+#elif defined(__linux__)
   rv = pthread_setname_np(pthread_self(), name);
 #endif
+
+#if !defined(__GNU__)
   MOZ_RELEASE_ASSERT(!rv);
+#endif
 }
 
 void
