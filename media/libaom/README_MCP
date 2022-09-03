@@ -10,3 +10,5 @@ The upstream aom git repository is:
     https://aomedia.googlesource.com/aom
 
 The version used was tagged 3.4.0.
+
+After updating the libaom source, don't forget to run patch.sh!
