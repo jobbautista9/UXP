@@ -58,10 +58,10 @@
 #define _EVENT_HAVE_DLFCN_H 1
 
 /* Define if your system supports the epoll system calls */
-#define _EVENT_HAVE_EPOLL 1
+/* #undef _EVENT_HAVE_EPOLL 1 */
 
 /* Define to 1 if you have the `epoll_ctl' function. */
-#define _EVENT_HAVE_EPOLL_CTL 1
+/* #undef _EVENT_HAVE_EPOLL_CTL 1 */
 
 /* Define to 1 if you have the `eventfd' function. */
 #define _EVENT_HAVE_EVENTFD 1
