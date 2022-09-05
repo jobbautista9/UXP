@@ -496,8 +496,10 @@ static volatile bool malloc_initialized = false;
 /* No init lock for Windows nor FreeBSD. */
 #elif defined(MOZ_MEMORY_DARWIN)
 static malloc_mutex_t init_lock = {OS_SPINLOCK_INIT};
-#elif defined(MOZ_MEMORY_LINUX) || defined(MOZ_MEMORY_HURD)
+#elif defined(MOZ_MEMORY_LINUX)
 static malloc_mutex_t init_lock = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
+#elif defined(MOZ_MEMORY_HURD)
+static malloc_mutex_t init_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 #else
 static malloc_mutex_t init_lock = PTHREAD_MUTEX_INITIALIZER;
 #endif
@@ -1405,7 +1407,11 @@ malloc_mutex_init(malloc_mutex_t *mutex)
 	pthread_mutexattr_t attr;
 	if (pthread_mutexattr_init(&attr) != 0)
 		return (true);
+#if defined(MOZ_MEMORY_HURD)
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_FAST_NP);
+#else // defined(MOZ_MEMORY_LINUX)
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+#endif // defined(MOZ_MEMORY_HURD)
 	if (pthread_mutex_init(mutex, &attr) != 0) {
 		pthread_mutexattr_destroy(&attr);
 		return (true);
@@ -1471,7 +1477,11 @@ malloc_spin_init(malloc_spinlock_t *lock)
 	pthread_mutexattr_t attr;
 	if (pthread_mutexattr_init(&attr) != 0)
 		return (true);
+#if defined(MOZ_MEMORY_HURD)
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_FAST_NP);
+#else // defined(MOZ_MEMORY_LINUX)
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+#endif // defined(MOZ_MEMORY_HURD)
 	if (pthread_mutex_init(lock, &attr) != 0) {
 		pthread_mutexattr_destroy(&attr);
 		return (true);
