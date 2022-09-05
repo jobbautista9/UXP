@@ -54,9 +54,7 @@ void _PR_InitLocks(void)
     (defined(FREEBSD) && __FreeBSD_version > 700055)
     rv = pthread_mutexattr_settype(&_pt_mattr, PTHREAD_MUTEX_ADAPTIVE_NP);
     PR_ASSERT(0 == rv);
-#endif
-
-#if defined(HURD)
+#elif defined(HURD)
     rv = pthread_mutexattr_settype(&_pt_mattr, PTHREAD_MUTEX_FAST_NP);
     PR_ASSERT(0 == rv);
 #endif
