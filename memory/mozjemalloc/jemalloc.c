@@ -498,8 +498,6 @@ static volatile bool malloc_initialized = false;
 static malloc_mutex_t init_lock = {OS_SPINLOCK_INIT};
 #elif defined(MOZ_MEMORY_LINUX)
 static malloc_mutex_t init_lock = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
-#elif defined(MOZ_MEMORY_HURD)
-static malloc_mutex_t init_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 #else
 static malloc_mutex_t init_lock = PTHREAD_MUTEX_INITIALIZER;
 #endif
