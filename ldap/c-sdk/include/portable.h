@@ -122,7 +122,9 @@
  * some systems don't have the BSD re_comp and re_exec routines
  */
 #ifndef NEED_BSDREGEX
-#if ( defined( SYSV ) || defined( NETBSD ) || defined( FREEBSD ) || defined(__OpenBSD__) || defined( linux ) || defined( DARWIN )) && !defined(sgi)
+#if ( defined( SYSV ) || defined( NETBSD ) || defined( FREEBSD ) || \
+      defined(__OpenBSD__) || defined( linux ) || defined( DARWIN ) || \
+      defined( HURD ) || defined(__GLIBC__)) && !defined(sgi)
 #define NEED_BSDREGEX
 #endif
 #endif
@@ -169,7 +171,7 @@
  * for select()
  */
 #if !defined(WINSOCK) && !defined(_WINDOWS) && !defined(macintosh) && !defined(XP_OS2)
-#if defined(hpux) || defined(LINUX) || defined(SUNOS4) || defined(XP_BEOS)
+#if defined(hpux) || defined(LINUX) || defined(HURD) || defined(__GLIBC__) || defined(SUNOS4) || defined(XP_BEOS)
 #include <sys/time.h>
 #else
 #include <sys/select.h>
@@ -241,15 +243,14 @@
 #define HAVE_TIME_R
 #endif
 
-#if defined(SNI) || defined(LINUX1_2)
+#if defined(SNI) || defined(LINUX1_2) || defined(HURD) || defined(__GLIBC__)
 int strcasecmp(const char *, const char *);
 #ifdef SNI
 int strncasecmp(const char *, const char *, int);
-#endif /* SNI */
-#ifdef LINUX1_2
+#else
 int strncasecmp(const char *, const char *, size_t);
-#endif /* LINUX1_2 */
-#endif /* SNI || LINUX1_2 */
+#endif /* SNI */
+#endif /* SNI || LINUX1_2 || HURD || __GLIBC__ */
 
 #if defined(_WINDOWS) || defined(macintosh) || defined(XP_OS2) || defined(DARWIN)
 #define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname( n )
@@ -289,7 +290,7 @@ typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 #elif defined(HPUX10)
 #define GETHOSTBYNAME_BUF_T struct hostent_data
 #define GETHOSTBYNAME( n, r, b, l, e )	nsldapi_compat_gethostbyname_r( n, r, (char *)&b, l, e )
-#elif defined(LINUX) || defined(DRAGONFLY)
+#elif defined(LINUX) || defined(HURD) || defined(__GLIBC__) || defined(DRAGONFLY)
 typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 #define GETHOSTBYNAME_BUF_T GETHOSTBYNAME_buf_t
 #define GETHOSTBYNAME( n, r, b, l, rp, e )  gethostbyname_r( n, r, b, l, rp, e )
@@ -311,7 +312,8 @@ typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 	|| defined(OSF1V4) || defined(AIX) || defined(UnixWare) \
         || defined(hpux) || defined(HPUX11) || defined(NETBSD) \
         || defined(IRIX6) || defined(FREEBSD) || defined(VMS) \
-        || defined(NTO) || defined(OPENBSD) || defined(DRAGONFLY)
+        || defined(NTO) || defined(OPENBSD) || defined(HURD) \
+        || defined(__GLIBC__) || defined(DRAGONFLY)
 #define NSLDAPI_CTIME( c, b, l )        ctime_r( c, b )
 #elif defined( OSF1V3 )
 #define NSLDAPI_CTIME( c, b, l )	(ctime_r( c, b, l ) ? NULL : b)
@@ -321,7 +323,7 @@ typedef char GETHOSTBYNAME_buf_t [NSLDAPI_NETDB_BUF_SIZE];
 #if defined(hpux9) || defined(SUNOS4) || defined(SNI) || \
     defined(SCOOS) || defined(BSDI) || defined(NCR) || defined(VMS) || \
     defined(NEC) || (defined(LINUX) && __GNU_LIBRARY__ != 6) || \
-    (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+    (defined(AIX) && !defined(USE_REENTRANT_LIBC)) || defined(HURD)
 #define STRTOK( s1, s2, l )		strtok( s1, s2 )
 #else
 #define HAVE_STRTOK_R
@@ -452,7 +454,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #define NSLDAPI_FOPEN( filename, mode )	fopen( filename, mode )
 #endif
 
-#if defined(LINUX) || defined(AIX) || defined(HPUX) || defined(_WINDOWS)
+#if defined(LINUX) || defined(HURD) || defined(__GLIBC__) || defined(AIX) || defined(HPUX) || defined(_WINDOWS)
 size_t nsldapi_compat_strlcpy(char *dst, const char *src, size_t len);
 #define STRLCPY nsldapi_compat_strlcpy
 #else
