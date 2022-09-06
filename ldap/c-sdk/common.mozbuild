@@ -18,6 +18,8 @@ elif CONFIG['OS_ARCH'] == 'WINNT':
     DEFINES['_WINDOWS'] = True
 elif CONFIG['OS_ARCH'] == 'SunOS':
     DEFINES['__USE_DRAFT6_PROTOTYPES__'] = True
+elif CONFIG['OS_TARGET'] == 'GNU':
+    DEFINES['HURD'] = 1
 
 DEFINES['_PR_PTHREADS'] = True
 DEFINES['NET_SSL'] = True
