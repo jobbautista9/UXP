@@ -35,7 +35,7 @@
 #include <stdio.h>
 #endif  // WEBRTC_POSIX && !WEBRTC_MAC || WEBRTC_IOS
 
-#if defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)
+#if (defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)) || defined(WEBRTC_HURD)
 #include <ctype.h>
 #include <algorithm>
 #endif
@@ -409,7 +409,7 @@ bool UnixFilesystem::GetAppDataFolder(Pathname* path, bool per_user) {
 #elif defined(WEBRTC_ANDROID) || defined(WEBRTC_IOS)  // && !WEBRTC_MAC || WEBRTC_IOS
   ASSERT(provided_app_data_folder_ != NULL);
   path->SetPathname(provided_app_data_folder_, "");
-#elif defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)  // && !WEBRTC_MAC && !WEBRTC_IOS && !WEBRTC_ANDROID
+#elif (defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)) || defined(WEBRTC_HURD)  // && !WEBRTC_MAC && !WEBRTC_IOS && !WEBRTC_ANDROID
   if (per_user) {
     // We follow the recommendations in
     // http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
@@ -446,7 +446,7 @@ bool UnixFilesystem::GetAppDataFolder(Pathname* path, bool per_user) {
 #if defined(WEBRTC_MAC) || defined(WEBRTC_ANDROID)
   path->AppendFolder(organization_name_);
   path->AppendFolder(application_name_);
-#elif defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)
+#elif (defined(WEBRTC_LINUX) && !defined(WEBRTC_ANDROID)) || defined(WEBRTC_HURD)
   // XDG says to use a single directory level, so we concatenate the org and app
   // name with a hyphen. We also do the Linuxy thing and convert to all
   // lowercase with no spaces.
@@ -525,7 +525,7 @@ bool UnixFilesystem::GetDiskFreeSpace(const Pathname& path, int64 *freebytes) {
   if (0 != statvfs(existing_path.pathname().c_str(), &vfs))
     return false;
 #endif  // WEBRTC_ANDROID
-#if defined(WEBRTC_LINUX)
+#if defined(WEBRTC_LINUX) || defined(WEBRTC_HURD)
   *freebytes = static_cast<int64>(vfs.f_bsize) * vfs.f_bavail;
 #elif defined(WEBRTC_MAC)
   *freebytes = static_cast<int64>(vfs.f_frsize) * vfs.f_bavail;

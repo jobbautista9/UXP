@@ -208,16 +208,16 @@ inline int VoEChannelId(int moduleId)
 
 #endif  // #if (defined(_WIN32)
 
-// *** LINUX ***
+// *** LINUX/HURD ***
 
-#ifdef WEBRTC_LINUX
+#if defined(WEBRTC_LINUX) || defined(WEBRTC_HURD)
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#ifndef QNX
+#if !defined(QNX) && !defined(WEBRTC_HURD)
   #include <linux/net.h>
 #ifndef ANDROID
   #include <sys/soundcard.h>
@@ -260,7 +260,7 @@ inline int VoEChannelId(int moduleId)
 #define __cdecl
 #define LPSOCKADDR struct sockaddr *
 
-// Default device for Linux and Android
+// Default device for Linux, Android, and Hurd
 #define WEBRTC_VOICE_ENGINE_DEFAULT_DEVICE 0
 
 #endif  // #ifdef WEBRTC_LINUX

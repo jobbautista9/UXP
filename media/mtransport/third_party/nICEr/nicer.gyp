@@ -231,6 +231,33 @@
 		 'sources': [
 		 ],
               }],
+              ## GNU/Hurd
+              [ 'OS == "gnu"', {
+                'cflags_mozilla': [
+                    '-Wall',
+                    '-Wno-parentheses',
+                    '-Wno-strict-prototypes',
+                    '-Wmissing-prototypes',
+                 ],
+                 'defines' : [
+                     'HURD',
+                     'HAVE_LIBM=1',
+                     'HAVE_STRDUP=1',
+                     'HAVE_SYS_TIME_H=1',
+                     'HAVE_VFPRINTF=1',
+                     'NEW_STDIO'
+                     'RETSIGTYPE=void',
+                     'TIME_WITH_SYS_TIME_H=1',
+                     '__UNUSED__=__attribute__((unused))',
+                 ],
+
+		 'include_dirs': [
+		     '../nrappkit/src/port/hurd/include'
+		 ],
+
+		 'sources': [
+		 ],
+              }],
              ['have_ethtool_cmd_speed_hi==0', {
                'defines': [
                   "DONT_HAVE_ETHTOOL_SPEED_HI",
