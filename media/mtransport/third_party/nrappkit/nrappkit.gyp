@@ -226,6 +226,34 @@
 		 'sources': [
               	      './src/port/linux/include/csi_platform.h',
 		 ],
+              }],
+              ## GNU/Hurd
+              [ 'OS == "gnu"', {
+                 'cflags_mozilla': [
+                     '-Wall',
+                     '-Wno-parentheses',
+                     '-Wno-strict-prototypes',
+                     '-Wmissing-prototypes',
+                 ],
+                 'defines' : [
+                     'HURD',
+                     'HAVE_LIBM=1',
+                     'HAVE_STRDUP=1',
+                     'HAVE_SYS_TIME_H=1',
+                     'HAVE_VFPRINTF=1',
+                     'NEW_STDIO'
+                     'RETSIGTYPE=void',
+                     'TIME_WITH_SYS_TIME_H=1',
+                     'NO_REG_RPC=1',
+                     '__UNUSED__=__attribute__((unused))',
+                 ],
+
+		 'include_dirs': [
+		     'src/port/hurd/include'
+		 ],
+		 'sources': [
+              	      './src/port/hurd/include/csi_platform.h',
+		 ],
               }]
           ]
       }]

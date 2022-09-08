@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-#ifdef LINUX
+#if defined(LINUX) || defined(HURD)
 #define _GNU_SOURCE 1
 #endif
 #include <string.h>

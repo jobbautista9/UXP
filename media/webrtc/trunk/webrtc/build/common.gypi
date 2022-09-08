@@ -392,6 +392,18 @@
           'WEBRTC_LINUX',
         ],
       }],
+      ['OS=="gnu"', {
+#        'conditions': [
+#          ['have_clock_monotonic==1', {
+#            'defines': [
+#              'WEBRTC_CLOCK_TYPE_REALTIME',
+#            ],
+#          }],
+#        ],
+        'defines': [
+          'WEBRTC_HURD',
+        ],
+      }],
       ['OS=="mac"', {
         'defines': [
           'WEBRTC_MAC',
@@ -484,6 +496,11 @@
         ['OS=="linux"', {
           'defines': [
             'WEBRTC_LINUX',
+          ],
+        }],
+        ['OS=="gnu"', {
+          'defines': [
+            'WEBRTC_HURD',
           ],
         }],
         ['OS=="android"', {

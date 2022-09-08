@@ -46,10 +46,10 @@ bool AudioDeviceUtility::StringCompare(
 
 }  // namespace webrtc
 
-#elif defined(WEBRTC_LINUX) || defined(WEBRTC_BSD) || defined(WEBRTC_MAC)
+#elif defined(WEBRTC_LINUX) || defined(WEBRTC_BSD) || defined(WEBRTC_MAC) || defined(WEBRTC_HURD)
 
 // ============================================================================
-//                                 Linux & Mac
+//                          Linux, *BSD, Mac, and Hurd
 // ============================================================================
 
 #include <stdio.h>      // getchar

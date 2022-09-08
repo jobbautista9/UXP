@@ -45,6 +45,12 @@ if CONFIG['OS_TARGET'] == 'Linux':
         '/media/mtransport/third_party/nrappkit/src/port/linux/include',
     ]
 
+if CONFIG['OS_TARGET'] == 'GNU':
+    DEFINES['HURD'] = True
+    LOCAL_INCLUDES += [
+        '/media/mtransport/third_party/nrappkit/src/port/hurd/include',
+    ]
+
 if CONFIG['OS_TARGET'] == 'Darwin':
     LOCAL_INCLUDES += [
         '/media/mtransport/third_party/nrappkit/src/port/darwin/include',

@@ -41,24 +41,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/socket.h>
 #ifndef LINUX
 #include <net/if.h>
+#ifndef HURD
 #if !defined(__OpenBSD__) && !defined(__NetBSD__)
 #include <net/if_var.h>
-#endif
+#endif // !defined(__OpenBSD__) && !defined(__NetBSD__)
 #include <net/if_dl.h>
 #include <net/if_types.h>
+#endif // !defined(HURD)
 #else
 #include <linux/if.h>
-#endif
+#endif // !defined(LINUX)
 #ifndef BSD
 #include <net/route.h>
-#endif
+#endif // !defined(BSD)
 #include <netinet/in.h>
-#ifndef LINUX
+#if !defined(LINUX) && !defined(HURD)
 #include <netinet/in_var.h>
-#endif
+#endif // !defined(LINUX) || !defined(HURD)
 #include <arpa/inet.h>
 #include <netdb.h>
-#endif
+#endif // defined(WIN32)
 #include <time.h>
 
 #include "nr_api.h"
