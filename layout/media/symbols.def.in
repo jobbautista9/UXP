@@ -88,9 +88,11 @@ JxlDecoderProcessInput
 JxlDecoderSetInput
 JxlDecoderReleaseInput
 JxlDecoderGetBasicInfo
+JxlDecoderGetColorAsICCProfile
 JxlDecoderImageOutBufferSize
 JxlDecoderSetImageOutBuffer
 JxlDecoderGetFrameHeader
+JxlDecoderGetICCProfileSize
 JxlDecoderFlushImage
 JxlThreadParallelRunner
 JxlThreadParallelRunnerCreate

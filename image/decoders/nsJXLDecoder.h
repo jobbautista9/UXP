@@ -10,6 +10,8 @@
 #include "Decoder.h"
 #include "SurfacePipe.h"
 
+#include "qcms.h"
+
 #include "jxl/decode_cxx.h"
 #include "jxl/thread_parallel_runner_cxx.h"
 
@@ -49,8 +51,15 @@ class nsJXLDecoder final : public Decoder {
   JxlThreadParallelRunnerPtr mParallelRunner;
   Vector<uint8_t> mBuffer;
   Vector<uint8_t> mOutBuffer;
-  JxlBasicInfo mInfo{};
+  JxlBasicInfo mInfo;
+  JxlPixelFormat mFormat;
   JxlFrameHeader mFrameHeader;
+
+  qcms_profile* mInProfile;
+  qcms_transform* mTransform;
+  uint8_t mChannels;
+  uint8_t* mCMSLine;
+  uint32_t mCMSMode;
 
   uint32_t mNumFrames;
   FrameTimeout mTimeout;

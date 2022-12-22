@@ -46,12 +46,23 @@ nsJXLDecoder::nsJXLDecoder(RasterImage* aImage)
       mDecoder(JxlDecoderMake(nullptr)),
       mParallelRunner(
           JxlThreadParallelRunnerMake(nullptr, PreferredThreadCount())),
+      mInProfile(nullptr),
+      mTransform(nullptr),
+      mCMSLine(nullptr),
       mNumFrames(0),
+      mCMSMode(0),
+      mChannels(0),
       mTimeout(FrameTimeout::Forever()),
       mContinue(false) {
-  JxlDecoderSubscribeEvents(mDecoder.get(),
-                            JXL_DEC_BASIC_INFO | JXL_DEC_FRAME |
-                            JXL_DEC_FULL_IMAGE);
+  int events = JXL_DEC_BASIC_INFO | JXL_DEC_FRAME | JXL_DEC_FULL_IMAGE;
+
+  mCMSMode = gfxPlatform::GetCMSMode();
+
+  if (mCMSMode != eCMSMode_Off) {
+    events |= JXL_DEC_COLOR_ENCODING;
+  }
+
+  JxlDecoderSubscribeEvents(mDecoder.get(), events);
   JxlDecoderSetParallelRunner(mDecoder.get(), JxlThreadParallelRunner,
                               mParallelRunner.get());
 
@@ -62,6 +73,10 @@ nsJXLDecoder::nsJXLDecoder(RasterImage* aImage)
 nsJXLDecoder::~nsJXLDecoder() {
   MOZ_LOG(sJXLLog, LogLevel::Debug,
           ("[this=%p] nsJXLDecoder::~nsJXLDecoder", this));
+
+  if (mCMSLine) {
+    free(mCMSLine);
+  }
 }
 
 size_t nsJXLDecoder::PreferredThreadCount() {
@@ -135,9 +150,16 @@ nsJXLDecoder::ReadJXLData(const char* aData, size_t aLength)
             // A full frame partial image is written to the buffer.
             mPipe.ResetToFirstRow();
             for (uint8_t* rowPtr = mOutBuffer.begin();
-                 rowPtr < mOutBuffer.end(); rowPtr += mInfo.xsize * 4) {
+                 rowPtr < mOutBuffer.end(); rowPtr += mInfo.xsize * mChannels) {
+              uint8_t* rowToWrite = rowPtr;
+
+              if (mTransform) {
+                qcms_transform_data(mTransform, rowToWrite, mCMSLine, mInfo.xsize);
+                rowToWrite = mCMSLine;
+              }
+
               mPipe.WritePixels<uint32_t>([&]{
-                return PackRGBAPixelAndAdvance(rowPtr);
+                return PackRGBAPixelAndAdvance(rowToWrite);
               });
             }
 
@@ -155,12 +177,27 @@ nsJXLDecoder::ReadJXLData(const char* aData, size_t aLength)
       case JXL_DEC_BASIC_INFO: {
         JXL_TRY(JxlDecoderGetBasicInfo(mDecoder.get(), &mInfo));
         PostSize(mInfo.xsize, mInfo.ysize);
+
         if (mInfo.alpha_bits > 0) {
           PostHasTransparency();
         }
+
         if (!mInfo.have_animation && IsMetadataDecode()) {
           return Transition::TerminateSuccess();
         }
+
+        // If CMS is off or the image is RGB, always output in RGBA.
+        // If the image is grayscale, then the pipe transform can't be used.
+        if (mCMSMode != eCMSMode_Off) {
+          mChannels = mInfo.num_color_channels == 1
+                          ? 1 + (mInfo.alpha_bits > 0 ? 1 : 0)
+                          : 4;
+        } else {
+          mChannels = 4;
+        }
+
+        mFormat = {mChannels, JXL_TYPE_UINT8, JXL_LITTLE_ENDIAN, 0};
+
         break;
       }
 
@@ -221,22 +258,82 @@ nsJXLDecoder::ReadJXLData(const char* aData, size_t aLength)
 
       case JXL_DEC_NEED_IMAGE_OUT_BUFFER: {
         size_t size = 0;
-        JxlPixelFormat format{4, JXL_TYPE_UINT8, JXL_LITTLE_ENDIAN, 0};
-        JXL_TRY(JxlDecoderImageOutBufferSize(mDecoder.get(), &format, &size));
+        JXL_TRY(JxlDecoderImageOutBufferSize(mDecoder.get(), &mFormat, &size));
 
         mOutBuffer.clear();
         JXL_TRY_BOOL(mOutBuffer.growBy(size));
-        JXL_TRY(JxlDecoderSetImageOutBuffer(mDecoder.get(), &format,
+        JXL_TRY(JxlDecoderSetImageOutBuffer(mDecoder.get(), &mFormat,
                                             mOutBuffer.begin(), size));
+        break;
+      }
+
+
+      case JXL_DEC_COLOR_ENCODING: {
+        size_t size = 0;
+        JXL_TRY(JxlDecoderGetICCProfileSize(
+            mDecoder.get(), &mFormat, JXL_COLOR_PROFILE_TARGET_DATA, &size))
+        std::vector<uint8_t> icc_profile(size);
+        JXL_TRY(JxlDecoderGetColorAsICCProfile(mDecoder.get(), &mFormat,
+                                               JXL_COLOR_PROFILE_TARGET_DATA,
+                                               icc_profile.data(), size))
+
+        mInProfile = qcms_profile_from_memory((char*)icc_profile.data(), size);
+
+        uint32_t profileSpace = qcms_profile_get_color_space(mInProfile);
+
+        // Skip color management if color profile is not compatible with number
+        // of channels.
+        if (profileSpace != icSigRgbData &&
+            (mInfo.num_color_channels == 3 || profileSpace != icSigGrayData)) {
+          break;
+        }
+
+        qcms_data_type inType;
+        if (mInfo.num_color_channels == 3) {
+          inType = QCMS_DATA_RGBA_8;
+        } else if (mInfo.alpha_bits > 0) {
+          inType = QCMS_DATA_GRAYA_8;
+        } else {
+          inType = QCMS_DATA_GRAY_8;
+        }
+
+        if (!(profileSpace == icSigRgbData && mInfo.num_color_channels == 3)) {
+          mCMSLine =
+              static_cast<uint8_t*>(malloc(sizeof(uint32_t) * mInfo.xsize));
+        }
+
+        int intent = gfxPlatform::GetRenderingIntent();
+        if (intent == -1) {
+          intent = qcms_profile_get_rendering_intent(mInProfile);
+        }
+
+        mTransform =
+            qcms_transform_create(mInProfile, inType,
+                                  gfxPlatform::GetCMSOutputProfile(),
+                                  QCMS_DATA_RGBA_8, (qcms_intent)intent);
+
         break;
       }
 
       case JXL_DEC_FULL_IMAGE: {
         mPipe.ResetToFirstRow();
         for (uint8_t* rowPtr = mOutBuffer.begin(); rowPtr < mOutBuffer.end();
-             rowPtr += mInfo.xsize * 4) {
+             rowPtr += mInfo.xsize * mChannels) {
+          uint8_t* rowToWrite = rowPtr;
+
+          if (mTransform) {
+            if (mCMSLine) {
+              qcms_transform_data(mTransform, rowToWrite, mCMSLine,
+                                  mInfo.xsize);
+              rowToWrite = mCMSLine;
+            } else {
+              qcms_transform_data(mTransform, rowToWrite, rowToWrite,
+                                  mInfo.xsize);
+            }
+          }
+
           mPipe.WritePixels<uint32_t>([&]{
-            return PackRGBAPixelAndAdvance(rowPtr);
+            return PackRGBAPixelAndAdvance(rowToWrite);
           });
         }
 
