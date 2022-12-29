@@ -12,7 +12,7 @@ EXPORTS += [
     'OpusParser.h',
 ]
 
-UNIFIED_SOURCES += [
+SOURCES += [
     'OggCodecState.cpp',
     'OggCodecStore.cpp',
     'OggDecoder.cpp',

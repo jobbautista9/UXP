@@ -15,7 +15,7 @@ EXPORTS += [
     'wrappers/H264Converter.h'
 ]
 
-UNIFIED_SOURCES += [
+SOURCES += [
     'agnostic/AgnosticDecoderModule.cpp',
     'agnostic/BlankDecoderModule.cpp',
     'agnostic/OpusDecoder.cpp',
@@ -41,7 +41,7 @@ if CONFIG['MOZ_WMF']:
 
 if CONFIG['MOZ_FFVPX'] or CONFIG['MOZ_FFMPEG']:
     # common code to either FFmpeg or FFVPX
-    UNIFIED_SOURCES += [
+    SOURCES += [
         'ffmpeg/FFmpegLibWrapper.cpp',
     ]
 
@@ -59,7 +59,7 @@ if CONFIG['MOZ_AV1']:
     EXPORTS += [
         'agnostic/AOMDecoder.h',
     ]
-    UNIFIED_SOURCES += [
+    SOURCES += [
         'agnostic/AOMDecoder.cpp',
     ]
 
@@ -67,7 +67,7 @@ if CONFIG['MOZ_APPLEMEDIA']:
   EXPORTS += [
       'apple/AppleDecoderModule.h',
   ]
-  UNIFIED_SOURCES += [
+  SOURCES += [
       'apple/AppleATDecoder.cpp',
       'apple/AppleCMLinker.cpp',
       'apple/AppleDecoderModule.cpp',

@@ -46,7 +46,7 @@ XPIDL_SOURCES += [
     'nsIWorkerDebuggerManager.idl',
 ]
 
-UNIFIED_SOURCES += [
+SOURCES += [
     'ChromeWorkerScope.cpp',
     'FileReaderSync.cpp',
     'Principal.cpp',
