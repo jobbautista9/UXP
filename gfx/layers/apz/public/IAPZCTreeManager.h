@@ -11,7 +11,6 @@
 #include "FrameMetrics.h"               // for FrameMetrics, etc
 #include "mozilla/EventForwards.h"      // for WidgetInputEvent, nsEventStatus
 #include "mozilla/layers/APZUtils.h"    // for HitTestResult
-#include "mozilla/MouseEvents.h"        // for WidgetMouseEvent 
 #include "nsTArrayForwardDeclare.h"     // for nsTArray, nsTArray_Impl, etc
 #include "nsISupportsImpl.h"            // for MOZ_COUNT_CTOR, etc
 #include "Units.h"                      // for CSSPoint, CSSRect, etc
@@ -38,15 +37,6 @@ enum ZoomToRectBehavior : uint32_t {
 };
 
 class AsyncDragMetrics;
-
-static bool
-WillHandleMouseEvent(const WidgetMouseEventBase& aEvent)
-{
-  return aEvent.mMessage == eMouseMove ||
-         aEvent.mMessage == eMouseDown ||
-         aEvent.mMessage == eMouseUp ||
-         aEvent.mMessage == eDragEnd;
-}
 
 class IAPZCTreeManager {
   NS_INLINE_DECL_THREADSAFE_VIRTUAL_REFCOUNTING(IAPZCTreeManager)
