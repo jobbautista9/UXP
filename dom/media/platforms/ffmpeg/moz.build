@@ -16,7 +16,7 @@ DIRS += [
     'ffmpeg59',
 ]
 
-UNIFIED_SOURCES += [
+SOURCES += [
     'FFmpegRuntimeLinker.cpp',
 ]
 
