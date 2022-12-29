@@ -19,7 +19,7 @@ EXPORTS.mozilla.dom += [
     'SpeechSynthesisVoice.h',
 ]
 
-UNIFIED_SOURCES += [
+SOURCES += [
     'ipc/SpeechSynthesisChild.cpp',
     'ipc/SpeechSynthesisParent.cpp',
     'nsSpeechTask.cpp',
