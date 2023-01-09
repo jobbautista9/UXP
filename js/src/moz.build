@@ -9,6 +9,7 @@ include('js-testing.mozbuild')
 
 DIRS += [
     'builtin',
+    'devtools',
 ]
 
 if CONFIG['JS_BUNDLED_EDITLINE']:
@@ -18,7 +19,6 @@ if not CONFIG['JS_DISABLE_SHELL']:
     DIRS += ['shell']
 
 CONFIGURE_SUBST_FILES += [
-    'devtools/rootAnalysis/Makefile',
     'js-config',
     'js.pc',
 ]
@@ -114,7 +114,6 @@ EXPORTS.js += [
 ]
 
 UNIFIED_SOURCES += [
-    'devtools/sharkctl.cpp',
     'ds/LifoAlloc.cpp',
     'ds/MemoryProtectionExceptionHandler.cpp',
     'frontend/BytecodeCompiler.cpp',
@@ -354,11 +353,6 @@ SOURCES += [
 if CONFIG['JS_POSIX_NSPR']:
     SOURCES += [
         'vm/PosixNSPR.cpp',
-    ]
-
-if CONFIG['MOZ_INSTRUMENTS']:
-    SOURCES += [
-        'devtools/Instruments.cpp',
     ]
 
 if CONFIG['ENABLE_TRACE_LOGGING']:
