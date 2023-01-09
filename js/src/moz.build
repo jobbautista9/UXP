@@ -10,6 +10,7 @@ include('js-testing.mozbuild')
 DIRS += [
     'builtin',
     'devtools',
+    'ds',
 ]
 
 if CONFIG['JS_BUNDLED_EDITLINE']:
@@ -114,8 +115,6 @@ EXPORTS.js += [
 ]
 
 UNIFIED_SOURCES += [
-    'ds/LifoAlloc.cpp',
-    'ds/MemoryProtectionExceptionHandler.cpp',
     'frontend/BytecodeCompiler.cpp',
     'frontend/BytecodeEmitter.cpp',
     'frontend/FoldConstants.cpp',
