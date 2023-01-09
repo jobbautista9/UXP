@@ -17,8 +17,13 @@ UNIFIED_SOURCES += [
     'FoldConstants.cpp',
     'NameFunctions.cpp',
     'ParseNode.cpp',
-    'Parser.cpp',
     'TokenStream.cpp',
+]
+
+# Parser.cpp cannot be built in unified mode because of explicit
+# template instantiations.
+SOURCES += [
+    'Parser.cpp',
 ]
 
 GENERATED_FILES += ['ReservedWordsGenerated.h']

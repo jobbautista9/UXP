@@ -22,13 +22,18 @@ UNIFIED_SOURCES += [
     'Promise.cpp',
     'Reflect.cpp',
     'ReflectParse.cpp',
-    'RegExp.cpp',
     'SIMD.cpp',
     'SymbolObject.cpp',
     'TestingFunctions.cpp',
     'TypedObject.cpp',
     'WeakMapObject.cpp',
     'WeakSetObject.cpp',
+]
+
+# RegExp.cpp cannot be built in unified mode because it is built
+# without PGO
+SOURCES += [
+    'RegExp.cpp',
 ]
 
 if CONFIG['_MSC_VER']:

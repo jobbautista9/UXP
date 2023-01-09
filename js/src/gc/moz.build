@@ -22,9 +22,15 @@ UNIFIED_SOURCES += [
     'Nursery.cpp',
     'RootMarking.cpp',
     'Statistics.cpp',
-    'StoreBuffer.cpp',
     'Tracer.cpp',
     'Zone.cpp',
+]
+
+# StoreBuffer.cpp cannot be built in unified mode because its template
+# instantiations may or may not be needed depending on what it gets bundled
+# with.
+SOURCES += [
+    'StoreBuffer.cpp',
 ]
 
 if CONFIG['MOZ_DEBUG']:
