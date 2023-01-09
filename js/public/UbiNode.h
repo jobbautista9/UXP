@@ -296,7 +296,7 @@ class BaseStackFrame {
 // A traits template with a specialization for each backing type that implements
 // the ubi::BaseStackFrame interface. Each specialization must be the a subclass
 // of ubi::BaseStackFrame.
-template<typename T> class ConcreteStackFrame;
+template<typename T> class JS_PUBLIC_API(ConcreteStackFrame);
 
 // A JS::ubi::StackFrame represents a frame in a recorded stack. It can be
 // backed either by a live SavedFrame object or by a structure deserialized from
@@ -311,7 +311,7 @@ template<typename T> class ConcreteStackFrame;
 // valid within the scope of an AutoCheckCannotGC; if the graph being analyzed
 // is an offline heap snapshot, the JS::ubi::StackFrame is valid as long as the
 // offline heap snapshot is alive.
-class StackFrame {
+class JS_PUBLIC_API(StackFrame) {
     // Storage in which we allocate BaseStackFrame subclasses.
     mozilla::AlignedStorage2<BaseStackFrame> storage;
 
@@ -441,7 +441,7 @@ class StackFrame {
 // The ubi::StackFrame null pointer. Any attempt to operate on a null
 // ubi::StackFrame crashes.
 template<>
-class ConcreteStackFrame<void> : public BaseStackFrame {
+class JS_PUBLIC_API(ConcreteStackFrame<void>) : public BaseStackFrame {
     explicit ConcreteStackFrame(void* ptr) : BaseStackFrame(ptr) { }
 
   public:
@@ -485,7 +485,7 @@ ConstructSavedFrameStackSlow(JSContext* cx,
 // be reused for new variants. Doing so will cause inspecting ubi::Nodes backed
 // by an offline heap snapshot from an older SpiderMonkey/Firefox version to
 // break. Consider this enum append only.
-enum class CoarseType: uint32_t {
+enum class JS_PUBLIC_API(CoarseType): uint32_t {
     Other  = 0,
     Object = 1,
     Script = 2,
@@ -495,13 +495,13 @@ enum class CoarseType: uint32_t {
     LAST   = String
 };
 
-inline uint32_t
+inline JS_PUBLIC_API(uint32_t)
 CoarseTypeToUint32(CoarseType type)
 {
     return static_cast<uint32_t>(type);
 }
 
-inline bool
+inline JS_PUBLIC_API(bool)
 Uint32IsValidCoarseType(uint32_t n)
 {
     auto first = static_cast<uint32_t>(CoarseType::FIRST);
@@ -510,7 +510,7 @@ Uint32IsValidCoarseType(uint32_t n)
     return first <= n && n <= last;
 }
 
-inline CoarseType
+inline JS_PUBLIC_API(CoarseType)
 Uint32ToCoarseType(uint32_t n)
 {
     MOZ_ASSERT(Uint32IsValidCoarseType(n));
@@ -520,7 +520,7 @@ Uint32ToCoarseType(uint32_t n)
 // The base class implemented by each ubi::Node referent type. Subclasses must
 // not add data members to this class.
 class JS_PUBLIC_API(Base) {
-    friend class Node;
+    friend class JS_PUBLIC_API(Node);
 
     // For performance's sake, we'd prefer to avoid a virtual destructor; and
     // an empty constructor seems consistent with the 'lightweight value type'
@@ -668,11 +668,11 @@ class JS_PUBLIC_API(Base) {
 //    // knows Referent's details.
 //    static void construct(void* storage, Referent* referent);
 template<typename Referent>
-class Concrete;
+class JS_PUBLIC_API(Concrete);
 
 // A container for a Base instance; all members simply forward to the contained
 // instance.  This container allows us to pass ubi::Node instances by value.
-class Node {
+class JS_PUBLIC_API(Node) {
     // Storage in which we allocate Base subclasses.
     mozilla::AlignedStorage2<Base> storage;
     Base* base() { return storage.addr(); }
@@ -832,7 +832,7 @@ using NodeSetPtr = mozilla::UniquePtr<NodeSet, JS::DeletePolicy<NodeSet>>;
 using EdgeName = UniqueTwoByteChars;
 
 // An outgoing edge to a referent node.
-class Edge {
+class JS_PUBLIC_API(Edge) {
   public:
     Edge() : name(nullptr), referent() { }
 
@@ -882,7 +882,7 @@ class Edge {
 // object's edges. For example, a dumb implementation for JS Cells might use
 // JS::TraceChildren to to get the outgoing edges, and then store them in an
 // array internal to the EdgeRange.
-class EdgeRange {
+class JS_PUBLIC_API(EdgeRange) {
   protected:
     // The current front edge of this range, or nullptr if this range is empty.
     Edge* front_;
@@ -917,7 +917,7 @@ typedef mozilla::Vector<Edge, 8, js::SystemAllocPolicy> EdgeVector;
 // Edges. A PreComputedEdgeRange does not take ownership of its
 // EdgeVector; it is up to the PreComputedEdgeRange's consumer to manage
 // that lifetime.
-class PreComputedEdgeRange : public EdgeRange {
+class JS_PUBLIC_API(PreComputedEdgeRange) : public EdgeRange {
     EdgeVector& edges;
     size_t      i;
 

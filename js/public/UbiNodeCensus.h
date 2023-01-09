@@ -77,18 +77,18 @@
 namespace JS {
 namespace ubi {
 
-struct Census;
+struct JS_PUBLIC_API(Census);
 
-class CountBase;
+class JS_PUBLIC_API(CountBase);
 
-struct CountDeleter {
+struct JS_PUBLIC_API(CountDeleter) {
     JS_PUBLIC_API(void) operator()(CountBase*);
 };
 
 using CountBasePtr = js::UniquePtr<CountBase, CountDeleter>;
 
 // Abstract base class for CountType nodes.
-struct CountType {
+struct JS_PUBLIC_API(CountType) {
     explicit CountType() { }
     virtual ~CountType() { }
 
@@ -117,7 +117,7 @@ struct CountType {
 using CountTypePtr = js::UniquePtr<CountType>;
 
 // An abstract base class for count tree nodes.
-class CountBase {
+class JS_PUBLIC_API(CountBase) {
     // In lieu of a vtable, each CountBase points to its type, which
     // carries not only the implementations of the CountBase methods, but also
     // additional parameters for the type's behavior, as specified in the
@@ -176,7 +176,7 @@ class CountBase {
     Node::Id smallestNodeIdCounted_;
 };
 
-class RootedCount : JS::CustomAutoRooter {
+class JS_PUBLIC_API(RootedCount) : JS::CustomAutoRooter {
     CountBasePtr count;
 
     void trace(JSTracer* trc) override { count->trace(trc); }
@@ -192,7 +192,7 @@ class RootedCount : JS::CustomAutoRooter {
 };
 
 // Common data for a census traversal, shared across all CountType nodes.
-struct Census {
+struct JS_PUBLIC_API(Census) {
     JSContext* const cx;
     // If the targetZones set is non-empty, then only consider nodes whose zone
     // is an element of the set. If the targetZones set is empty, then nodes in
@@ -207,7 +207,7 @@ struct Census {
 
 // A BreadthFirst handler type that conducts a census, using a CountBase to
 // categorize and count each node.
-class CensusHandler {
+class JS_PUBLIC_API(CensusHandler) {
     Census& census;
     CountBasePtr& rootCount;
     mozilla::MallocSizeOf mallocSizeOf;

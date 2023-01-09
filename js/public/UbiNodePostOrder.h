@@ -51,7 +51,7 @@ namespace ubi {
  *     occurs. A false return value terminates the traversal immediately, and
  *     causes `PostOrder::traverse` to return false.
  */
-struct PostOrder {
+struct JS_PUBLIC_API(PostOrder) {
   private:
     struct OriginAndEdges {
         Node                 origin;

@@ -74,7 +74,7 @@ namespace ubi {
 //      immediately, and causes BreadthFirst<Handler>::traverse to return
 //      false.
 template<typename Handler>
-struct BreadthFirst {
+struct JS_PUBLIC_API(BreadthFirst) {
 
     // Construct a breadth-first traversal object that reports the nodes it
     // reaches to |handler|. The traversal asserts that no GC happens in its

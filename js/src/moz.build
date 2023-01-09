@@ -595,8 +595,8 @@ if CONFIG['JS_SHARED_LIBRARY']:
 else:
     Library('js')
 
-FORCE_STATIC_LIB = True
-STATIC_LIBRARY_NAME = 'js_static'
+# FORCE_STATIC_LIB = True
+# STATIC_LIBRARY_NAME = 'js_static'
 
 if not CONFIG['MOZ_ICU_DATA_ARCHIVE']:
     USE_LIBS += [
@@ -641,7 +641,7 @@ if CONFIG['OS_ARCH'] == 'SunOS':
 
 OS_LIBS += CONFIG['REALTIME_LIBS']
 
-NO_EXPAND_LIBS = True
+# NO_EXPAND_LIBS = True
 
 DIST_INSTALL = True
 
