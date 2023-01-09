@@ -131,19 +131,15 @@ EXPORTS.js += [
 UNIFIED_SOURCES += [
     'jsalloc.cpp',
     'jsapi.cpp',
-    'jsarray.cpp',
-    'jsatom.cpp',
     'jsbool.cpp',
     'jscntxt.cpp',
     'jscompartment.cpp',
     'jsdate.cpp',
-    'jsdtoa.cpp',
     'jsexn.cpp',
     'jsfriendapi.cpp',
     'jsfun.cpp',
     'jsgc.cpp',
     'jsiter.cpp',
-    'jsmath.cpp',
     'jsnativestack.cpp',
     'jsnum.cpp',
     'jsobj.cpp',
@@ -153,8 +149,16 @@ UNIFIED_SOURCES += [
     'jspropertytree.cpp',
     'jsscript.cpp',
     'jsstr.cpp',
-    'jsutil.cpp',
     'jsweakmap.cpp',
+]
+
+# Can't be built unified
+SOURCES += [
+    'jsarray.cpp',
+    'jsatom.cpp',
+    'jsdtoa.cpp',
+    'jsmath.cpp',
+    'jsutil.cpp',
 ]
 
 # Suppress warnings in third-party code.
@@ -162,7 +166,7 @@ UNIFIED_SOURCES += [
 if CONFIG['CLANG_CXX'] or CONFIG['GNU_CXX']:
     SOURCES['jsdtoa.cpp'].flags += ['-Wno-implicit-fallthrough']
 
-SOURCES += [
+UNIFIED_SOURCES += [
     'vm/ArgumentsObject.cpp',
     'vm/ArrayBufferObject.cpp',
     'vm/AsyncFunction.cpp',
@@ -182,7 +186,6 @@ SOURCES += [
     'vm/GlobalObject.cpp',
     'vm/HelperThreads.cpp',
     'vm/Id.cpp',
-    'vm/Initialization.cpp',
     'vm/Interpreter.cpp',
     'vm/JSONParser.cpp',
     'vm/MemoryMetrics.cpp',
@@ -224,12 +227,18 @@ SOURCES += [
     'vm/Xdr.cpp',
 ]
 
+# Can't be built unified
+SOURCES += [
+    'vm/Initialization.cpp',
+]
+
 if CONFIG['JS_POSIX_NSPR']:
-    SOURCES += [
+    UNIFIED_SOURCES += [
         'vm/PosixNSPR.cpp',
     ]
 
 if CONFIG['ENABLE_TRACE_LOGGING']:
+    # Can't be built unified
     SOURCES += [
         'vm/TraceLogging.cpp',
         'vm/TraceLoggingGraph.cpp',
