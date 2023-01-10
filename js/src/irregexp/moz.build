@@ -15,6 +15,7 @@ UNIFIED_SOURCES += [
     'NativeRegExpMacroAssembler.cpp',
     'RegExpAST.cpp',
     'RegExpCharacters.cpp',
+    'RegExpCharRanges.cpp',
     'RegExpEngine.cpp',
     'RegExpInterpreter.cpp',
     'RegExpMacroAssembler.cpp',
