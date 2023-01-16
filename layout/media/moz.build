@@ -18,8 +18,21 @@ else:
     # on Windows for them to propagate there.
     Library('gkmedias')
 
+EXPORTS.uxp += [
+    'gkmedias-export.h',
+]
+
 if CONFIG['MOZ_WEBRTC']:
     DIRS += ['webrtc']
+
+if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT'] or \
+        CONFIG['MOZ_TREE_FREETYPE']:
+    USE_LIBS += [
+        'freetype',
+    ]
+
+if CONFIG['MOZ_ENABLE_DBUS']:
+    OS_LIBS += CONFIG['MOZ_DBUS_GLIB_LIBS']
 
 if CONFIG['MOZ_SYSTEM_JPEG']:
     OS_LIBS += CONFIG['MOZ_JPEG_LIBS']
