@@ -38,6 +38,8 @@
 #include "hb-unicode.h"
 #include "hb-font.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 /**
@@ -140,7 +142,7 @@ hb_segment_properties_hash (const hb_segment_properties_t *p);
 
 typedef struct hb_buffer_t hb_buffer_t;
 
-HB_EXTERN hb_buffer_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_buffer_t *
 hb_buffer_create (void);
 
 HB_EXTERN hb_buffer_t *
@@ -149,7 +151,7 @@ hb_buffer_get_empty (void);
 HB_EXTERN hb_buffer_t *
 hb_buffer_reference (hb_buffer_t *buffer);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_destroy (hb_buffer_t *buffer);
 
 HB_EXTERN hb_bool_t
@@ -183,28 +185,28 @@ HB_EXTERN hb_buffer_content_type_t
 hb_buffer_get_content_type (hb_buffer_t *buffer);
 
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_set_unicode_funcs (hb_buffer_t        *buffer,
 			     hb_unicode_funcs_t *unicode_funcs);
 
 HB_EXTERN hb_unicode_funcs_t *
 hb_buffer_get_unicode_funcs (hb_buffer_t        *buffer);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_set_direction (hb_buffer_t    *buffer,
 			 hb_direction_t  direction);
 
 HB_EXTERN hb_direction_t
 hb_buffer_get_direction (hb_buffer_t *buffer);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_set_script (hb_buffer_t *buffer,
 		      hb_script_t  script);
 
 HB_EXTERN hb_script_t
 hb_buffer_get_script (hb_buffer_t *buffer);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_set_language (hb_buffer_t   *buffer,
 			hb_language_t  language);
 
@@ -267,7 +269,7 @@ typedef enum {
   HB_BUFFER_CLUSTER_LEVEL_DEFAULT = HB_BUFFER_CLUSTER_LEVEL_MONOTONE_GRAPHEMES
 } hb_buffer_cluster_level_t;
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_set_cluster_level (hb_buffer_t               *buffer,
 			     hb_buffer_cluster_level_t  cluster_level);
 
@@ -331,7 +333,7 @@ hb_buffer_add_utf8 (hb_buffer_t  *buffer,
 		    unsigned int  item_offset,
 		    int           item_length);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_buffer_add_utf16 (hb_buffer_t    *buffer,
 		     const uint16_t *text,
 		     int             text_length,
@@ -369,11 +371,11 @@ hb_buffer_get_length (hb_buffer_t *buffer);
 
 /* Getting glyphs out of the buffer */
 
-HB_EXTERN hb_glyph_info_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_glyph_info_t *
 hb_buffer_get_glyph_infos (hb_buffer_t  *buffer,
                            unsigned int *length);
 
-HB_EXTERN hb_glyph_position_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_glyph_position_t *
 hb_buffer_get_glyph_positions (hb_buffer_t  *buffer,
                                unsigned int *length);
 

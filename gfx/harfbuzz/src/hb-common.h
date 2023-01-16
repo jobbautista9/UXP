@@ -57,6 +57,9 @@
 
 #endif
 
+#include "uxp/gkmedias-export.h"
+
+
 HB_BEGIN_DECLS
 
 
@@ -132,7 +135,7 @@ hb_direction_to_string (hb_direction_t direction);
 
 typedef const struct hb_language_impl_t *hb_language_t;
 
-HB_EXTERN hb_language_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_language_t
 hb_language_from_string (const char *str, int len);
 
 HB_EXTERN const char *
@@ -329,7 +332,7 @@ typedef enum
 
 /* Script functions */
 
-HB_EXTERN hb_script_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_script_t
 hb_script_from_iso15924_tag (hb_tag_t tag);
 
 HB_EXTERN hb_script_t

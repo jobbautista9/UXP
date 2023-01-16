@@ -17,6 +17,8 @@
 #include "./bit_reader.h"
 #include "./huffman.h"
 
+#include "uxp/gkmedias-export.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
@@ -341,9 +343,9 @@ struct BrotliDecoderStateStruct {
 typedef struct BrotliDecoderStateStruct BrotliDecoderStateInternal;
 #define BrotliDecoderState BrotliDecoderStateInternal
 
-BROTLI_INTERNAL BROTLI_BOOL BrotliDecoderStateInit(BrotliDecoderState* s,
+UXP_GKMEDIAS_EXPORT(BROTLI_INTERNAL) BROTLI_BOOL BrotliDecoderStateInit(BrotliDecoderState* s,
     brotli_alloc_func alloc_func, brotli_free_func free_func, void* opaque);
-BROTLI_INTERNAL void BrotliDecoderStateCleanup(BrotliDecoderState* s);
+UXP_GKMEDIAS_EXPORT(BROTLI_INTERNAL) void BrotliDecoderStateCleanup(BrotliDecoderState* s);
 BROTLI_INTERNAL void BrotliDecoderStateMetablockBegin(BrotliDecoderState* s);
 BROTLI_INTERNAL void BrotliDecoderStateCleanupAfterMetablock(
     BrotliDecoderState* s);

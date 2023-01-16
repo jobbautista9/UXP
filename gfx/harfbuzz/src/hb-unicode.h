@@ -37,6 +37,8 @@
 
 #include "hb-common.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -178,10 +180,10 @@ HB_EXTERN hb_unicode_funcs_t *
 hb_unicode_funcs_get_default (void);
 
 
-HB_EXTERN hb_unicode_funcs_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_unicode_funcs_t *
 hb_unicode_funcs_create (hb_unicode_funcs_t *parent);
 
-HB_EXTERN hb_unicode_funcs_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_unicode_funcs_t *
 hb_unicode_funcs_get_empty (void);
 
 HB_EXTERN hb_unicode_funcs_t *
@@ -285,7 +287,7 @@ typedef unsigned int			(*hb_unicode_decompose_compatibility_func_t)	(hb_unicode_
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_combining_class_func (hb_unicode_funcs_t *ufuncs,
 					   hb_unicode_combining_class_func_t func,
 					   void *user_data, hb_destroy_func_t destroy);
@@ -317,7 +319,7 @@ hb_unicode_funcs_set_eastasian_width_func (hb_unicode_funcs_t *ufuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_general_category_func (hb_unicode_funcs_t *ufuncs,
 					    hb_unicode_general_category_func_t func,
 					    void *user_data, hb_destroy_func_t destroy);
@@ -333,7 +335,7 @@ hb_unicode_funcs_set_general_category_func (hb_unicode_funcs_t *ufuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_mirroring_func (hb_unicode_funcs_t *ufuncs,
 				     hb_unicode_mirroring_func_t func,
 				     void *user_data, hb_destroy_func_t destroy);
@@ -349,7 +351,7 @@ hb_unicode_funcs_set_mirroring_func (hb_unicode_funcs_t *ufuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_script_func (hb_unicode_funcs_t *ufuncs,
 				  hb_unicode_script_func_t func,
 				  void *user_data, hb_destroy_func_t destroy);
@@ -365,7 +367,7 @@ hb_unicode_funcs_set_script_func (hb_unicode_funcs_t *ufuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_compose_func (hb_unicode_funcs_t *ufuncs,
 				   hb_unicode_compose_func_t func,
 				   void *user_data, hb_destroy_func_t destroy);
@@ -381,7 +383,7 @@ hb_unicode_funcs_set_compose_func (hb_unicode_funcs_t *ufuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_unicode_funcs_set_decompose_func (hb_unicode_funcs_t *ufuncs,
 				     hb_unicode_decompose_func_t func,
 				     void *user_data, hb_destroy_func_t destroy);

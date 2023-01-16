@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "uxp/gkmedias-export.h"
+
 /* if we've already got an ICC_H header we can ignore the following */
 #ifndef ICC_H
 /* icc34 defines */
@@ -134,43 +136,49 @@ qcms_profile* qcms_profile_create_rgb_with_gamma(
                 qcms_CIE_xyYTRIPLE primaries,
                 float gamma);
 
-void qcms_data_create_rgb_with_gamma(
-                qcms_CIE_xyY white_point,
-                qcms_CIE_xyYTRIPLE primaries,
-                float gamma,
-                void **mem,
-                size_t *size);
+UXP_GKMEDIAS_EXPORT() void
+  qcms_data_create_rgb_with_gamma(
+              qcms_CIE_xyY white_point,
+              qcms_CIE_xyYTRIPLE primaries,
+              float gamma,
+              void **mem,
+              size_t *size);
 
-qcms_profile* qcms_profile_from_memory(const void *mem, size_t size);
+UXP_GKMEDIAS_EXPORT() qcms_profile*
+  qcms_profile_from_memory(const void *mem, size_t size);
 
 qcms_profile* qcms_profile_from_file(FILE *file);
 qcms_profile* qcms_profile_from_path(const char *path);
 
-void qcms_data_from_path(const char *path, void **mem, size_t *size);
+UXP_GKMEDIAS_EXPORT() void
+  qcms_data_from_path(const char *path, void **mem, size_t *size);
 
 #ifdef _WIN32
 qcms_profile* qcms_profile_from_unicode_path(const wchar_t *path);
 void qcms_data_from_unicode_path(const wchar_t *path, void **mem, size_t *size);
 #endif
-qcms_profile* qcms_profile_sRGB(void);
-void qcms_profile_release(qcms_profile *profile);
+UXP_GKMEDIAS_EXPORT() qcms_profile* qcms_profile_sRGB(void);
+UXP_GKMEDIAS_EXPORT() void qcms_profile_release(qcms_profile *profile);
 
-qcms_bool qcms_profile_is_bogus(qcms_profile *profile);
+UXP_GKMEDIAS_EXPORT() qcms_bool qcms_profile_is_bogus(qcms_profile *profile);
 qcms_intent qcms_profile_get_rendering_intent(qcms_profile *profile);
 icColorSpaceSignature qcms_profile_get_color_space(qcms_profile *profile);
 
-void qcms_profile_precache_output_transform(qcms_profile *profile);
+UXP_GKMEDIAS_EXPORT() void
+  qcms_profile_precache_output_transform(qcms_profile *profile);
 
-qcms_transform* qcms_transform_create(
-		qcms_profile *in, qcms_data_type in_type,
-		qcms_profile* out, qcms_data_type out_type,
-		qcms_intent intent);
+UXP_GKMEDIAS_EXPORT() qcms_transform*
+  qcms_transform_create(
+    qcms_profile *in, qcms_data_type in_type,
+    qcms_profile* out, qcms_data_type out_type,
+    qcms_intent intent);
 
-void qcms_transform_release(qcms_transform *);
+UXP_GKMEDIAS_EXPORT() void qcms_transform_release(qcms_transform *);
 
-void qcms_transform_data(qcms_transform *transform, void *src, void *dest, size_t length);
+UXP_GKMEDIAS_EXPORT() void
+  qcms_transform_data(qcms_transform *transform, void *src, void *dest, size_t length);
 
-void qcms_enable_iccv4();
+UXP_GKMEDIAS_EXPORT() void qcms_enable_iccv4();
 
 #ifdef  __cplusplus
 }

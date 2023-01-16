@@ -33,13 +33,15 @@
 
 #include <glib.h>
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
 HB_EXTERN hb_script_t
 hb_glib_script_to_script (GUnicodeScript script);
 
-HB_EXTERN GUnicodeScript
+UXP_GKMEDIAS_EXPORT() HB_EXTERN GUnicodeScript
 hb_glib_script_from_script (hb_script_t script);
 
 

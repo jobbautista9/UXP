@@ -33,6 +33,7 @@
 
 #include "hb.h"
 
+
 HB_BEGIN_DECLS
 
 
@@ -157,14 +158,14 @@ typedef struct hb_ot_math_glyph_part_t {
 
 /* Methods */
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_math_has_data (hb_face_t *face);
 
-HB_EXTERN hb_position_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_position_t
 hb_ot_math_get_constant (hb_font_t *font,
 			 hb_ot_math_constant_t constant);
 
-HB_EXTERN hb_position_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_position_t
 hb_ot_math_get_glyph_italics_correction (hb_font_t *font,
 					 hb_codepoint_t glyph);
 
@@ -182,7 +183,7 @@ hb_ot_math_get_glyph_kerning (hb_font_t *font,
 			      hb_ot_math_kern_t kern,
 			      hb_position_t correction_height);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_math_get_glyph_variants (hb_font_t *font,
 			       hb_codepoint_t glyph,
 			       hb_direction_t direction,
@@ -194,7 +195,7 @@ HB_EXTERN hb_position_t
 hb_ot_math_get_min_connector_overlap (hb_font_t *font,
 				      hb_direction_t direction);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_math_get_glyph_assembly (hb_font_t *font,
 			       hb_codepoint_t glyph,
 			       hb_direction_t direction,

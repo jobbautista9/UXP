@@ -25,6 +25,8 @@
 # endif
 #endif
 
+#include "uxp/gkmedias-export.h"
+
 CAIRO_BEGIN_DECLS
 
 #define CAIRO_VERSION_ENCODE(major, minor, micro) (	\
@@ -385,22 +387,22 @@ cairo_set_user_data (cairo_t			 *cr,
 		     void			 *user_data,
 		     cairo_destroy_func_t	  destroy);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_save (cairo_t *cr);
 
 cairo_public void
 cairo_restore (cairo_t *cr);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_push_group (cairo_t *cr);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_push_group_with_content (cairo_t *cr, cairo_content_t content);
 
 cairo_public cairo_pattern_t *
 cairo_pop_group (cairo_t *cr);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_pop_group_to_source (cairo_t *cr);
 
 /* Modify state */
@@ -520,21 +522,21 @@ typedef enum _cairo_operator {
     CAIRO_OPERATOR_HSL_LUMINOSITY
 } cairo_operator_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_operator (cairo_t *cr, cairo_operator_t op);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_source (cairo_t *cr, cairo_pattern_t *source);
 
 cairo_public void
 cairo_set_source_rgb (cairo_t *cr, double red, double green, double blue);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_source_rgba (cairo_t *cr,
 		       double red, double green, double blue,
 		       double alpha);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_source_surface (cairo_t	  *cr,
 			  cairo_surface_t *surface,
 			  double	   x,
@@ -596,10 +598,10 @@ typedef enum _cairo_fill_rule {
     CAIRO_FILL_RULE_EVEN_ODD
 } cairo_fill_rule_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_fill_rule (cairo_t *cr, cairo_fill_rule_t fill_rule);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_line_width (cairo_t *cr, double width);
 
 /**
@@ -618,7 +620,7 @@ typedef enum _cairo_line_cap {
     CAIRO_LINE_CAP_SQUARE
 } cairo_line_cap_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_line_cap (cairo_t *cr, cairo_line_cap_t line_cap);
 
 /**
@@ -640,7 +642,7 @@ typedef enum _cairo_line_join {
     CAIRO_LINE_JOIN_BEVEL
 } cairo_line_join_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_line_join (cairo_t *cr, cairo_line_join_t line_join);
 
 cairo_public void
@@ -652,7 +654,7 @@ cairo_set_dash (cairo_t      *cr,
 cairo_public void
 cairo_set_miter_limit (cairo_t *cr, double limit);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_translate (cairo_t *cr, double tx, double ty);
 
 cairo_public void
@@ -665,11 +667,11 @@ cairo_public void
 cairo_transform (cairo_t	      *cr,
 		 const cairo_matrix_t *matrix);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_set_matrix (cairo_t	       *cr,
 		  const cairo_matrix_t *matrix);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_identity_matrix (cairo_t *cr);
 
 cairo_public void
@@ -685,10 +687,10 @@ cairo_public void
 cairo_device_to_user_distance (cairo_t *cr, double *dx, double *dy);
 
 /* Path creation functions */
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_new_path (cairo_t *cr);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_move_to (cairo_t *cr, double x, double y);
 
 cairo_public void
@@ -780,7 +782,7 @@ cairo_stroke_preserve (cairo_t *cr);
 cairo_public void
 cairo_fill (cairo_t *cr);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_fill_preserve (cairo_t *cr);
 
 cairo_public void
@@ -1188,13 +1190,13 @@ typedef enum _cairo_hint_metrics {
  **/
 typedef struct _cairo_font_options cairo_font_options_t;
 
-cairo_public cairo_font_options_t *
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_font_options_t *
 cairo_font_options_create (void);
 
 cairo_public cairo_font_options_t *
 cairo_font_options_copy (const cairo_font_options_t *original);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_font_options_destroy (cairo_font_options_t *options);
 
 cairo_public cairo_status_t
@@ -1210,25 +1212,25 @@ cairo_font_options_equal (const cairo_font_options_t *options,
 cairo_public unsigned long
 cairo_font_options_hash (const cairo_font_options_t *options);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_font_options_set_antialias (cairo_font_options_t *options,
 				  cairo_antialias_t     antialias);
-cairo_public cairo_antialias_t
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_antialias_t
 cairo_font_options_get_antialias (const cairo_font_options_t *options);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_font_options_set_subpixel_order (cairo_font_options_t   *options,
 				       cairo_subpixel_order_t  subpixel_order);
 cairo_public cairo_subpixel_order_t
 cairo_font_options_get_subpixel_order (const cairo_font_options_t *options);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_font_options_set_hint_style (cairo_font_options_t *options,
 				   cairo_hint_style_t     hint_style);
 cairo_public cairo_hint_style_t
 cairo_font_options_get_hint_style (const cairo_font_options_t *options);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_font_options_set_hint_metrics (cairo_font_options_t *options,
 				     cairo_hint_metrics_t  hint_metrics);
 cairo_public cairo_hint_metrics_t
@@ -1397,7 +1399,7 @@ cairo_scaled_font_create (cairo_font_face_t          *font_face,
 cairo_public cairo_scaled_font_t *
 cairo_scaled_font_reference (cairo_scaled_font_t *scaled_font);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_scaled_font_destroy (cairo_scaled_font_t *scaled_font);
 
 cairo_public unsigned int
@@ -1428,7 +1430,7 @@ cairo_scaled_font_text_extents (cairo_scaled_font_t  *scaled_font,
 				const char  	     *utf8,
 				cairo_text_extents_t *extents);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_scaled_font_glyph_extents (cairo_scaled_font_t   *scaled_font,
 				 const cairo_glyph_t   *glyphs,
 				 int                   num_glyphs,
@@ -1994,7 +1996,7 @@ cairo_device_set_user_data (cairo_device_t		 *device,
 
 /* Surface manipulation */
 
-cairo_public cairo_surface_t *
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_surface_t *
 cairo_surface_create_similar (cairo_surface_t  *other,
 			      cairo_content_t	content,
 			      int		width,
@@ -2007,13 +2009,13 @@ cairo_surface_create_for_rectangle (cairo_surface_t	*target,
                                     double		 width,
                                     double		 height);
 
-cairo_public cairo_surface_t *
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_surface_t *
 cairo_surface_reference (cairo_surface_t *surface);
 
 cairo_public void
 cairo_surface_finish (cairo_surface_t *surface);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_surface_destroy (cairo_surface_t *surface);
 
 cairo_public cairo_device_t *
@@ -2022,7 +2024,7 @@ cairo_surface_get_device (cairo_surface_t *surface);
 cairo_public unsigned int
 cairo_surface_get_reference_count (cairo_surface_t *surface);
 
-cairo_public cairo_status_t
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_status_t
 cairo_surface_status (cairo_surface_t *surface);
 
 /**
@@ -2105,7 +2107,7 @@ typedef enum _cairo_surface_type {
     CAIRO_SURFACE_TYPE_D2D
 } cairo_surface_type_t;
 
-cairo_public cairo_surface_type_t
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_surface_type_t
 cairo_surface_get_type (cairo_surface_t *surface);
 
 cairo_public cairo_content_t
@@ -2128,7 +2130,7 @@ cairo_public void *
 cairo_surface_get_user_data (cairo_surface_t		 *surface,
 			     const cairo_user_data_key_t *key);
 
-cairo_public cairo_status_t
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_status_t
 cairo_surface_set_user_data (cairo_surface_t		 *surface,
 			     const cairo_user_data_key_t *key,
 			     void			 *user_data,
@@ -2178,12 +2180,12 @@ cairo_surface_mark_dirty_rectangle (cairo_surface_t *surface,
 				    int              width,
 				    int              height);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_surface_set_device_offset (cairo_surface_t *surface,
 				 double           x_offset,
 				 double           y_offset);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_surface_get_device_offset (cairo_surface_t *surface,
 				 double          *x_offset,
 				 double          *y_offset);
@@ -2265,7 +2267,7 @@ typedef enum _cairo_format {
     CAIRO_FORMAT_RGB16_565 = 4
 } cairo_format_t;
 
-cairo_public cairo_surface_t *
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_surface_t *
 cairo_image_surface_create (cairo_format_t	format,
 			    int			width,
 			    int			height);
@@ -2274,7 +2276,7 @@ cairo_public int
 cairo_format_stride_for_width (cairo_format_t	format,
 			       int		width);
 
-cairo_public cairo_surface_t *
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_surface_t *
 cairo_image_surface_create_for_data (unsigned char	       *data,
 				     cairo_format_t		format,
 				     int			width,
@@ -2348,13 +2350,13 @@ cairo_pattern_create_radial (double cx0, double cy0, double radius0,
 cairo_public cairo_pattern_t *
 cairo_pattern_reference (cairo_pattern_t *pattern);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_pattern_destroy (cairo_pattern_t *pattern);
 
 cairo_public unsigned int
 cairo_pattern_get_reference_count (cairo_pattern_t *pattern);
 
-cairo_public cairo_status_t
+UXP_GKMEDIAS_EXPORT(cairo_public) cairo_status_t
 cairo_pattern_status (cairo_pattern_t *pattern);
 
 cairo_public void *
@@ -2418,7 +2420,7 @@ cairo_pattern_add_color_stop_rgba (cairo_pattern_t *pattern,
 				   double red, double green, double blue,
 				   double alpha);
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_pattern_set_matrix (cairo_pattern_t      *pattern,
 			  const cairo_matrix_t *matrix);
 
@@ -2454,7 +2456,7 @@ typedef enum _cairo_extend {
     CAIRO_EXTEND_PAD
 } cairo_extend_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_pattern_set_extend (cairo_pattern_t *pattern, cairo_extend_t extend);
 
 cairo_public cairo_extend_t
@@ -2487,7 +2489,7 @@ typedef enum _cairo_filter {
     CAIRO_FILTER_GAUSSIAN
 } cairo_filter_t;
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter);
 
 cairo_public cairo_filter_t
@@ -2525,7 +2527,7 @@ cairo_pattern_get_radial_circles (cairo_pattern_t *pattern,
 
 /* Matrix functions */
 
-cairo_public void
+UXP_GKMEDIAS_EXPORT(cairo_public) void
 cairo_matrix_init (cairo_matrix_t *matrix,
 		   double  xx, double  yx,
 		   double  xy, double  yy,

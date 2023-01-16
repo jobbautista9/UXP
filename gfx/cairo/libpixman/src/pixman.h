@@ -83,6 +83,8 @@ SOFTWARE.
 #define PIXMAN_END_DECLS
 #endif
 
+#include "uxp/gkmedias-export.h"
+
 PIXMAN_BEGIN_DECLS
 
 /*
@@ -643,17 +645,17 @@ struct pixman_region32
 };
 
 /* creation/destruction */
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void                    pixman_region32_init               (pixman_region32_t *region);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void                    pixman_region32_init_rect          (pixman_region32_t *region,
 							    int                x,
 							    int                y,
 							    unsigned int       width,
 							    unsigned int       height);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_init_rects         (pixman_region32_t *region,
 							    const pixman_box32_t *boxes,
 							    int                count);
@@ -666,31 +668,31 @@ PIXMAN_API
 void                    pixman_region32_init_from_image    (pixman_region32_t *region,
 							    pixman_image_t    *image);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void                    pixman_region32_fini               (pixman_region32_t *region);
 
 
 /* manipulation */
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void                    pixman_region32_translate          (pixman_region32_t *region,
 							    int                x,
 							    int                y);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_copy               (pixman_region32_t *dest,
 							    pixman_region32_t *source);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_intersect          (pixman_region32_t *new_reg,
 							    pixman_region32_t *reg1,
 							    pixman_region32_t *reg2);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_union              (pixman_region32_t *new_reg,
 							    pixman_region32_t *reg1,
 							    pixman_region32_t *reg2);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t		pixman_region32_intersect_rect     (pixman_region32_t *dest,
 							    pixman_region32_t *source,
 							    int                x,
@@ -698,7 +700,7 @@ pixman_bool_t		pixman_region32_intersect_rect     (pixman_region32_t *dest,
 							    unsigned int       width,
 							    unsigned int       height);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_union_rect         (pixman_region32_t *dest,
 							    pixman_region32_t *source,
 							    int                x,
@@ -706,7 +708,7 @@ pixman_bool_t           pixman_region32_union_rect         (pixman_region32_t *d
 							    unsigned int       width,
 							    unsigned int       height);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_subtract           (pixman_region32_t *reg_d,
 							    pixman_region32_t *reg_m,
 							    pixman_region32_t *reg_s);
@@ -716,41 +718,41 @@ pixman_bool_t           pixman_region32_inverse            (pixman_region32_t *n
 							    pixman_region32_t *reg1,
 							    pixman_box32_t    *inv_rect);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_contains_point     (pixman_region32_t *region,
 							    int                x,
 							    int                y,
 							    pixman_box32_t    *box);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_region_overlap_t pixman_region32_contains_rectangle (pixman_region32_t *region,
 							    pixman_box32_t    *prect);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_not_empty          (pixman_region32_t *region);
 
 PIXMAN_API
 pixman_box32_t *        pixman_region32_extents            (pixman_region32_t *region);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 int                     pixman_region32_n_rects            (pixman_region32_t *region);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_box32_t *        pixman_region32_rectangles         (pixman_region32_t *region,
 							    int               *n_rects);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 pixman_bool_t           pixman_region32_equal              (pixman_region32_t *region1,
 							    pixman_region32_t *region2);
 
 PIXMAN_API
 pixman_bool_t           pixman_region32_selfcheck          (pixman_region32_t *region);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void                    pixman_region32_reset              (pixman_region32_t *region,
 							    pixman_box32_t    *box);
 
-PIXMAN_API
+UXP_GKMEDIAS_EXPORT(PIXMAN_API)
 void			pixman_region32_clear		   (pixman_region32_t *region);
 
 

@@ -15,6 +15,8 @@
 #include <brotli/port.h>
 #include <brotli/types.h>
 
+#include "uxp/gkmedias-export.h"
+
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
@@ -172,7 +174,7 @@ BROTLI_DEC_API BROTLI_BOOL BrotliDecoderSetParameter(
  * @returns @c 0 if instance can not be allocated or initialized
  * @returns pointer to initialized ::BrotliDecoderState otherwise
  */
-BROTLI_DEC_API BrotliDecoderState* BrotliDecoderCreateInstance(
+UXP_GKMEDIAS_EXPORT(BROTLI_DEC_API) BrotliDecoderState* BrotliDecoderCreateInstance(
     brotli_alloc_func alloc_func, brotli_free_func free_func, void* opaque);
 
 /**
@@ -180,7 +182,7 @@ BROTLI_DEC_API BrotliDecoderState* BrotliDecoderCreateInstance(
  *
  * @param state decoder instance to be cleaned up and deallocated
  */
-BROTLI_DEC_API void BrotliDecoderDestroyInstance(BrotliDecoderState* state);
+UXP_GKMEDIAS_EXPORT(BROTLI_DEC_API) void BrotliDecoderDestroyInstance(BrotliDecoderState* state);
 
 /**
  * Performs one-shot memory-to-memory decompression.
@@ -243,7 +245,7 @@ BROTLI_DEC_API BrotliDecoderResult BrotliDecoderDecompress(
  * @returns ::BROTLI_DECODER_RESULT_SUCCESS decoding is finished, no more
  *          input might be consumed and no more output will be produced
  */
-BROTLI_DEC_API BrotliDecoderResult BrotliDecoderDecompressStream(
+UXP_GKMEDIAS_EXPORT(BROTLI_DEC_API) BrotliDecoderResult BrotliDecoderDecompressStream(
   BrotliDecoderState* state, size_t* available_in, const uint8_t** next_in,
   size_t* available_out, uint8_t** next_out, size_t* total_out);
 
@@ -308,7 +310,7 @@ BROTLI_DEC_API BROTLI_BOOL BrotliDecoderIsUsed(const BrotliDecoderState* state);
  *          the input and produced all of the output
  * @returns ::BROTLI_FALSE otherwise
  */
-BROTLI_DEC_API BROTLI_BOOL BrotliDecoderIsFinished(
+UXP_GKMEDIAS_EXPORT(BROTLI_DEC_API) BROTLI_BOOL BrotliDecoderIsFinished(
     const BrotliDecoderState* state);
 
 /**

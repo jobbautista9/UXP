@@ -34,6 +34,8 @@
 #include "hb-common.h"
 #include "hb-face.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -46,7 +48,7 @@ typedef struct hb_font_t hb_font_t;
 
 typedef struct hb_font_funcs_t hb_font_funcs_t;
 
-HB_EXTERN hb_font_funcs_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_font_funcs_t *
 hb_font_funcs_create (void);
 
 HB_EXTERN hb_font_funcs_t *
@@ -211,7 +213,7 @@ hb_font_funcs_set_font_v_extents_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 1.2.3
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_nominal_glyph_func (hb_font_funcs_t *ffuncs,
 				      hb_font_get_nominal_glyph_func_t func,
 				      void *user_data, hb_destroy_func_t destroy);
@@ -227,7 +229,7 @@ hb_font_funcs_set_nominal_glyph_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 1.2.3
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_variation_glyph_func (hb_font_funcs_t *ffuncs,
 					hb_font_get_variation_glyph_func_t func,
 					void *user_data, hb_destroy_func_t destroy);
@@ -243,7 +245,7 @@ hb_font_funcs_set_variation_glyph_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_h_advance_func (hb_font_funcs_t *ffuncs,
 					hb_font_get_glyph_h_advance_func_t func,
 					void *user_data, hb_destroy_func_t destroy);
@@ -259,7 +261,7 @@ hb_font_funcs_set_glyph_h_advance_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_v_advance_func (hb_font_funcs_t *ffuncs,
 					hb_font_get_glyph_v_advance_func_t func,
 					void *user_data, hb_destroy_func_t destroy);
@@ -291,7 +293,7 @@ hb_font_funcs_set_glyph_h_origin_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_v_origin_func (hb_font_funcs_t *ffuncs,
 				       hb_font_get_glyph_v_origin_func_t func,
 				       void *user_data, hb_destroy_func_t destroy);
@@ -307,7 +309,7 @@ hb_font_funcs_set_glyph_v_origin_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_h_kerning_func (hb_font_funcs_t *ffuncs,
 					hb_font_get_glyph_h_kerning_func_t func,
 					void *user_data, hb_destroy_func_t destroy);
@@ -339,7 +341,7 @@ hb_font_funcs_set_glyph_v_kerning_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_extents_func (hb_font_funcs_t *ffuncs,
 				      hb_font_get_glyph_extents_func_t func,
 				      void *user_data, hb_destroy_func_t destroy);
@@ -355,7 +357,7 @@ hb_font_funcs_set_glyph_extents_func (hb_font_funcs_t *ffuncs,
  *
  * Since: 0.9.2
  **/
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_funcs_set_glyph_contour_point_func (hb_font_funcs_t *ffuncs,
 					    hb_font_get_glyph_contour_point_func_t func,
 					    void *user_data, hb_destroy_func_t destroy);
@@ -523,7 +525,7 @@ hb_font_glyph_from_string (hb_font_t *font,
 
 /* Fonts are very light-weight objects */
 
-HB_EXTERN hb_font_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_font_t *
 hb_font_create (hb_face_t *face);
 
 HB_EXTERN hb_font_t *
@@ -535,7 +537,7 @@ hb_font_get_empty (void);
 HB_EXTERN hb_font_t *
 hb_font_reference (hb_font_t *font);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_destroy (hb_font_t *font);
 
 HB_EXTERN hb_bool_t
@@ -567,7 +569,7 @@ HB_EXTERN hb_face_t *
 hb_font_get_face (hb_font_t *font);
 
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_set_funcs (hb_font_t         *font,
 		   hb_font_funcs_t   *klass,
 		   void              *font_data,
@@ -580,7 +582,7 @@ hb_font_set_funcs_data (hb_font_t         *font,
 		        hb_destroy_func_t  destroy);
 
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_set_scale (hb_font_t *font,
 		   int x_scale,
 		   int y_scale);
@@ -593,7 +595,7 @@ hb_font_get_scale (hb_font_t *font,
 /*
  * A zero value means "no hinting in that direction"
  */
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_font_set_ppem (hb_font_t *font,
 		  unsigned int x_ppem,
 		  unsigned int y_ppem);

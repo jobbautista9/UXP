@@ -18,6 +18,10 @@ else:
     # on Windows for them to propagate there.
     Library('gkmedias')
 
+EXPORTS.uxp += [
+    'gkmedias-export.h',
+]
+
 if CONFIG['MOZ_WEBRTC']:
     DIRS += ['webrtc']
 

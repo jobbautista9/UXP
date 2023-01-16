@@ -35,6 +35,8 @@
 
 #include "hb-ot-tag.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -97,14 +99,14 @@ hb_ot_layout_get_ligature_carets (hb_font_t      *font,
 #define HB_OT_LAYOUT_DEFAULT_LANGUAGE_INDEX	0xFFFFu
 #define HB_OT_LAYOUT_NO_VARIATIONS_INDEX	0xFFFFFFFFu
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_layout_table_get_script_tags (hb_face_t    *face,
 				    hb_tag_t      table_tag,
 				    unsigned int  start_offset,
 				    unsigned int *script_count /* IN/OUT */,
 				    hb_tag_t     *script_tags /* OUT */);
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_layout_table_find_script (hb_face_t    *face,
 				hb_tag_t      table_tag,
 				hb_tag_t      script_tag,
@@ -125,7 +127,7 @@ hb_ot_layout_table_get_feature_tags (hb_face_t    *face,
 				     unsigned int *feature_count /* IN/OUT */,
 				     hb_tag_t     *feature_tags /* OUT */);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_layout_script_get_language_tags (hb_face_t    *face,
 				       hb_tag_t      table_tag,
 				       unsigned int  script_index,
@@ -140,7 +142,7 @@ hb_ot_layout_script_find_language (hb_face_t    *face,
 				   hb_tag_t      language_tag,
 				   unsigned int *language_index);
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_layout_language_get_required_feature_index (hb_face_t    *face,
 						  hb_tag_t      table_tag,
 						  unsigned int  script_index,
@@ -155,7 +157,7 @@ hb_ot_layout_language_get_required_feature (hb_face_t    *face,
 					    unsigned int *feature_index,
 					    hb_tag_t     *feature_tag);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_layout_language_get_feature_indexes (hb_face_t    *face,
 					   hb_tag_t      table_tag,
 					   unsigned int  script_index,
@@ -164,7 +166,7 @@ hb_ot_layout_language_get_feature_indexes (hb_face_t    *face,
 					   unsigned int *feature_count /* IN/OUT */,
 					   unsigned int *feature_indexes /* OUT */);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_layout_language_get_feature_tags (hb_face_t    *face,
 					hb_tag_t      table_tag,
 					unsigned int  script_index,
@@ -173,7 +175,7 @@ hb_ot_layout_language_get_feature_tags (hb_face_t    *face,
 					unsigned int *feature_count /* IN/OUT */,
 					hb_tag_t     *feature_tags /* OUT */);
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_layout_language_find_feature (hb_face_t    *face,
 				    hb_tag_t      table_tag,
 				    unsigned int  script_index,
@@ -181,7 +183,7 @@ hb_ot_layout_language_find_feature (hb_face_t    *face,
 				    hb_tag_t      feature_tag,
 				    unsigned int *feature_index);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_ot_layout_feature_get_lookups (hb_face_t    *face,
 				  hb_tag_t      table_tag,
 				  unsigned int  feature_index,
@@ -194,7 +196,7 @@ hb_ot_layout_table_get_lookup_count (hb_face_t    *face,
 				     hb_tag_t      table_tag);
 
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_ot_layout_collect_lookups (hb_face_t      *face,
 			      hb_tag_t        table_tag,
 			      const hb_tag_t *scripts,
@@ -202,7 +204,7 @@ hb_ot_layout_collect_lookups (hb_face_t      *face,
 			      const hb_tag_t *features,
 			      hb_set_t       *lookup_indexes /* OUT */);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_ot_layout_lookup_collect_glyphs (hb_face_t    *face,
 				    hb_tag_t      table_tag,
 				    unsigned int  lookup_index,
@@ -260,7 +262,7 @@ hb_ot_layout_feature_with_variations_get_lookups (hb_face_t    *face,
  * GSUB
  */
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_layout_has_substitution (hb_face_t *face);
 
 HB_EXTERN hb_bool_t
@@ -293,7 +295,7 @@ Xhb_ot_layout_lookup_substitute (hb_font_t            *font,
  * GPOS
  */
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_ot_layout_has_positioning (hb_face_t *face);
 
 #ifdef HB_NOT_IMPLEMENTED

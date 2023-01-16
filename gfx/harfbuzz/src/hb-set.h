@@ -33,6 +33,8 @@
 
 #include "hb-common.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -44,7 +46,7 @@ HB_BEGIN_DECLS
 typedef struct hb_set_t hb_set_t;
 
 
-HB_EXTERN hb_set_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_set_t *
 hb_set_create (void);
 
 HB_EXTERN hb_set_t *
@@ -53,7 +55,7 @@ hb_set_get_empty (void);
 HB_EXTERN hb_set_t *
 hb_set_reference (hb_set_t *set);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_set_destroy (hb_set_t *set);
 
 HB_EXTERN hb_bool_t
@@ -72,19 +74,19 @@ hb_set_get_user_data (hb_set_t           *set,
 HB_EXTERN hb_bool_t
 hb_set_allocation_successful (const hb_set_t *set);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_set_clear (hb_set_t *set);
 
 HB_EXTERN hb_bool_t
 hb_set_is_empty (const hb_set_t *set);
 
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_set_has (const hb_set_t *set,
 	    hb_codepoint_t  codepoint);
 
 /* Right now limited to 16-bit integers.  Eventually will do full codepoint range, sans -1
  * which we will use as a sentinel. */
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_set_add (hb_set_t       *set,
 	    hb_codepoint_t  codepoint);
 
@@ -114,7 +116,7 @@ HB_EXTERN void
 hb_set_union (hb_set_t       *set,
 	      const hb_set_t *other);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_set_intersect (hb_set_t       *set,
 		  const hb_set_t *other);
 
@@ -129,7 +131,7 @@ hb_set_symmetric_difference (hb_set_t       *set,
 HB_EXTERN void
 hb_set_invert (hb_set_t *set);
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_set_get_population (const hb_set_t *set);
 
 /* Returns -1 if set empty. */
@@ -141,7 +143,7 @@ HB_EXTERN hb_codepoint_t
 hb_set_get_max (const hb_set_t *set);
 
 /* Pass -1 in to get started. */
-HB_EXTERN hb_bool_t
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_bool_t
 hb_set_next (const hb_set_t *set,
 	     hb_codepoint_t *codepoint);
 

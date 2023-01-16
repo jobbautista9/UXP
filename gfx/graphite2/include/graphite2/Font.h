@@ -28,6 +28,8 @@
 
 #include "graphite2/Types.h"
 
+#include "uxp/gkmedias-export.h"
+
 #define GR2_VERSION_MAJOR   1
 #define GR2_VERSION_MINOR   3
 #define GR2_VERSION_BUGFIX  10
@@ -128,7 +130,8 @@ typedef struct gr_face_ops	gr_face_ops;
   *                      call only.
   * @param faceOptions   Bitfield describing various options. See enum gr_face_options for details.
   */
-GR2_API gr_face* gr_make_face_with_ops(const void* appFaceHandle/*non-NULL*/, const gr_face_ops *face_ops, unsigned int faceOptions);
+UXP_GKMEDIAS_EXPORT(GR2_API) gr_face*
+  gr_make_face_with_ops(const void* appFaceHandle/*non-NULL*/, const gr_face_ops *face_ops, unsigned int faceOptions);
 
 /** Create a gr_face object given application information and a getTable function. This function is deprecated as of v1.2.0 in
   * favour of gr_make_face_with_ops.
@@ -193,7 +196,8 @@ GR2_API void gr_tag_to_str(gr_uint32 tag, char *str);
   *                  langname is right 0 padded and assumes lowercase. Thus the en langauge
   *                  would be 0x656E0000. Langname may also be space padded, thus 0x656E2020.
   */
-GR2_API gr_feature_val* gr_face_featureval_for_lang(const gr_face* pFace, gr_uint32 langname);
+UXP_GKMEDIAS_EXPORT(GR2_API) gr_feature_val*
+  gr_face_featureval_for_lang(const gr_face* pFace, gr_uint32 langname);
 
 /** Get feature reference for a given feature id from a face
   *
@@ -202,7 +206,8 @@ GR2_API gr_feature_val* gr_face_featureval_for_lang(const gr_face* pFace, gr_uin
   * @param pFace Font face to get information on.
   * @param featId    Feature id tag to get reference to.
   */
-GR2_API const gr_feature_ref* gr_face_find_fref(const gr_face* pFace, gr_uint32 featId);
+UXP_GKMEDIAS_EXPORT(GR2_API) const gr_feature_ref*
+  gr_face_find_fref(const gr_face* pFace, gr_uint32 featId);
 
 /** Returns number of feature references in a face **/
 GR2_API gr_uint16 gr_face_n_fref(const gr_face* pFace);
@@ -217,13 +222,15 @@ GR2_API unsigned short gr_face_n_languages(const gr_face* pFace);
 GR2_API gr_uint32 gr_face_lang_by_index(const gr_face* pFace, gr_uint16 i);
 
 /** Destroy the given face and free its memory **/
-GR2_API void gr_face_destroy(gr_face *face);
+UXP_GKMEDIAS_EXPORT(GR2_API) void
+  gr_face_destroy(gr_face *face);
 
 /** Returns the number of glyphs in the face **/
 GR2_API unsigned short gr_face_n_glyphs(const gr_face* pFace);
 
 /** Returns a faceinfo for the face and script **/
-GR2_API const gr_faceinfo *gr_face_info(const gr_face *pFace, gr_uint32 script);
+UXP_GKMEDIAS_EXPORT(GR2_API) const gr_faceinfo
+  *gr_face_info(const gr_face *pFace, gr_uint32 script);
 
 /** Returns whether the font supports a given Unicode character
   *
@@ -300,7 +307,8 @@ typedef struct gr_font_ops  gr_font_ops;
   * @param face the face this font corresponds to. Must stay alive as long as
   *        the font does.
   */
-GR2_API gr_font* gr_make_font_with_ops(float ppm, const void* appFontHandle, const gr_font_ops * font_ops, const gr_face *face);
+UXP_GKMEDIAS_EXPORT(GR2_API) gr_font*
+  gr_make_font_with_ops(float ppm, const void* appFontHandle, const gr_font_ops * font_ops, const gr_face *face);
 
 /** Creates a font with hinted advance width query function.
   * This function is deprecated. Use gr_make_font_with_ops instead.
@@ -316,7 +324,8 @@ GR2_API gr_font* gr_make_font_with_ops(float ppm, const void* appFontHandle, con
 GR2_API gr_font* gr_make_font_with_advance_fn(float ppm, const void* appFontHandle, gr_advance_fn getAdvance, const gr_face *face);
 
 /** Free a font **/
-GR2_API void gr_font_destroy(gr_font *font);
+UXP_GKMEDIAS_EXPORT(GR2_API) void
+  gr_font_destroy(gr_font *font);
 
 /** get a feature value
   *
@@ -333,7 +342,8 @@ GR2_API gr_uint16 gr_fref_feature_value(const gr_feature_ref* pfeatureref, const
   * @param val   value to set the feature to
   * @param pDest the gr_feature_val containing all the values for all the features
   */
-GR2_API int gr_fref_set_feature_value(const gr_feature_ref* pfeatureref, gr_uint16 val, gr_feature_val* pDest);
+UXP_GKMEDIAS_EXPORT(GR2_API) int
+  gr_fref_set_feature_value(const gr_feature_ref* pfeatureref, gr_uint16 val, gr_feature_val* pDest);
 
 /** Returns the id tag for a gr_feature_ref **/
 GR2_API gr_uint32 gr_fref_id(const gr_feature_ref* pfeatureref);
@@ -380,7 +390,8 @@ GR2_API void gr_label_destroy(void * label);
 GR2_API gr_feature_val* gr_featureval_clone(const gr_feature_val* pfeatures);
 
 /** Destroys a gr_feature_val **/
-GR2_API void gr_featureval_destroy(gr_feature_val *pfeatures);
+UXP_GKMEDIAS_EXPORT(GR2_API) void
+  gr_featureval_destroy(gr_feature_val *pfeatures);
 
 #ifdef __cplusplus
 }

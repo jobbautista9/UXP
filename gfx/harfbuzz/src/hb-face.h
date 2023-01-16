@@ -34,6 +34,8 @@
 #include "hb-common.h"
 #include "hb-blob.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -50,7 +52,7 @@ hb_face_create (hb_blob_t    *blob,
 typedef hb_blob_t * (*hb_reference_table_func_t)  (hb_face_t *face, hb_tag_t tag, void *user_data);
 
 /* calls destroy() when not needing user_data anymore */
-HB_EXTERN hb_face_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_face_t *
 hb_face_create_for_tables (hb_reference_table_func_t  reference_table_func,
 			   void                      *user_data,
 			   hb_destroy_func_t          destroy);
@@ -58,10 +60,10 @@ hb_face_create_for_tables (hb_reference_table_func_t  reference_table_func,
 HB_EXTERN hb_face_t *
 hb_face_get_empty (void);
 
-HB_EXTERN hb_face_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_face_t *
 hb_face_reference (hb_face_t *face);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_face_destroy (hb_face_t *face);
 
 HB_EXTERN hb_bool_t

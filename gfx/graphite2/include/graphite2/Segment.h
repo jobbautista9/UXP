@@ -29,6 +29,8 @@
 #include "graphite2/Types.h"
 #include "graphite2/Font.h"
 
+#include "uxp/gkmedias-export.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -226,7 +228,8 @@ GR2_API int gr_cinfo_before(const gr_char_info* p/*not NULL*/);
   * @return code unit index between 0 and the end of the string
   * @param p Pointer to charinfo to return information on.
   */
-GR2_API size_t gr_cinfo_base(const gr_char_info* p/*not NULL*/);
+UXP_GKMEDIAS_EXPORT(GR2_API) size_t
+  gr_cinfo_base(const gr_char_info* p/*not NULL*/);
 
 /** Returns the number of unicode characters in a string.
   *
@@ -239,7 +242,8 @@ GR2_API size_t gr_cinfo_base(const gr_char_info* p/*not NULL*/);
   *               in this variable. If no error occurs, pError will contain NULL. NULL
   *               may be passed for pError if no such information is required.
   */
-GR2_API size_t gr_count_unicode_characters(enum gr_encform enc, const void* buffer_begin, const void* buffer_end, const void** pError);
+UXP_GKMEDIAS_EXPORT(GR2_API) size_t
+  gr_count_unicode_characters(enum gr_encform enc, const void* buffer_begin, const void* buffer_end, const void** pError);
 
 /** Creates and returns a segment.
   *
@@ -266,19 +270,22 @@ GR2_API size_t gr_count_unicode_characters(enum gr_encform enc, const void* buff
   *            right (0) and whether to run the internal bidi pass, if a font requests it.
   *            See enum gr_bidirtl for details.
   */
-GR2_API gr_segment* gr_make_seg(const gr_font* font, const gr_face* face, gr_uint32 script, const gr_feature_val* pFeats, enum gr_encform enc, const void* pStart, size_t nChars, int dir);
+UXP_GKMEDIAS_EXPORT(GR2_API) gr_segment*
+  gr_make_seg(const gr_font* font, const gr_face* face, gr_uint32 script, const gr_feature_val* pFeats, enum gr_encform enc, const void* pStart, size_t nChars, int dir);
 
 /** Destroys a segment, freeing the memory.
   *
   * @param p The segment to destroy
   */
-GR2_API void gr_seg_destroy(gr_segment* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) void
+  gr_seg_destroy(gr_segment* p);
 
 /** Returns the advance for the whole segment.
   *
   * Returns the width of the segment up to the next glyph origin after the segment
   */
-GR2_API float gr_seg_advance_X(const gr_segment* pSeg/*not NULL*/);
+UXP_GKMEDIAS_EXPORT(GR2_API) float
+  gr_seg_advance_X(const gr_segment* pSeg/*not NULL*/);
 
 /** Returns the height advance for the segment. **/
 GR2_API float gr_seg_advance_Y(const gr_segment* pSeg/*not NULL*/);
@@ -287,7 +294,8 @@ GR2_API float gr_seg_advance_Y(const gr_segment* pSeg/*not NULL*/);
 GR2_API unsigned int gr_seg_n_cinfo(const gr_segment* pSeg/*not NULL*/);
 
 /** Returns a gr_char_info at a given index in the segment. **/
-GR2_API const gr_char_info* gr_seg_cinfo(const gr_segment* pSeg/*not NULL*/, unsigned int index/*must be <number_of_CharInfo*/);
+UXP_GKMEDIAS_EXPORT(GR2_API) const gr_char_info*
+  gr_seg_cinfo(const gr_segment* pSeg/*not NULL*/, unsigned int index/*must be <number_of_CharInfo*/);
 
 /** Returns the number of glyph gr_slots in the segment. **/
 GR2_API unsigned int gr_seg_n_slots(const gr_segment* pSeg/*not NULL*/);      //one slot per glyph
@@ -331,7 +339,8 @@ GR2_API float gr_seg_justify(gr_segment* pSeg/*not NULL*/, const gr_slot* pStart
   * Slots are held in a linked list. This returns the next in the linked list. The slot
   * may or may not be attached to another slot. Returns NULL at the end of the segment.
   */
-GR2_API const gr_slot* gr_slot_next_in_segment(const gr_slot* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) const gr_slot*
+  gr_slot_next_in_segment(const gr_slot* p);
 
 /** Returns the previous slot along in the segment.
   *
@@ -375,13 +384,16 @@ GR2_API const gr_slot* gr_slot_next_sibling_attachment(const gr_slot* p);
   * Each slot has a glyphid which is rendered at the position given by the slot. This
   * glyphid is the real glyph to be rendered and never a pseudo glyph.
   */
-GR2_API unsigned short gr_slot_gid(const gr_slot* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) unsigned short
+  gr_slot_gid(const gr_slot* p);
 
 /** Returns X offset of glyph from start of segment **/
-GR2_API float gr_slot_origin_X(const gr_slot* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) float
+  gr_slot_origin_X(const gr_slot* p);
 
 /** Returns Y offset of glyph from start of segment **/
-GR2_API float gr_slot_origin_Y(const gr_slot* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) float
+  gr_slot_origin_Y(const gr_slot* p);
 
 /** Returns the glyph advance for this glyph as adjusted for kerning
   *
@@ -417,7 +429,8 @@ GR2_API int gr_slot_before(const gr_slot* p/*not NULL*/);
   * of char_infos that it is associated with and this function returning the index of
   * the char_info with the highest index, from this set.
   */
-GR2_API int gr_slot_after(const gr_slot* p/*not NULL*/);
+UXP_GKMEDIAS_EXPORT(GR2_API) int
+  gr_slot_after(const gr_slot* p/*not NULL*/);
 
 /** Returns the index of this slot in the segment
   *
@@ -440,7 +453,8 @@ GR2_API int gr_slot_attr(const gr_slot* p/*not NULL*/, const gr_segment* pSeg/*n
   * .insert attribute explicitly set to true. This is the primary mechanism
   * for identifying contiguous sequences of base plus diacritics.
   */
-GR2_API int gr_slot_can_insert_before(const gr_slot* p);
+UXP_GKMEDIAS_EXPORT(GR2_API) int
+  gr_slot_can_insert_before(const gr_slot* p);
 
 /** Returns the original gr_char_info index this slot refers to.
   *

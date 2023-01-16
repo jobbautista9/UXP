@@ -1,0 +1,51 @@
+diff --git jpeglib.h jpeglib.h
+index d7664f063..cce7940ee 100644
+--- jpeglib.h
++++ jpeglib.h
+@@ -37,6 +37,8 @@ extern "C" {
+ #endif
+ #endif
+ 
++#include "uxp/gkmedias-export.h"
++
+ 
+ /* Various constants determining the sizes of things.
+  * All of these are specified by the JPEG standard, so don't change them
+@@ -888,7 +890,8 @@ typedef boolean (*jpeg_marker_parser_method) (j_decompress_ptr cinfo);
+ 
+ 
+ /* Default error-management setup */
+-EXTERN(struct jpeg_error_mgr *) jpeg_std_error(struct jpeg_error_mgr *err);
++UXP_GKMEDIAS_EXPORT() EXTERN(struct jpeg_error_mgr *)
++  jpeg_std_error(struct jpeg_error_mgr *err);
+ 
+ /* Initialization of JPEG compression objects.
+  * jpeg_create_compress() and jpeg_create_decompress() are the exported
+@@ -905,11 +908,13 @@ EXTERN(struct jpeg_error_mgr *) jpeg_std_error(struct jpeg_error_mgr *err);
+                         (size_t)sizeof(struct jpeg_decompress_struct))
+ EXTERN(void) jpeg_CreateCompress(j_compress_ptr cinfo, int version,
+                                  size_t structsize);
+-EXTERN(void) jpeg_CreateDecompress(j_decompress_ptr cinfo, int version,
+-                                   size_t structsize);
++UXP_GKMEDIAS_EXPORT() EXTERN(void)
++  jpeg_CreateDecompress(j_decompress_ptr cinfo, int version,
++                        size_t structsize);
+ /* Destruction of JPEG compression objects */
+ EXTERN(void) jpeg_destroy_compress(j_compress_ptr cinfo);
+-EXTERN(void) jpeg_destroy_decompress(j_decompress_ptr cinfo);
++UXP_GKMEDIAS_EXPORT() EXTERN(void)
++  jpeg_destroy_decompress(j_decompress_ptr cinfo);
+ 
+ /* Standard data source and destination managers: stdio streams. */
+ /* Caller is responsible for opening the file before and closing after. */
+@@ -1060,7 +1065,8 @@ EXTERN(void) jpeg_abort(j_common_ptr cinfo);
+ EXTERN(void) jpeg_destroy(j_common_ptr cinfo);
+ 
+ /* Default restart-marker-resync procedure for use by data source modules */
+-EXTERN(boolean) jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired);
++UXP_GKMEDIAS_EXPORT() EXTERN(boolean)
++  jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired);
+ 
+ /* Read ICC profile.  See libjpeg.txt for usage information. */
+ EXTERN(boolean) jpeg_read_icc_profile(j_decompress_ptr cinfo,
+

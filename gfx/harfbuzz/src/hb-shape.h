@@ -37,6 +37,8 @@
 #include "hb-buffer.h"
 #include "hb-font.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -56,7 +58,7 @@ hb_feature_to_string (hb_feature_t *feature,
 		      char *buf, unsigned int size);
 
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_shape (hb_font_t           *font,
 	  hb_buffer_t         *buffer,
 	  const hb_feature_t  *features,

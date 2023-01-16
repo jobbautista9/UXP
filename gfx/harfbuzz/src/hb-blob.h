@@ -33,6 +33,8 @@
 
 #include "hb-common.h"
 
+#include "uxp/gkmedias-export.h"
+
 HB_BEGIN_DECLS
 
 
@@ -64,7 +66,7 @@ typedef enum {
 
 typedef struct hb_blob_t hb_blob_t;
 
-HB_EXTERN hb_blob_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_blob_t *
 hb_blob_create (const char        *data,
 		unsigned int       length,
 		hb_memory_mode_t   mode,
@@ -82,13 +84,13 @@ hb_blob_create_sub_blob (hb_blob_t    *parent,
 			 unsigned int  offset,
 			 unsigned int  length);
 
-HB_EXTERN hb_blob_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_blob_t *
 hb_blob_get_empty (void);
 
-HB_EXTERN hb_blob_t *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN hb_blob_t *
 hb_blob_reference (hb_blob_t *blob);
 
-HB_EXTERN void
+UXP_GKMEDIAS_EXPORT() HB_EXTERN void
 hb_blob_destroy (hb_blob_t *blob);
 
 HB_EXTERN hb_bool_t
@@ -111,10 +113,10 @@ HB_EXTERN hb_bool_t
 hb_blob_is_immutable (hb_blob_t *blob);
 
 
-HB_EXTERN unsigned int
+UXP_GKMEDIAS_EXPORT() HB_EXTERN unsigned int
 hb_blob_get_length (hb_blob_t *blob);
 
-HB_EXTERN const char *
+UXP_GKMEDIAS_EXPORT() HB_EXTERN const char *
 hb_blob_get_data (hb_blob_t *blob, unsigned int *length);
 
 HB_EXTERN char *
