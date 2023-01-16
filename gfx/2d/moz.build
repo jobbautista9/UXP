@@ -201,7 +201,7 @@ if CONFIG['CPU_ARCH'] == 'arm' and CONFIG['BUILD_ARM_NEON']:
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gkmedias'
 
 for var in ('USE_CAIRO', 'MOZ2D_HAS_MOZ_CAIRO'):
     DEFINES[var] = True
