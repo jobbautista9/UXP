@@ -230,7 +230,7 @@ sym(vp8_bilinear_predict8x8_mmx):
         mov         rdi,        arg(4) ;dst_ptr           ;
 
         shl         rax,        5 ; offset * 32
-        lea         rcx,        [GLOBAL(sym(vp8_bilinear_filters_x86_8))]
+        lea         rcx,        [sym(vp8_bilinear_filters_x86_8) wrt ..gotpcrel]
 
         add         rax,        rcx ; HFilter
         mov         rsi,        arg(0) ;src_ptr              ;
@@ -386,7 +386,7 @@ sym(vp8_bilinear_predict8x4_mmx):
         movsxd      rax,        dword ptr arg(2) ;xoffset
         mov         rdi,        arg(4) ;dst_ptr           ;
 
-        lea         rcx,        [GLOBAL(sym(vp8_bilinear_filters_x86_8))]
+        lea         rcx,        [sym(vp8_bilinear_filters_x86_8) wrt ..gotpcrel]
         shl         rax,        5
 
         mov         rsi,        arg(0) ;src_ptr              ;
@@ -541,7 +541,7 @@ sym(vp8_bilinear_predict4x4_mmx):
         movsxd      rax,        dword ptr arg(2) ;xoffset
         mov         rdi,        arg(4) ;dst_ptr           ;
 
-        lea         rcx,        [GLOBAL(sym(vp8_bilinear_filters_x86_8))]
+        lea         rcx,        [sym(vp8_bilinear_filters_x86_8) wrt ..gotpcrel]
         shl         rax,        5
 
         add         rax,        rcx ; HFilter

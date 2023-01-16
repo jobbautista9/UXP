@@ -38,7 +38,7 @@ sym(vp8_mbpost_proc_down_mmx):
 %define flimit2 [rsp+128]
 
 %if ABI_IS_32BIT=0
-    lea         r8,       [GLOBAL(sym(vp8_rv))]
+    lea         r8,       [sym(vp8_rv) wrt ..gotpcrel]
 %endif
 
     ;rows +=8;

@@ -977,7 +977,7 @@ sym(vp8_bilinear_predict16x16_sse2):
     ;const short *HFilter = vp8_bilinear_filters_x86_8[xoffset]
     ;const short *VFilter = vp8_bilinear_filters_x86_8[yoffset]
 
-        lea         rcx,        [GLOBAL(sym(vp8_bilinear_filters_x86_8))]
+        lea         rcx,        [sym(vp8_bilinear_filters_x86_8) wrt ..gotpcrel]
         movsxd      rax,        dword ptr arg(2) ;xoffset
 
         cmp         rax,        0      ;skip first_pass filter if xoffset=0
@@ -1247,7 +1247,7 @@ sym(vp8_bilinear_predict8x8_sse2):
 
     ;const short *HFilter = vp8_bilinear_filters_x86_8[xoffset]
     ;const short *VFilter = vp8_bilinear_filters_x86_8[yoffset]
-        lea         rcx,        [GLOBAL(sym(vp8_bilinear_filters_x86_8))]
+        lea         rcx,        [sym(vp8_bilinear_filters_x86_8) wrt ..gotpcrel]
 
         mov         rsi,        arg(0) ;src_ptr
         movsxd      rdx,        dword ptr arg(1) ;src_pixels_per_line
