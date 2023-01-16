@@ -21,6 +21,17 @@ else:
 if CONFIG['MOZ_WEBRTC']:
     DIRS += ['webrtc']
 
+if CONFIG['MOZ_SYSTEM_JPEG']:
+    OS_LIBS += CONFIG['MOZ_JPEG_LIBS']
+
+if CONFIG['MOZ_ALSA']:
+    OS_LIBS += CONFIG['MOZ_ALSA_LIBS']
+
+if CONFIG['MOZ_SNDIO']:
+    OS_LIBS += [
+        'sndio',
+    ]
+
 if CONFIG['OS_TARGET'] == 'WINNT':
     DEFFILE = 'symbols.def'
     OS_LIBS += [
