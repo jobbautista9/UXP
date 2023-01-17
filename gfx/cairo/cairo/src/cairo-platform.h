@@ -7,6 +7,8 @@
 
 #include "prcpucfg.h"
 
+#include "uxp/gkmedias-export.h"
+
 /* we're replacing any definition from cairoint.h etc */
 #undef cairo_public
 
@@ -18,8 +20,9 @@
 #define CVISIBILITY_HIDDEN
 #endif
 
-/* In libxul builds we don't ever want to export cairo symbols */
-#define cairo_public extern CVISIBILITY_HIDDEN
+/* If we're building into libxul we don't ever want to export cairo
+ * symbols. Otherwise, export them. */
+#define cairo_public extern UXP_GKMEDIAS_EXPORT(CVISIBILITY_HIDDEN)
 
 #define CCALLBACK
 #define CCALLBACK_DECL
