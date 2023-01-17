@@ -16,6 +16,8 @@
 
 #include <stdint.h>
 
+#include "uxp/gkmedias-export.h"
+
 /*
  * Maximum number of components (color channels) allowed in JPEG image.
  * To meet the letter of Rec. ITU-T T.81 | ISO/IEC 10918-1, set this to 255.
@@ -162,7 +164,7 @@ typedef unsigned int JDIMENSION;
 /* a function referenced thru EXTERNs: */
 #define GLOBAL(type)            type
 /* a reference to a GLOBAL function: */
-#define EXTERN(type)            extern type
+#define EXTERN(type)            UXP_GKMEDIAS_EXPORT() extern type
 
 
 /* Originally, this macro was used as a way of defining function prototypes

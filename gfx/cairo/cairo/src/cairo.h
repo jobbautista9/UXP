@@ -9,6 +9,8 @@
 #include "cairo-features.h"
 #include "cairo-deprecated.h"
 
+#include "uxp/gkmedias-export.h"
+
 #ifdef  __cplusplus
 # define CAIRO_BEGIN_DECLS  extern "C" {
 # define CAIRO_END_DECLS    }
@@ -21,7 +23,7 @@
 # if defined (_MSC_VER) && ! defined (CAIRO_WIN32_STATIC_BUILD)
 #  define cairo_public __declspec(dllimport)
 # else
-#  define cairo_public
+#  define cairo_public UXP_GKMEDIAS_EXPORT()
 # endif
 #endif
 

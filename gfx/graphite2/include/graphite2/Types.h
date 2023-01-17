@@ -28,6 +28,8 @@
 
 #include <stddef.h>
 
+#include "uxp/gkmedias-export.h"
+
 typedef unsigned char   gr_uint8;
 typedef gr_uint8        gr_byte;
 typedef signed char     gr_int8;
@@ -60,13 +62,13 @@ enum gr_encform {
   #define GR2_LOCAL
 #elif __GNUC__ >= 4
   #if defined GRAPHITE2_STATIC
-    #define GR2_API      __attribute__ ((visibility("hidden")))
+    #define GR2_API      UXP_GKMEDIAS_EXPORT(__attribute__ ((visibility("hidden"))))
   #else
-    #define GR2_API      __attribute__ ((visibility("default")))
+    #define GR2_API      UXP_GKMEDIAS_EXPORT(__attribute__ ((visibility("default"))))
   #endif
   #define GR2_LOCAL      __attribute__ ((visibility("hidden")))
 #else
-  #define GR2_API
+  #define GR2_API        UXP_GKMEDIAS_EXPORT()
   #define GR2_LOCAL
 #endif
 

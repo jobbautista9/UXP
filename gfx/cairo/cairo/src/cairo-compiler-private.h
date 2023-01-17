@@ -7,6 +7,8 @@
 
 #include "cairo.h"
 
+#include "uxp/gkmedias-export.h"
+
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -51,9 +53,9 @@
  * macros.
  */
 #if __GNUC__ >= 3 && defined(__ELF__) && !defined(__sun)
-# define slim_hidden_proto(name)		slim_hidden_proto1(name, slim_hidden_int_name(name)) cairo_private
-# define slim_hidden_proto_no_warn(name)	slim_hidden_proto1(name, slim_hidden_int_name(name)) cairo_private_no_warn
-# define slim_hidden_def(name)			slim_hidden_def1(name, slim_hidden_int_name(name))
+# define slim_hidden_proto(name)		UXP_GKMEDIAS_EXPORT(slim_hidden_proto1(name, slim_hidden_int_name(name)) cairo_private)
+# define slim_hidden_proto_no_warn(name)	UXP_GKMEDIAS_EXPORT(slim_hidden_proto1(name, slim_hidden_int_name(name)) cairo_private_no_warn)
+# define slim_hidden_def(name)			UXP_GKMEDIAS_EXPORT(slim_hidden_def1(name, slim_hidden_int_name(name)))
 # define slim_hidden_int_name(name) INT_##name
 # define slim_hidden_proto1(name, internal)				\
   extern __typeof (name) name						\

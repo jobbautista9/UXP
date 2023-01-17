@@ -6,6 +6,8 @@
 #ifndef GLSLANG_SHADERLANG_H_
 #define GLSLANG_SHADERLANG_H_
 
+#include "uxp/gkmedias-export.h"
+
 #if defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
 #if defined(_WIN32) || defined(_WIN64)
 
@@ -20,7 +22,7 @@
 #endif
 
 #else  // defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
-#define COMPILER_EXPORT
+#define COMPILER_EXPORT UXP_GKMEDIAS_EXPORT()
 #endif
 
 #include <stddef.h>

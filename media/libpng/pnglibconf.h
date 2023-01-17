@@ -5,6 +5,8 @@
 #ifndef PNGLCONF_H
 #define PNGLCONF_H
 
+#include "uxp/gkmedias-export.h"
+
 #define MOZ_EMBEDDED_LIBPNG
 
 /* Limit image dimensions (bug #251381, #591822, #967656, and #1283961) */
@@ -20,7 +22,7 @@
 #define PNG_GAMMA_THRESHOLD_FIXED 5000
 #define PNG_IDAT_READ_SIZE PNG_ZBUF_SIZE
 #define PNG_INFLATE_BUF_SIZE 1024
-#define PNG_LINKAGE_API extern
+#define PNG_LINKAGE_API UXP_GKMEDIAS_EXPORT() extern
 #define PNG_LINKAGE_CALLBACK extern
 #define PNG_LINKAGE_DATA extern
 #define PNG_LINKAGE_FUNCTION extern

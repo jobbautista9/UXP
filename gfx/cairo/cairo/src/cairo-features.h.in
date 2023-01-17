@@ -7,6 +7,8 @@
 
 #include "cairo-platform.h"
 
+#include "uxp/gkmedias-export.h"
+
 #ifdef  __cplusplus
 # define CAIRO_BEGIN_DECLS  extern "C" {
 # define CAIRO_END_DECLS    }
@@ -16,7 +18,7 @@
 #endif
 
 #ifndef cairo_public
-# define cairo_public
+# define cairo_public UXP_GKMEDIAS_EXPORT()
 #endif
 
 #define CAIRO_VERSION_MAJOR 1

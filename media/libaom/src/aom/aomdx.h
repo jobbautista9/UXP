@@ -28,6 +28,9 @@ extern "C" {
 /* Include controls common to both the encoder and decoder */
 #include "aom/aom.h"
 
+/* Make symbols used by libxul visible if gkmedias is shared */
+#include "uxp/gkmedias-export.h"
+
 /*!\name Algorithm interface for AV1
  *
  * This interface provides the capability to decode AV1 streams.
@@ -41,7 +44,7 @@ extern "C" {
 extern aom_codec_iface_t aom_codec_av1_dx_algo;
 /*!\brief The interface to the AV1 decoder.
  */
-extern aom_codec_iface_t *aom_codec_av1_dx(void);
+UXP_GKMEDIAS_EXPORT() extern aom_codec_iface_t *aom_codec_av1_dx(void);
 
 /*!@} - end algorithm interface member group */
 

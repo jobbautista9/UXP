@@ -22,6 +22,8 @@ extern "C" {
 
 #include "aom/aom_integer.h"
 
+#include "uxp/gkmedias-export.h"
+
 /*!\brief Current ABI version number
  *
  * \internal
@@ -253,6 +255,7 @@ typedef struct aom_image {
  *         parameter is non-null, the value of the img parameter will be
  *         returned.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_image_t *aom_img_alloc(aom_image_t *img, aom_img_fmt_t fmt,
                            unsigned int d_w, unsigned int d_h,
                            unsigned int align);
@@ -341,6 +344,7 @@ void aom_img_flip(aom_image_t *img);
  *
  * \param[in]    img       Image descriptor
  */
+UXP_GKMEDIAS_EXPORT()
 void aom_img_free(aom_image_t *img);
 
 /*!\brief Get the width of a plane

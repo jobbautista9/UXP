@@ -7,7 +7,9 @@
 #ifndef JXL_EXPORT_H
 #define JXL_EXPORT_H
 
-#define JXL_EXPORT
+#include "uxp/gkmedias-export.h"
+
+#define JXL_EXPORT UXP_GKMEDIAS_EXPORT()
 
 // MSVC requires [[deprecated]]
 #define JXL_DEPRECATED [[deprecated]]

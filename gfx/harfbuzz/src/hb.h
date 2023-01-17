@@ -28,8 +28,10 @@
 #define HB_H
 #define HB_H_IN
 
+#include "uxp/gkmedias-export.h"
+
 #ifndef HB_EXTERN
-#define HB_EXTERN extern
+#define HB_EXTERN UXP_GKMEDIAS_EXPORT() extern
 #endif
 
 #include "hb-blob.h"

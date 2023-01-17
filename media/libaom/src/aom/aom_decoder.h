@@ -33,6 +33,8 @@ extern "C" {
 #include "aom/aom_codec.h"
 #include "aom/aom_frame_buffer.h"
 
+#include "uxp/gkmedias-export.h"
+
 /*!\brief Current ABI version number
  *
  * \internal
@@ -117,6 +119,7 @@ typedef struct aom_codec_dec_cfg {
  * \retval #AOM_CODEC_MEM_ERROR
  *     Memory allocation failed.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_codec_err_t aom_codec_dec_init_ver(aom_codec_ctx_t *ctx,
                                        aom_codec_iface_t *iface,
                                        const aom_codec_dec_cfg_t *cfg,
@@ -150,6 +153,7 @@ aom_codec_err_t aom_codec_dec_init_ver(aom_codec_ctx_t *ctx,
  *     The decoder didn't recognize the coded data, or the
  *     buffer was too short.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_codec_err_t aom_codec_peek_stream_info(aom_codec_iface_t *iface,
                                            const uint8_t *data, size_t data_sz,
                                            aom_codec_stream_info_t *si);
@@ -188,6 +192,7 @@ aom_codec_err_t aom_codec_get_stream_info(aom_codec_ctx_t *ctx,
  *         see the descriptions of the other error codes in ::aom_codec_err_t
  *         for recoverability capabilities.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_codec_err_t aom_codec_decode(aom_codec_ctx_t *ctx, const uint8_t *data,
                                  size_t data_sz, void *user_priv);
 
@@ -207,6 +212,7 @@ aom_codec_err_t aom_codec_decode(aom_codec_ctx_t *ctx, const uint8_t *data,
  * \return Returns a pointer to an image, if one is ready for display. Frames
  *         produced will always be in PTS (presentation time stamp) order.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_image_t *aom_codec_get_frame(aom_codec_ctx_t *ctx, aom_codec_iter_t *iter);
 
 /*!\defgroup cap_external_frame_buffer External Frame Buffer Functions

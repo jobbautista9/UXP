@@ -7,6 +7,8 @@
 #ifndef JXL_THREADS_EXPORT_H
 #define JXL_THREADS_EXPORT_H
 
-#define JXL_THREADS_EXPORT
+#include "uxp/gkmedias-export.h"
+
+#define JXL_THREADS_EXPORT UXP_GKMEDIAS_EXPORT()
 
 #endif /* JXL_THREADS_EXPORT_H */

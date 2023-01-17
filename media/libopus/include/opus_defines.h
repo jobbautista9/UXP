@@ -35,6 +35,8 @@
 
 #include "opus_types.h"
 
+#include "uxp/gkmedias-export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,7 +75,7 @@ extern "C" {
 # elif defined(__GNUC__) && defined(OPUS_BUILD)
 #  define OPUS_EXPORT __attribute__ ((visibility ("default")))
 # else
-#  define OPUS_EXPORT
+#  define OPUS_EXPORT UXP_GKMEDIAS_EXPORT()
 # endif
 #endif
 

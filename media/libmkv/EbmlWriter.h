@@ -18,6 +18,8 @@ extern "C" {
 #include "vpx/vpx_integer.h"
 #include "EbmlBufferWriter.h"
 
+#include "uxp/gkmedias-export.h"
+
 /* note: you must define write and serialize functions as well as your own
  * EBML_GLOBAL
  *
@@ -36,7 +38,7 @@ void Ebml_WriteUTF8(EbmlGlobal *glob, const wchar_t *wstr);
 void Ebml_WriteID(EbmlGlobal *glob, unsigned long class_id);
 void Ebml_SerializeUnsigned32(EbmlGlobal *glob, unsigned long class_id, uint32_t ui);
 void Ebml_SerializeUnsigned64(EbmlGlobal *glob, unsigned long class_id, uint64_t ui);
-void Ebml_SerializeUnsigned(EbmlGlobal *glob, unsigned long class_id, unsigned long ui);
+UXP_GKMEDIAS_EXPORT() void Ebml_SerializeUnsigned(EbmlGlobal *glob, unsigned long class_id, unsigned long ui);
 void Ebml_SerializeBinary(EbmlGlobal *glob, unsigned long class_id, unsigned long ui);
 void Ebml_SerializeFloat(EbmlGlobal *glob, unsigned long class_id, double d);
 /* TODO make this more generic to signed */

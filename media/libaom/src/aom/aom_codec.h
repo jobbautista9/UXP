@@ -100,6 +100,8 @@ extern "C" {
 #include "aom/aom_image.h"
 #include "aom/aom_integer.h"
 
+#include "uxp/gkmedias-export.h"
+
 /*!\brief Decorator indicating a function is deprecated */
 #ifndef AOM_DEPRECATED
 #if defined(__GNUC__) && __GNUC__
@@ -405,6 +407,7 @@ const char *aom_codec_iface_name(aom_codec_iface_t *iface);
  * \param[in]    err     Error number.
  *
  */
+UXP_GKMEDIAS_EXPORT()
 const char *aom_codec_err_to_string(aom_codec_err_t err);
 
 /*!\brief Retrieve error synopsis for codec context
@@ -448,6 +451,7 @@ const char *aom_codec_error_detail(aom_codec_ctx_t *ctx);
  * \retval #AOM_CODEC_MEM_ERROR
  *     Memory allocation failed.
  */
+UXP_GKMEDIAS_EXPORT()
 aom_codec_err_t aom_codec_destroy(aom_codec_ctx_t *ctx);
 
 /*!\brief Get the capabilities of an algorithm.

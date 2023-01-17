@@ -9,6 +9,8 @@
 #ifndef BROTLI_COMMON_PORT_H_
 #define BROTLI_COMMON_PORT_H_
 
+#include "uxp/gkmedias-export.h"
+
 /* The following macros were borrowed from https://github.com/nemequ/hedley
  * with permission of original author - Evan Nemerson <evan@nemerson.com> */
 
@@ -281,7 +283,7 @@
 #endif  /* _WIN32 */
 #else  /* BROTLI_SHARED_COMPILATION */
 #define BROTLI_COMMON_API
-#define BROTLI_DEC_API
+#define BROTLI_DEC_API UXP_GKMEDIAS_EXPORT()
 #define BROTLI_ENC_API
 #endif
 
