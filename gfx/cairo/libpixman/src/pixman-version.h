@@ -27,6 +27,8 @@
 #ifndef PIXMAN_VERSION_H__
 #define PIXMAN_VERSION_H__
 
+#include "uxp/gkmedias-export.h"
+
 #ifndef PIXMAN_H__
 #  error pixman-version.h should only be included by pixman.h
 #endif
@@ -48,7 +50,7 @@
 	PIXMAN_VERSION_MICRO)
 
 #ifndef PIXMAN_API
-# define PIXMAN_API
+# define PIXMAN_API UXP_GKMEDIAS_EXPORT()
 #endif
 
 #endif /* PIXMAN_VERSION_H__ */
