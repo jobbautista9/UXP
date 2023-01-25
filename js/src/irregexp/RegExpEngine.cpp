@@ -1353,7 +1353,7 @@ irregexp::CompilePattern(JSContext* cx, RegExpShared* shared, RegExpCompileData*
         native_assembler.emplace(&alloc, shared, cx->runtime(), mode, (data->capture_count + 1) * 2);
         assembler = native_assembler.ptr();
     } else {
-        interpreted_assembler.emplace(&alloc, shared, (data->capture_count + 1) * 2);
+        interpreted_assembler.emplace(cx, &alloc, shared, (data->capture_count + 1) * 2);
         assembler = interpreted_assembler.ptr();
     }
 
