@@ -1058,7 +1058,8 @@ RegExpShared::compile(JSContext* cx, MutableHandleRegExpShared re, HandleAtom pa
     irregexp::RegExpCompileData data;
     if (!irregexp::ParsePattern(dummyTokenStream, cx->tempLifoAlloc(), pattern,
                                 re->multiline(), mode == MatchOnly, re->unicode(),
-                                re->ignoreCase(), re->global(), re->sticky(), &data))
+                                re->ignoreCase(), re->global(), re->sticky(),
+                                re->dotAll(), &data))
     {
         return false;
     }
