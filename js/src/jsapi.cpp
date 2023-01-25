@@ -6156,7 +6156,7 @@ JS_GetRegExpSource(JSContext* cx, HandleObject obj)
     RootedRegExpShared shared(cx);
     if (!RegExpToShared(cx, obj, &shared))
         return nullptr;
-    return shared.->getSource();
+    return shared->getSource();
 }
 
 /************************************************************************/
