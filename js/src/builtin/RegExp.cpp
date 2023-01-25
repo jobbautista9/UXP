@@ -1071,7 +1071,7 @@ RegExpMatcherImpl(JSContext* cx, HandleObject regexp, HandleString string,
 
     /* Steps 16-25 */
     Rooted<RegExpObject*> reobj(cx, &regexp->as<RegExpObject>());
-    RegExpGuard shared(cx);
+    RootedRegExpShared shared(cx);
     if (!RegExpObject::getShared(cx, reobj, &shared))
         return false;
     return CreateRegExpMatchResult(cx, *shared, string, matches, rval);
@@ -1118,7 +1118,7 @@ js::RegExpMatcherRaw(JSContext* cx, HandleObject regexp, HandleString input,
     // successful only if the pairs have actually been filled in.
     if (maybeMatches && maybeMatches->pairsRaw()[0] >= 0) {
       Rooted<RegExpObject*> reobj(cx, &regexp->as<RegExpObject>());
-      RegExpGuard shared(cx);
+      RootedRegExpShared shared(cx);
       if (!RegExpObject::getShared(cx, reobj, &shared))
           return false;
       return CreateRegExpMatchResult(cx, *shared, input, *maybeMatches, output);
