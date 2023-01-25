@@ -42,6 +42,10 @@ class MatchPairs;
 class RegExpShared;
 class RegExpStatics;
 
+using RootedRegExpShared = JS::Rooted<RegExpShared*>;
+using HandleRegExpShared = JS::Handle<RegExpShared*>;
+using MutableHandleRegExpShared = JS::MutableHandle<RegExpShared*>;
+
 namespace frontend { class TokenStream; }
 
 enum RegExpFlag : uint8_t
@@ -150,13 +154,14 @@ class RegExpShared : public gc::TenuredCell
     /* Internal functions. */
     RegExpShared(JSAtom* source, RegExpFlag flags);
 
-    bool compile(JSContext* cx, HandleLinearString input,
-                 CompilationMode mode, ForceByteCodeEnum force);
-    bool compile(JSContext* cx, HandleAtom pattern, HandleLinearString input,
-                 CompilationMode mode, ForceByteCodeEnum force);
+    static bool compile(JSContext* cx, MutableHandleRegExpShared res, HandleLinearString input,
+                        CompilationMode mode, ForceByteCodeEnum force);
+    static bool compile(JSContext* cx, MutableHandleRegExpShared res, HandleAtom pattern,
+                        HandleLinearString input, CompilationMode mode, ForceByteCodeEnum force);
 
-    bool compileIfNecessary(JSContext* cx, HandleLinearString input,
-                            CompilationMode mode, ForceByteCodeEnum force);
+    static bool compileIfNecessary(JSContext* cx, MutableHandleRegExpShared res,
+                                   HandleLinearString input, CompilationMode mode,
+                                   ForceByteCodeEnum force);
 
     const RegExpCompilation& compilation(CompilationMode mode, bool latin1) const {
         return compilationArray[CompilationIndex(mode, latin1)];
@@ -171,8 +176,9 @@ class RegExpShared : public gc::TenuredCell
 
     // Execute this RegExp on input starting from searchIndex, filling in
     // matches if specified and otherwise only determining if there is a match.
-    RegExpRunStatus execute(JSContext* cx, HandleLinearString input, size_t searchIndex,
-                            MatchPairs* matches, size_t* endIndex);
+    static RegExpRunStatus execute(JSContext* cx, MutableHandleRegExpShared res,
+                                   HandleLinearString input, size_t searchIndex,
+                                   MatchPairs* matches, size_t* endIndex);
 
     // Register a table with this RegExpShared, and take ownership.
     bool addTable(uint8_t* table) {
@@ -245,13 +251,10 @@ class RegExpShared : public gc::TenuredCell
     size_t sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
 
 #ifdef DEBUG
-    bool dumpBytecode(JSContext* cx, bool match_only, HandleLinearString input);
+    static bool dumpBytecode(JSContext* cx, MutableHandleRegExpShared res, bool match_only,
+                             HandleLinearString input);
 #endif
 };
-
-using RootedRegExpShared = JS::Rooted<RegExpShared*>;
-using HandleRegExpShared = JS::Handle<RegExpShared*>;
-using MutableHandleRegExpShared = JS::MutableHandle<RegExpShared*>;
 
 class RegExpCompartment
 {
@@ -323,7 +326,7 @@ class RegExpCompartment
 
     bool empty() { return set_.empty(); }
 
-    bool get(JSContext* cx, JSAtom* source, RegExpFlag flags, MutableHandleRegExpShared shared);
+    bool get(JSContext* cx, HandleAtom source, RegExpFlag flags, MutableHandleRegExpShared shared);
 
     /* Like 'get', but compile 'maybeOpt' (if non-null). */
     bool get(JSContext* cx, HandleAtom source, JSString* maybeOpt,
