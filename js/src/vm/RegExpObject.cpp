@@ -1254,7 +1254,7 @@ RegExpShared::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf)
 /* RegExpCompartment */
 
 RegExpCompartment::RegExpCompartment(Zone* zone)
-  : set_(zone, Set(zone->runtimeFromActiveCooperatingThread())),
+  : set_(zone, Set(zone->runtimeFromMainThread())),
     matchResultTemplateObject_(nullptr),
     optimizableRegExpPrototypeShape_(nullptr),
     optimizableRegExpInstanceShape_(nullptr)
