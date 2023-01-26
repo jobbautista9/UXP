@@ -196,7 +196,9 @@ class RegExpShared : public gc::TenuredCell
     size_t pairCount() const            { return getParenCount() + 1; }
 
     // not public due to circular inclusion problems
-    bool initializeNamedCaptures(JSContext* cx, irregexp::CharacterVectorVector* names, irregexp::IntegerVector* indices);
+    static bool initializeNamedCaptures(JSContext* cx, HandleRegExpShared re,
+                                        irregexp::CharacterVectorVector* names,
+                                        irregexp::IntegerVector* indices);
     PlainObject* getGroupsTemplate() { return groupsTemplate_; }
     uint32_t numNamedCaptures() const { return numNamedCaptures_; }
 

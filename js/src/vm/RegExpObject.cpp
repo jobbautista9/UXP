@@ -992,10 +992,12 @@ RegExpShared::compile(JSContext* cx, MutableHandleRegExpShared re, HandleLinearS
     return compile(cx, re, pattern, input, mode, force);
 }
 
-bool
-RegExpShared::initializeNamedCaptures(JSContext* cx, irregexp::CharacterVectorVector* names, irregexp::IntegerVector* indices)
+/* static */ bool
+RegExpShared::initializeNamedCaptures(JSContext* cx, HandleRegExpShared re,
+                                      irregexp::CharacterVectorVector* names,
+                                      irregexp::IntegerVector* indices)
 {
-    MOZ_ASSERT(!groupsTemplate_);
+    MOZ_ASSERT(!re->groupsTemplate_);
     MOZ_ASSERT(names);
     MOZ_ASSERT(indices);
     MOZ_ASSERT(names->length() == indices->length());
@@ -1037,8 +1039,8 @@ RegExpShared::initializeNamedCaptures(JSContext* cx, irregexp::CharacterVectorVe
         AddTypePropertyId(cx, templateObject, id, TypeSet::Int32Type());
     }
 
-    groupsTemplate_ = templateObject;
-    numNamedCaptures_ = numNamedCaptures;
+    re->groupsTemplate_ = templateObject;
+    re->numNamedCaptures_ = numNamedCaptures;
     return true;
 }
 
@@ -1067,7 +1069,7 @@ RegExpShared::compile(JSContext* cx, MutableHandleRegExpShared re, HandleAtom pa
     re->parenCount = data.capture_count;
     if (data.capture_name_list) {
       // convert LifoAlloc'd named capture info to NativeObject
-      if (!initializeNamedCaptures(cx, data.capture_name_list, data.capture_index_list)) {
+      if (!initializeNamedCaptures(cx, re, data.capture_name_list, data.capture_index_list)) {
         return false;
       }
     }
