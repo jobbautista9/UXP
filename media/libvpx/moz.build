@@ -12,9 +12,6 @@ EXPORTS.vpx += files['EXPORTS']
 
 SOURCES += files['SOURCES']
 
-if CONFIG['MOZ_VPX_ERROR_CONCEALMENT']:
-    SOURCES += files['ERROR_CONCEALMENT']
-
 if CONFIG['VPX_USE_YASM']:
     USE_YASM = True
 
@@ -23,6 +20,9 @@ if CONFIG['VPX_X86_ASM']:
 
     if '64' in CONFIG['OS_TEST']:
         SOURCES += files['X86-64_ASM']
+
+    #avx can be enabled on all supported compilters
+    SOURCES += files['AVX']
 
     #avx2 can be enabled on all supported compilters
     SOURCES += files['AVX2']
@@ -33,6 +33,9 @@ if CONFIG['VPX_X86_ASM']:
 arm_asm_files = []
 if CONFIG['VPX_ARM_ASM']:
     arm_asm_files += files['ARM_ASM']
+
+    if '64' in CONFIG['OS_TEST']:
+        SOURCES += files['ARM64_ASM']
 
     if CONFIG['VPX_AS_CONVERSION']:
         SOURCES += sorted([
@@ -76,6 +79,8 @@ if CONFIG['CLANG_CL'] or not CONFIG['_MSC_VER']:
                 SOURCES[f].flags += ['-mssse3']
             if 'sse4' in f:
                 SOURCES[f].flags += ['-msse4.1']
+            if 'avx' in f:
+                SOURCES[f].flags += ['-mavx']
             if 'avx2' in f:
                 SOURCES[f].flags += ['-mavx2']
 
