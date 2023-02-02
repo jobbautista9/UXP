@@ -1,7 +1,7 @@
-diff --git a/vpx_dsp/vpx_dsp.mk b/vpx_dsp/vpx_dsp.mk
+diff --git a/src/vpx_dsp/vpx_dsp.mk b/src/vpx_dsp/vpx_dsp.mk
 index 13999af04..6519d828c 100644
---- a/vpx_dsp/vpx_dsp.mk
-+++ b/vpx_dsp/vpx_dsp.mk
+--- a/src/vpx_dsp/vpx_dsp.mk
++++ b/src/vpx_dsp/vpx_dsp.mk
 @@ -177,7 +177,7 @@ DSP_SRCS-$(HAVE_LSX) += loongarch/vpx_convolve_lsx.h
  # loop filters
  DSP_SRCS-yes += loopfilter.c

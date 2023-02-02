@@ -8,8 +8,6 @@
 ;  be found in the AUTHORS file in the root of the source tree.
 ;
 
-%define program_name vpx
-
 %include "third_party/x86inc/x86inc.asm"
 
 SECTION .text
@@ -27,11 +25,11 @@ cglobal highbd_sad%1x%2, 4, %3, 7, src, src_stride, ref, ref_stride, \
 cglobal highbd_sad%1x%2_avg, 5, 1 + %3, 7, src, src_stride, ref, ref_stride, \
                                     second_pred, n_rows
 %else ; %3 == 7
-cglobal highbd_sad%1x%2_avg, 5, ARCH_X86_64 + %3, 7, src, src_stride, \
+cglobal highbd_sad%1x%2_avg, 5, VPX_ARCH_X86_64 + %3, 7, src, src_stride, \
                                               ref, ref_stride, \
                                               second_pred, \
                                               src_stride3, ref_stride3
-%if ARCH_X86_64
+%if VPX_ARCH_X86_64
 %define n_rowsd r7d
 %else ; x86-32
 %define n_rowsd dword r0m

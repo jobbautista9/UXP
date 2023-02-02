@@ -20,6 +20,8 @@ if CONFIG['VPX_X86_ASM']:
 
     if '64' in CONFIG['OS_TEST']:
         SOURCES += files['X86-64_ASM']
+    else:
+        SOURCES += files['X86-32_ASM']
 
     #avx can be enabled on all supported compilters
     SOURCES += files['AVX']
@@ -57,7 +59,7 @@ if CONFIG['VPX_ARM_ASM']:
 # using RTCD, so we have to make sure we only add one of the two.
 if 'vp8/encoder/arm/armv5te/boolhuff_armv5te.asm' not in arm_asm_files:
     SOURCES += [
-        'vp8/encoder/boolhuff.c',
+        'src/vp8/encoder/boolhuff.c',
     ]
 
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
@@ -100,5 +102,10 @@ ASFLAGS += CONFIG['VPX_ASFLAGS']
 ASFLAGS += [
     '-I.',
     '-I%s/media/libvpx/' % TOPSRCDIR,
-    '-I%s/media/libvpx/vpx_ports/' % TOPSRCDIR,
+    '-I%s/media/libvpx/src' % TOPSRCDIR,
+    '-I%s/media/libvpx/src/vpx_ports/' % TOPSRCDIR,
+]
+
+LOCAL_INCLUDES += [
+    '/media/libvpx/src',
 ]
