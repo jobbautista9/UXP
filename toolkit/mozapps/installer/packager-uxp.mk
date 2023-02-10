@@ -6,6 +6,22 @@
 # very much still dependent on them
 include $(MOZILLA_DIR)/toolkit/mozapps/installer/packager.mk
 
+# Only use extreme compression when we are stripping the final
+# binaries during packaging, otherwise compressing an unstripped
+# package will take 20 minutes. We don't worry about package size if
+# it's just a debug build, just as we don't worry about compression
+# time if it's going to be a release build.
+#
+# We assume that --enable-strip is not active if PKG_SKIP_STRIP,
+# controlled by --enable-install-strip, is set. So don't do both
+# --enable-strip and --disable-install-strip. That will just give
+# you slightly less compressed tarballs. ;)
+ifdef PKG_SKIP_STRIP
+	XZ_COMPRESS := "-0"
+else
+	XZ_COMPRESS := "-9e"
+endif
+
 # This is currently only used on Windows, Linux, Solaris, and
 # FreeBSD. On other platforms such as Mac, we will fall back
 # to the original mozilla packaging.
@@ -18,6 +34,6 @@ else
 ifeq (WINNT,$(OS_ARCH))
 	cd $(DIST); $(CYGWIN_WRAPPER) 7z a -t7z -m0=lzma2 -mx=9 -aoa -bb3 $(PKG_BASENAME).7z $(MOZ_PKG_DIR)
 else
-	cd $(DIST); XZ_OPT=-9e $(TAR) cfJv $(PKG_BASENAME).tar.xz $(MOZ_PKG_DIR)
+	cd $(DIST); XZ_OPT=$(XZ_COMPRESS) $(TAR) cfJv $(PKG_BASENAME).tar.xz $(MOZ_PKG_DIR)
 endif
 endif
