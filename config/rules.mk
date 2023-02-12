@@ -636,8 +636,21 @@ else # !WINNT || GNU_CC
 	$(call CHECK_BINARY,$@)
 endif # WINNT && !GNU_CC
 
+# Linux doesn't have a linker that generates debug symbols into
+# their own files like MSVC does, so let's separate out those
+# symbols into their own files with objcopy.
 ifdef ENABLE_STRIP
+ifeq ($(OS_ARCH),Linux)
+	objcopy --only-keep-debug $@ $@.sym
+# Because the symbols for gtk2/libmozgtk.so are hard linked
+# before the gtk2 directory is created in dist/bin
+	mkdir -p $(FINAL_TARGET)
+	ln $@.sym $(FINAL_TARGET)/
 	$(STRIP) $(STRIP_FLAGS) $@
+	objcopy --add-gnu-debuglink=$@.sym $@
+else
+	$(STRIP) $(STRIP_FLAGS) $@
+endif
 endif
 ifdef MOZ_POST_PROGRAM_COMMAND
 	$(MOZ_POST_PROGRAM_COMMAND) $@
@@ -695,8 +708,21 @@ else
 	$(call CHECK_BINARY,$@)
 endif # WINNT && !GNU_CC
 
+# Linux doesn't have a linker that generates debug symbols into
+# their own files like MSVC does, so let's separate out those
+# symbols into their own files with objcopy.
 ifdef ENABLE_STRIP
+ifeq ($(OS_ARCH),Linux)
+	objcopy --only-keep-debug $@ $@.sym
+# Because the symbols for gtk2/libmozgtk.so are hard linked
+# before the gtk2 directory is created in dist/bin
+	mkdir -p $(FINAL_TARGET)
+	ln $@.sym $(FINAL_TARGET)/
 	$(STRIP) $(STRIP_FLAGS) $@
+	objcopy --add-gnu-debuglink=$@.sym $@
+else
+	$(STRIP) $(STRIP_FLAGS) $@
+endif
 endif
 ifdef MOZ_POST_PROGRAM_COMMAND
 	$(MOZ_POST_PROGRAM_COMMAND) $@
@@ -805,8 +831,21 @@ ifdef MOZ_PROFILE_GENERATE
 endif
 endif	# WINNT && !GCC
 	chmod +x $@
+# Linux doesn't have a linker that generates debug symbols into
+# their own files like MSVC does, so let's separate out those
+# symbols into their own files with objcopy.
 ifdef ENABLE_STRIP
+ifeq ($(OS_ARCH),Linux)
+	objcopy --only-keep-debug $@ $@.sym
+# Because the symbols for gtk2/libmozgtk.so are hard linked
+# before the gtk2 directory is created in dist/bin
+	mkdir -p $(FINAL_TARGET)
+	ln $@.sym $(FINAL_TARGET)/
 	$(STRIP) $(STRIP_FLAGS) $@
+	objcopy --add-gnu-debuglink=$@.sym $@
+else
+	$(STRIP) $(STRIP_FLAGS) $@
+endif
 endif
 
 # The object file is in the current directory, and the source file can be any

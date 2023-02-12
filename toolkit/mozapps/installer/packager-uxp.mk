@@ -34,6 +34,15 @@ else
 ifeq (WINNT,$(OS_ARCH))
 	cd $(DIST); $(CYGWIN_WRAPPER) 7z a -t7z -m0=lzma2 -mx=9 -aoa -bb3 $(PKG_BASENAME).7z $(MOZ_PKG_DIR)
 else
-	cd $(DIST); XZ_OPT=$(XZ_COMPRESS) $(TAR) cfJv $(PKG_BASENAME).tar.xz $(MOZ_PKG_DIR)
+	cd $(DIST); XZ_OPT=$(XZ_COMPRESS) $(TAR) --exclude='*.sym' -cJvf $(PKG_BASENAME).tar.xz $(MOZ_PKG_DIR)
 endif
+endif
+
+# This is currently only used in Linux.
+package-debugsymbols:
+ifeq ($(OS_ARCH),Linux)
+	@echo 'Compressing debug symbols...'
+	cd $(DIST)/bin; find . -name '*.sym' -print0 | XZ_OPT="-0" $(TAR) cJvf ../symbols-$(MOZ_PKG_VERSION).$(MOZ_PKG_PLATFORM).tar.xz --null -T -
+else
+	@echo 'This function is not available for Windows and macOS.'
 endif

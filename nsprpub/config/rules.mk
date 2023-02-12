@@ -276,8 +276,21 @@ endif	# MOZ_PROFILE_GENERATE
 else	# WINNT && !GCC
 	$(CC) -o $@ $(CFLAGS) $(OBJS) $(LDFLAGS) $(WRAP_LDFLAGS)
 endif	# WINNT && !GCC
+# Linux doesn't have a linker that generates debug symbols into
+# their own files like MSVC does, so let's separate out those
+# symbols into their own files with objcopy.
 ifdef ENABLE_STRIP
+ifeq ($(OS_ARCH),Linux)
+	objcopy --only-keep-debug $@ $@.sym
+# Because the symbols for gtk2/libmozgtk.so are hard linked
+# before the gtk2 directory is created in dist/bin
+	mkdir -p $(FINAL_TARGET)
+	ln $@.sym $(FINAL_TARGET)/
 	$(STRIP) $@
+	objcopy --add-gnu-debuglink=$@.sym $@
+else
+	$(STRIP) $@
+endif
 endif
 
 # Same as OBJS, but without any file that matches p*vrsion.o, since these
@@ -333,8 +346,21 @@ else	# WINNT && !GCC
 	$(MKSHLIB) $(OBJS) $(RES) $(LDFLAGS) $(WRAP_LDFLAGS) $(EXTRA_LIBS)
 endif	# WINNT && !GCC
 endif	# AIX 4.1
+# Linux doesn't have a linker that generates debug symbols into
+# their own files like MSVC does, so let's separate out those
+# symbols into their own files with objcopy.
 ifdef ENABLE_STRIP
+ifeq ($(OS_ARCH),Linux)
+	objcopy --only-keep-debug $@ $@.sym
+# Because the symbols for gtk2/libmozgtk.so are hard linked
+# before the gtk2 directory is created in dist/bin
+	mkdir -p $(FINAL_TARGET)
+	ln $@.sym $(FINAL_TARGET)/
 	$(STRIP) $@
+	objcopy --add-gnu-debuglink=$@.sym $@
+else
+	$(STRIP) $@
+endif
 endif
 
 ################################################################################

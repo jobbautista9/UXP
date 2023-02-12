@@ -1111,6 +1111,21 @@ class Package(MachCommandBase):
         return ret
 
 @CommandProvider
+class Package_debugsymbols(MachCommandBase):
+    """Package the gdb-compatible debug symbols."""
+
+    @Command('package-debugsymbols', category='post-build',
+        description='Package the gdb-compatible debug symbols as an archive.')
+    @CommandArgument('-v', '--verbose', action='store_true',
+        help='Verbose output for what commands the packaging process is running.')
+    def package(self, verbose=False):
+        ret = self._run_make(directory=".", target='package-debugsymbols',
+                             silent=not verbose, ensure_exit_code=False)
+        if ret == 0:
+            self.notify('Packaging complete')
+        return ret
+
+@CommandProvider
 class Mozpackage(MachCommandBase):
     """Package the built product for distribution."""
 
