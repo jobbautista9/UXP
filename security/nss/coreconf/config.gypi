@@ -105,6 +105,7 @@
     'disable_deprecated_seed%': 0,
     'disable_deprecated_rc2%': 0,
     'disable_dbm%': 1,
+    'disable_avx2%': 1,
     'disable_libpkix%': 1,
     'disable_werror%': 0,
     'disable_altivec%': 0,
@@ -572,6 +573,11 @@
           [ 'disable_dbm==1', {
             'defines': [
               'NSS_DISABLE_DBM',
+            ],
+          }],
+          [ 'disable_avx2==1', {
+            'defines': [
+              'NSS_DISABLE_AVX2',
             ],
           }],
           [ 'disable_libpkix==1', {
