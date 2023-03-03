@@ -384,9 +384,9 @@ GetKeyUsage(CERTCertificate *cert)
     rv = CERT_FindKeyUsageExtension(cert, &tmpitem);
     if (rv == SECSuccess) {
         /* remember the actual value of the extension */
-        cert->rawKeyUsage = tmpitem.len ? tmpitem.data[0] : 0;
+        cert->rawKeyUsage = tmpitem.data[0];
         cert->keyUsagePresent = PR_TRUE;
-        cert->keyUsage = cert->rawKeyUsage;
+        cert->keyUsage = tmpitem.data[0];
 
         PORT_Free(tmpitem.data);
         tmpitem.data = NULL;
@@ -506,7 +506,7 @@ cert_ComputeCertType(CERTCertificate *cert)
         isCA = basicConstraint.isCA;
     }
     if (tmpitem.data != NULL || extKeyUsage != NULL) {
-        if (tmpitem.data == NULL || tmpitem.len == 0) {
+        if (tmpitem.data == NULL) {
             nsCertType = 0;
         } else {
             nsCertType = tmpitem.data[0];
@@ -2908,16 +2908,27 @@ CERT_LockCertTrust(const CERTCertificate *cert)
     PZ_Lock(certTrustLock);
 }
 
-static PZLock *certTempPermLock = NULL;
+static PZLock *certTempPermCertLock = NULL;
 
 /*
- * Acquire the cert temp/perm lock
+ * Acquire the cert temp/perm/nssCert lock
  */
 void
 CERT_LockCertTempPerm(const CERTCertificate *cert)
 {
-    PORT_Assert(certTempPermLock != NULL);
-    PZ_Lock(certTempPermLock);
+    PORT_Assert(certTempPermCertLock != NULL);
+    PZ_Lock(certTempPermCertLock);
+}
+
+/* Maybe[Lock, Unlock] variants are only to be used by
+ * CERT_DestroyCertificate, since an application could
+ * call this after NSS_Shutdown destroys cert locks. */
+void
+CERT_MaybeLockCertTempPerm(const CERTCertificate *cert)
+{
+    if (certTempPermCertLock) {
+        PZ_Lock(certTempPermCertLock);
+    }
 }
 
 SECStatus
@@ -2941,10 +2952,10 @@ cert_InitLocks(void)
         }
     }
 
-    if (certTempPermLock == NULL) {
-        certTempPermLock = PZ_NewLock(nssILockCertDB);
-        PORT_Assert(certTempPermLock != NULL);
-        if (!certTempPermLock) {
+    if (certTempPermCertLock == NULL) {
+        certTempPermCertLock = PZ_NewLock(nssILockCertDB);
+        PORT_Assert(certTempPermCertLock != NULL);
+        if (!certTempPermCertLock) {
             PZ_DestroyLock(certTrustLock);
             PZ_DestroyLock(certRefCountLock);
             certRefCountLock = NULL;
@@ -2977,10 +2988,10 @@ cert_DestroyLocks(void)
         rv = SECFailure;
     }
 
-    PORT_Assert(certTempPermLock != NULL);
-    if (certTempPermLock) {
-        PZ_DestroyLock(certTempPermLock);
-        certTempPermLock = NULL;
+    PORT_Assert(certTempPermCertLock != NULL);
+    if (certTempPermCertLock) {
+        PZ_DestroyLock(certTempPermCertLock);
+        certTempPermCertLock = NULL;
     } else {
         rv = SECFailure;
     }
@@ -2999,14 +3010,22 @@ CERT_UnlockCertTrust(const CERTCertificate *cert)
 }
 
 /*
- * Free the temp/perm lock
+ * Free the temp/perm/nssCert lock
  */
 void
 CERT_UnlockCertTempPerm(const CERTCertificate *cert)
 {
-    PORT_Assert(certTempPermLock != NULL);
-    PRStatus prstat = PZ_Unlock(certTempPermLock);
+    PORT_Assert(certTempPermCertLock != NULL);
+    PRStatus prstat = PZ_Unlock(certTempPermCertLock);
     PORT_AssertArg(prstat == PR_SUCCESS);
+}
+
+void
+CERT_MaybeUnlockCertTempPerm(const CERTCertificate *cert)
+{
+    if (certTempPermCertLock) {
+        PZ_Unlock(certTempPermCertLock);
+    }
 }
 
 /*

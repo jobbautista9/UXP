@@ -92,6 +92,11 @@ sftkdb_passwordToKey(SFTKDBHandle *keydb, SECItem *salt,
     SHA1Context *cx = NULL;
     SECStatus rv = SECFailure;
 
+    if (!pw) {
+        PORT_SetError(SEC_ERROR_INVALID_ARGS);
+        return SECFailure;
+    }
+
     key->data = PORT_Alloc(SHA1_LENGTH);
     if (key->data == NULL) {
         goto loser;
@@ -247,7 +252,7 @@ sftkdb_encodeCipherText(PLArenaPool *arena, sftkCipherValue *cipherValue,
 
 loser:
     if (localArena) {
-        PORT_FreeArena(localArena, PR_FALSE);
+        PORT_FreeArena(localArena, PR_TRUE);
     }
 
     return rv;
@@ -414,7 +419,7 @@ sftkdb_EncryptAttribute(PLArenaPool *arena, SFTKDBHandle *handle, SDB *db,
 
 loser:
     if ((arena == NULL) && signature) {
-        SECITEM_FreeItem(cipher, PR_TRUE);
+        SECITEM_ZfreeItem(signature, PR_TRUE);
     }
     if (cipher) {
         SECITEM_FreeItem(cipher, PR_TRUE);
@@ -481,7 +486,7 @@ loser:
         HMAC_Destroy(hashCx, PR_TRUE);
     }
     if (key) {
-        SECITEM_FreeItem(key, PR_TRUE);
+        SECITEM_ZfreeItem(key, PR_TRUE);
     }
     return rv;
 }
@@ -521,11 +526,12 @@ sftkdb_VerifyAttribute(SFTKDBHandle *handle,
     }
 
 loser:
+    PORT_Memset(signData, 0, sizeof signData);
     if (signValue.param) {
         nsspkcs5_DestroyPBEParameter(signValue.param);
     }
     if (signValue.arena) {
-        PORT_FreeArena(signValue.arena, PR_FALSE);
+        PORT_FreeArena(signValue.arena, PR_TRUE);
     }
     return rv;
 }
@@ -603,6 +609,7 @@ sftkdb_SignAttribute(PLArenaPool *arena, SFTKDBHandle *keyDB, SDB *db,
     }
 
 loser:
+    PORT_Memset(signData, 0, sizeof signData);
     if (param) {
         nsspkcs5_DestroyPBEParameter(param);
     }
@@ -1074,7 +1081,7 @@ sftkdb_finishPasswordCheck(SFTKDBHandle *keydb, SECItem *key, const char *pw,
 
 done:
     if (result) {
-        SECITEM_FreeItem(result, PR_TRUE);
+        SECITEM_ZfreeItem(result, PR_TRUE);
     }
     return rv;
 }
@@ -1085,11 +1092,7 @@ done:
 SECStatus
 sftkdb_PWCached(SFTKDBHandle *keydb)
 {
-    SECStatus rv;
-    PZ_Lock(keydb->passwordLock);
-    rv = keydb->passwordKey.data ? SECSuccess : SECFailure;
-    PZ_Unlock(keydb->passwordLock);
-    return rv;
+    return keydb->passwordKey.data ? SECSuccess : SECFailure;
 }
 
 static CK_RV
@@ -1272,8 +1275,7 @@ sftk_convertAttributes(SFTKDBHandle *handle, CK_OBJECT_HANDLE id,
     }
 
     /* free up our mess */
-    /* NOTE: at this point we know we've cleared out any unencrypted data */
-    PORT_FreeArena(arena, PR_FALSE);
+    PORT_FreeArena(arena, PR_TRUE);
     return CKR_OK;
 
 loser:

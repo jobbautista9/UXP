@@ -341,38 +341,27 @@ sec_pkcs12_decoder_safe_bag_update(void *arg, const char *data,
      * and that there are no errors.  If so, just return rather
      * than continuing to process.
      */
-    if (!safeContentsCtx || !safeContentsCtx->p12dcx || safeContentsCtx->skipCurrentSafeBag) {
+    if (!safeContentsCtx || !safeContentsCtx->p12dcx ||
+        safeContentsCtx->p12dcx->error || safeContentsCtx->skipCurrentSafeBag) {
         return;
     }
     p12dcx = safeContentsCtx->p12dcx;
 
-    /* make sure that there are no errors and we are not skipping the current safeBag */
-    if (p12dcx->error || safeContentsCtx->skipCurrentSafeBag) {
-        goto loser;
-    }
-
     rv = SEC_ASN1DecoderUpdate(safeContentsCtx->currentSafeBagA1Dcx, data, len);
     if (rv != SECSuccess) {
         p12dcx->errorValue = PORT_GetError();
-        p12dcx->error = PR_TRUE;
-        goto loser;
-    }
-
-    /* The update may have set safeContentsCtx->skipCurrentSafeBag, and we
-     * may not get another opportunity to clean up the decoder context.
-     */
-    if (safeContentsCtx->skipCurrentSafeBag) {
         goto loser;
     }
 
     return;
 
 loser:
-    /* Finish the decoder context. Because there
+    /* set the error, and finish the decoder context.  because there
      * is not a way of returning an error message, it may be worth
      * while to do a check higher up and finish any decoding contexts
      * that are still open.
      */
+    p12dcx->error = PR_TRUE;
     SEC_ASN1DecoderFinish(safeContentsCtx->currentSafeBagA1Dcx);
     safeContentsCtx->currentSafeBagA1Dcx = NULL;
     return;
@@ -1364,32 +1353,10 @@ sec_pkcs12_decoder_verify_mac(SEC_PKCS12DecoderContext *p12dcx)
                                   iteration);
 
     algtag = SECOID_GetAlgorithmTag(&p12dcx->macData.safeMac.digestAlgorithm);
-    switch (algtag) {
-        case SEC_OID_SHA1:
-            integrityMech = CKM_NSS_PBE_SHA1_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_MD5:
-            integrityMech = CKM_NSS_PBE_MD5_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_MD2:
-            integrityMech = CKM_NSS_PBE_MD2_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_SHA224:
-            integrityMech = CKM_NSS_PKCS12_PBE_SHA224_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_SHA256:
-            integrityMech = CKM_NSS_PKCS12_PBE_SHA256_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_SHA384:
-            integrityMech = CKM_NSS_PKCS12_PBE_SHA384_HMAC_KEY_GEN;
-            break;
-        case SEC_OID_SHA512:
-            integrityMech = CKM_NSS_PKCS12_PBE_SHA512_HMAC_KEY_GEN;
-            break;
-        default:
-            goto loser;
+    integrityMech = sec_pkcs12_algtag_to_keygen_mech(algtag);
+    if (integrityMech == CKM_INVALID_MECHANISM) {
+        goto loser;
     }
-
     symKey = PK11_KeyGen(NULL, integrityMech, params, 0, NULL);
     PK11_DestroyPBEParams(params);
     params = NULL;

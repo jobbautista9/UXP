@@ -10,7 +10,8 @@
 import buildconfig
 import os
 import subprocess
-
+import sys
+sys.dont_write_bytecode=True
 
 def main(output, *inputs):
     env = dict(os.environ)

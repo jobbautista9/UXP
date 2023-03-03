@@ -14,7 +14,8 @@
 # the file so it's simpler to just do the replacement in Python.
 
 import buildconfig
-
+import sys
+sys.dont_write_bytecode=True
 
 def main(output, input):
     # There's a check in old-configure.in under the system-nss handling

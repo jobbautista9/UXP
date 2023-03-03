@@ -100,8 +100,15 @@ queue.filter(task => {
 
   // Don't run all additional hardware tests on ARM.
   if (task.group == "Cipher" && task.platform == "aarch64" && task.env &&
-      (task.env.NSS_DISABLE_PCLMUL == "1" || task.env.NSS_DISABLE_HW_AES == "1"
+      (task.env.NSS_DISABLE_PCLMUL == "1" || task.env.NSS_DISABLE_SSE4_1 == "1"
        || task.env.NSS_DISABLE_AVX == "1" || task.env.NSS_DISABLE_AVX2 == "1")) {
+    return false;
+  }
+
+  // Don't run ARM specific hardware tests on non-ARM.
+  // TODO: our server that runs task cluster doesn't support Intel SHA extensions.
+  if (task.group == "Cipher" && task.platform != "aarch64" && task.env &&
+      (task.env.NSS_DISABLE_HW_SHA1 == "1" || task.env.NSS_DISABLE_HW_SHA2 == "1")) {
     return false;
   }
 
@@ -560,6 +567,13 @@ async function scheduleLinux(name, overrides, args = "") {
       CC: "gcc-4.8",
       CCC: "g++-4.8"
     },
+    // Use -Ddisable-intelhw_sha=1, GYP doesn't have a proper GCC version
+    // check for Intel SHA support.
+    command: [
+      "/bin/bash",
+      "-c",
+      "bin/checkout.sh && nss/automation/taskcluster/scripts/build_gyp.sh -Ddisable_intel_hw_sha=1"
+    ],
     symbol: "gcc-4.8"
   }));
 
@@ -1003,8 +1017,15 @@ function scheduleTests(task_build, task_cert, test_base) {
     name: "Cipher tests", symbol: "Default", tests: "cipher", group: "Cipher"
   }));
   queue.scheduleTask(merge(cert_base_long, {
-    name: "Cipher tests", symbol: "NoAESNI", tests: "cipher",
+    name: "Cipher tests", symbol: "NoAES", tests: "cipher",
     env: {NSS_DISABLE_HW_AES: "1"}, group: "Cipher"
+  }));
+  queue.scheduleTask(merge(cert_base_long, {
+    name: "Cipher tests", symbol: "NoSHA", tests: "cipher",
+    env: {
+      NSS_DISABLE_HW_SHA1: "1",
+      NSS_DISABLE_HW_SHA2: "1"
+    }, group: "Cipher"
   }));
   queue.scheduleTask(merge(cert_base_long, {
     name: "Cipher tests", symbol: "NoPCLMUL", tests: "cipher",
