@@ -62,6 +62,29 @@ typedef uint32_t GLenum;
 #define GL_RENDERER     0x1F01
 #define GL_VERSION      0x1F02
 
+// GLX_MESA_query_renderer
+#define GLX_RENDERER_VENDOR_ID_MESA                            0x8183
+#define GLX_RENDERER_DEVICE_ID_MESA                            0x8184
+#define GLX_RENDERER_VERSION_MESA                              0x8185
+#define GLX_RENDERER_ACCELERATED_MESA                          0x8186
+#define GLX_RENDERER_VIDEO_MEMORY_MESA                         0x8187
+#define GLX_RENDERER_UNIFIED_MEMORY_ARCHITECTURE_MESA          0x8188
+#define GLX_RENDERER_PREFERRED_PROFILE_MESA                    0x8189
+#define GLX_RENDERER_OPENGL_CORE_PROFILE_VERSION_MESA          0x818A
+#define GLX_RENDERER_OPENGL_COMPATIBILITY_PROFILE_VERSION_MESA 0x818B
+#define GLX_RENDERER_OPENGL_ES_PROFILE_VERSION_MESA            0x818C
+#define GLX_RENDERER_OPENGL_ES2_PROFILE_VERSION_MESA           0x818D
+#define GLX_RENDERER_ID_MESA                                   0x818E
+
+// stuff from egl.h
+#define EGL_BLUE_SIZE 0x3022
+#define EGL_GREEN_SIZE 0x3023
+#define EGL_RED_SIZE 0x3024
+#define EGL_NONE 0x3038
+#define EGL_VENDOR 0x3053
+#define EGL_CONTEXT_CLIENT_VERSION 0x3098
+#define EGL_NO_CONTEXT nullptr
+
 namespace mozilla {
 namespace widget {
 // the read end of the pipe, which will be used by GfxInfo
@@ -100,7 +123,7 @@ static void fatal_error(const char *str)
 static int
 x_error_handler(Display *, XErrorEvent *ev)
 {
-  enum { bufsize = 1024 };
+  enum { bufsize = 2048 };
   char buf[bufsize];
   int length = snprintf(buf, bufsize,
                         "X error occurred in GLX probe, error_code=%d, request_code=%d, minor_code=%d\n",
@@ -119,7 +142,157 @@ x_error_handler(Display *, XErrorEvent *ev)
 // care about leaking memory
 extern "C" {
 
-void glxtest()
+typedef void* EGLNativeDisplayType;
+
+static int get_egl_status(char* buf, int bufsize,
+                          EGLNativeDisplayType native_dpy, bool gles_test) {) {
+  void* libegl = dlopen("libEGL.so.1", RTLD_LAZY);
+  if (!libegl) {
+    libegl = dlopen("libEGL.so", RTLD_LAZY);
+  }
+  if (!libegl) {
+    return 0;
+  }
+
+  typedef void* EGLDisplay;
+  typedef int EGLBoolean;
+  typedef int EGLint;
+
+  typedef void* (*PFNEGLGETPROCADDRESS)(const char*);
+  PFNEGLGETPROCADDRESS eglGetProcAddress =
+      cast<PFNEGLGETPROCADDRESS>(dlsym(libegl, "eglGetProcAddress"));
+
+  if (!eglGetProcAddress) {
+    dlclose(libegl);
+    return 0;
+  }
+
+  typedef EGLDisplay (*PFNEGLGETDISPLAYPROC)(void* native_display);
+  PFNEGLGETDISPLAYPROC eglGetDisplay =
+      cast<PFNEGLGETDISPLAYPROC>(eglGetProcAddress("eglGetDisplay"));
+
+  typedef EGLBoolean (*PFNEGLINITIALIZEPROC)(EGLDisplay dpy, EGLint * major,
+                                             EGLint * minor);
+  PFNEGLINITIALIZEPROC eglInitialize =
+      cast<PFNEGLINITIALIZEPROC>(eglGetProcAddress("eglInitialize"));
+
+  typedef EGLBoolean (*PFNEGLTERMINATEPROC)(EGLDisplay dpy);
+  PFNEGLTERMINATEPROC eglTerminate =
+      cast<PFNEGLTERMINATEPROC>(eglGetProcAddress("eglTerminate"));
+
+  typedef const char* (*PFNEGLGETDISPLAYDRIVERNAMEPROC)(EGLDisplay dpy);
+  PFNEGLGETDISPLAYDRIVERNAMEPROC eglGetDisplayDriverName =
+      cast<PFNEGLGETDISPLAYDRIVERNAMEPROC>(
+          eglGetProcAddress("eglGetDisplayDriverName"));
+
+  if (!eglGetDisplay || !eglInitialize || !eglTerminate ||
+      !eglGetDisplayDriverName) {
+    dlclose(libegl);
+    return 0;
+  }
+
+  EGLDisplay dpy = eglGetDisplay(native_dpy);
+  if (!dpy) {
+    dlclose(libegl);
+    return 0;
+  }
+
+  EGLint major, minor;
+  if (!eglInitialize(dpy, &major, &minor)) {
+    dlclose(libegl);
+    return 0;
+  }
+
+  int length = 0;
+
+  if (gles_test) {
+    typedef void* EGLConfig;
+    typedef void* EGLContext;
+    typedef void* EGLSurface;
+
+    typedef EGLBoolean (*PFNEGLCHOOSECONFIGPROC)(
+        EGLDisplay dpy, EGLint const* attrib_list, EGLConfig* configs,
+        EGLint config_size, EGLint* num_config);
+    PFNEGLCHOOSECONFIGPROC eglChooseConfig =
+        cast<PFNEGLCHOOSECONFIGPROC>(eglGetProcAddress("eglChooseConfig"));
+
+    typedef EGLContext (*PFNEGLCREATECONTEXTPROC)(
+        EGLDisplay dpy, EGLConfig config, EGLContext share_context,
+        EGLint const* attrib_list);
+    PFNEGLCREATECONTEXTPROC eglCreateContext =
+        cast<PFNEGLCREATECONTEXTPROC>(eglGetProcAddress("eglCreateContext"));
+
+    typedef EGLSurface (*PFNEGLCREATEPBUFFERSURFACEPROC)(
+        EGLDisplay dpy, EGLConfig config, EGLint const* attrib_list);
+    PFNEGLCREATEPBUFFERSURFACEPROC eglCreatePbufferSurface =
+        cast<PFNEGLCREATEPBUFFERSURFACEPROC>(
+            eglGetProcAddress("eglCreatePbufferSurface"));
+
+    typedef EGLBoolean (*PFNEGLMAKECURRENTPROC)(
+        EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext context);
+    PFNEGLMAKECURRENTPROC eglMakeCurrent =
+        cast<PFNEGLMAKECURRENTPROC>(eglGetProcAddress("eglMakeCurrent"));
+
+    void* libgles = dlopen("libGLESv2.so.2", RTLD_LAZY);
+    if (!libgles) {
+      libgles = dlopen("libGLESv2.so", RTLD_LAZY);
+    }
+    if (!libgles) {
+      fatal_error("Unable to load libGLESv2");
+    }
+
+    typedef GLubyte* (*PFNGLGETSTRING)(GLenum);
+    PFNGLGETSTRING glGetString =
+        cast<PFNGLGETSTRING>(eglGetProcAddress("glGetString"));
+
+    if (!glGetString) {
+      // Implementations disagree about whether eglGetProcAddress or dlsym
+      // should be used for getting functions from the actual API, see
+      // https://github.com/anholt/libepoxy/commit/14f24485e33816139398d1bd170d617703473738
+      glGetString = cast<PFNGLGETSTRING>(dlsym(libgles, "glGetString"));
+    }
+
+    if (!glGetString) {
+      fatal_error("GLESv2 glGetString not found");
+    }
+
+    EGLint config_attrs[] = {EGL_RED_SIZE,  8, EGL_GREEN_SIZE, 8,
+                             EGL_BLUE_SIZE, 8, EGL_NONE};
+    EGLConfig config;
+    EGLint num_config;
+    eglChooseConfig(dpy, config_attrs, &config, 1, &num_config);
+    EGLint ctx_attrs[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
+    EGLContext ectx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, ctx_attrs);
+    EGLSurface pbuf = eglCreatePbufferSurface(dpy, config, nullptr);
+    eglMakeCurrent(dpy, pbuf, pbuf, ectx);
+
+    const GLubyte* versionString = glGetString(GL_VERSION);
+    const GLubyte* vendorString = glGetString(GL_VENDOR);
+    const GLubyte* rendererString = glGetString(GL_RENDERER);
+
+    if (!versionString || !vendorString || !rendererString)
+      fatal_error("glGetString returned null");
+
+    length = snprintf(buf, bufsize,
+                      "VENDOR\n%s\nRENDERER\n%s\nVERSION\n%s\nTFP\nTRUE\n",
+                      vendorString, rendererString, versionString);
+    if (length >= bufsize) {
+      fatal_error("GL strings length too large for buffer size");
+    }
+  }
+
+  const char* driDriver = eglGetDisplayDriverName(dpy);
+  if (driDriver) {
+    length +=
+        snprintf(buf + length, bufsize - length, "DRI_DRIVER\n%s\n", driDriver);
+  }
+
+  eglTerminate(dpy);
+  dlclose(libegl);
+  return length;
+}
+
+static void close_logging()
 {
   // we want to redirect to /dev/null stdout, stderr, and while we're at it,
   // any PR logging file descriptors. To that effect, we redirect all positive
@@ -128,7 +301,10 @@ void glxtest()
   for (int i = 1; i < fd; i++)
     dup2(fd, i);
   close(fd);
+}
 
+static void glxtest()
+{
 #if MOZ_WIDGET_GTK == 2
   // On Gtk+2 builds, try to get the Gtk+3 version if it's installed, and
   // use that in nsSystemInfo for secondaryLibrary. Better safe than sorry,
@@ -270,6 +446,48 @@ void glxtest()
   if (length >= bufsize)
     fatal_error("GL strings length too large for buffer size");
 
+  // If GLX_MESA_query_renderer is available, populate additional data.
+  typedef Bool (*PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC) (int attribute, unsigned int* value);
+  PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC glXQueryCurrentRendererIntegerMESAProc =
+    cast<PFNGLXQUERYCURRENTRENDERERINTEGERMESAPROC>(glXGetProcAddress("glXQueryCurrentRendererIntegerMESA"));
+  if (glXQueryCurrentRendererIntegerMESAProc) {
+    unsigned int vendorId, deviceId, accelerated, videoMemoryMB;
+    glXQueryCurrentRendererIntegerMESAProc(GLX_RENDERER_VENDOR_ID_MESA, &vendorId);
+    glXQueryCurrentRendererIntegerMESAProc(GLX_RENDERER_DEVICE_ID_MESA, &deviceId);
+    glXQueryCurrentRendererIntegerMESAProc(GLX_RENDERER_ACCELERATED_MESA, &accelerated);
+    glXQueryCurrentRendererIntegerMESAProc(GLX_RENDERER_VIDEO_MEMORY_MESA, &videoMemoryMB);
+
+    // Truncate IDs to 4 digits- that's all PCI IDs are.
+    vendorId &= 0xFFFF;
+    deviceId &= 0xFFFF;
+
+    length += snprintf(buf + length, bufsize,
+                       "MESA_VENDOR_ID\n0x%04x\n"
+                       "MESA_DEVICE_ID\n0x%04x\n"
+                       "MESA_ACCELERATED\n%s\n"
+                       "MESA_VRAM\n%dMB\n",
+                       vendorId, deviceId, accelerated ? "TRUE" : "FALSE",
+                       videoMemoryMB);
+
+    if (length >= bufsize)
+      fatal_error("GL strings length too large for buffer size");
+  }
+
+  // From Mesa's GL/internal/dri_interface.h, to be used by DRI clients.
+  int gotDriDriver = 0;
+  typedef const char * (* PFNGLXGETSCREENDRIVERPROC) (Display *dpy, int scrNum);
+  PFNGLXGETSCREENDRIVERPROC glXGetScreenDriverProc =
+    cast<PFNGLXGETSCREENDRIVERPROC>(glXGetProcAddress("glXGetScreenDriver"));
+  if (glXGetScreenDriverProc) {
+    const char* driDriver = glXGetScreenDriverProc(dpy, DefaultScreen(dpy));
+    if (driDriver) {
+      gotDriDriver = 1;
+      length += snprintf(buf + length, bufsize, "DRI_DRIVER\n%s\n", driDriver);
+      if (length >= bufsize)
+        fatal_error("GL strings length too large for buffer size");
+    }
+  }
+
   ///// Clean up. Indeed, the parent process might fail to kill us (e.g. if it doesn't need to check GL info)
   ///// so we might be staying alive for longer than expected, so it's important to consume as little memory as
   ///// possible. Also we want to check that we're able to do that too without generating X errors.
@@ -288,6 +506,15 @@ void glxtest()
 #endif
 
   dlclose(libgl);
+
+  // If we failed to get the driver name from X, try via EGL_MESA_query_driver.
+  // We are probably using Wayland.
+  if (!gotDriDriver) {
+    length += get_egl_status(buf + length, bufsize - length);
+    if (length >= bufsize) {
+      fatal_error("GL strings length too large for buffer size");
+    }
+  }
 
   ///// Finally write data to the pipe
   mozilla::Unused << write(write_end_of_the_pipe, buf, length);
@@ -330,6 +557,7 @@ bool fire_glxtest_process()
       close(gtkpfd[0]);
       gtk_write_end_of_the_pipe = gtkpfd[1];
 #endif
+      close_logging();
       glxtest();
       close(pfd[1]);
 #if MOZ_WIDGET_GTK == 2
