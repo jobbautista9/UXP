@@ -303,6 +303,39 @@ static void close_logging()
   close(fd);
 }
 
+static void get_x11_screen_info(Display* dpy) {
+  int screenCount = ScreenCount(dpy);
+  int defaultScreen = DefaultScreen(dpy);
+  if (screenCount != 0) {
+    record_value("SCREEN_INFO\n");
+    for (int idx = 0; idx < screenCount; idx++) {
+      Screen* scrn = ScreenOfDisplay(dpy, idx);
+      int current_height = scrn->height;
+      int current_width = scrn->width;
+
+      record_value("%dx%d:%d%s", current_width, current_height,
+                   idx == defaultScreen ? 1 : 0,
+                   idx == screenCount - 1 ? ";\n" : ";");
+    }
+  }
+}
+
+static bool x11_egltest()
+{
+  get_egl_status(nullptr, true);
+
+  Display* dpy = XOpenDisplay(nullptr);
+  if (!dpy) {
+    return false;
+  }
+  XSetErrorHandler(x_error_handler);
+
+  get_x11_screen_info(dpy);
+
+  XCloseDisplay(dpy);
+  return true;
+}
+
 static void glxtest()
 {
 #if MOZ_WIDGET_GTK == 2
@@ -558,7 +591,8 @@ bool fire_glxtest_process()
       gtk_write_end_of_the_pipe = gtkpfd[1];
 #endif
       close_logging();
-      glxtest();
+      if (!x11_egltest())
+          glxtest();
       close(pfd[1]);
 #if MOZ_WIDGET_GTK == 2
       close(gtkpfd[1]);
