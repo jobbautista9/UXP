@@ -30,6 +30,7 @@
 
 #include "../../mfbt/RefPtr.h"
 #include "../../mfbt/UniquePtr.h"
+#include "../../mfbt/ThreadLocal.h"
 
 #include "GLDefs.h"
 #include "GLLibraryLoader.h"
@@ -196,6 +197,7 @@ class GLContext
 {
 public:
     MOZ_DECLARE_WEAKREFERENCE_TYPENAME(GLContext)
+    static MOZ_THREAD_LOCAL(GLContext*) sCurrentContext;
 
 // -----------------------------------------------------------------------------
 // basic enums
@@ -352,6 +354,7 @@ public:
 protected:
     bool mIsOffscreen;
     bool mContextLost;
+    const bool mUseTLSIsCurrent;
     bool mIsDestroyed = false;
 
     /**
@@ -3206,7 +3209,7 @@ public:
 protected:
     explicit GLContext(CreateContextFlags flags, const SurfaceCaps& caps,
                        GLContext* sharedContext = nullptr,
-                       bool isOffscreen = false);
+                       bool isOffscreen = false, bool canUseTLSIsCurrent = false);
 
 
 // -----------------------------------------------------------------------------
@@ -3232,27 +3235,8 @@ public:
     }
 #endif
 
-    bool MakeCurrent(bool aForce = false) {
-        if (IsDestroyed()) {
-            return false;
-        }
-#ifdef MOZ_GL_DEBUG
-    PR_SetThreadPrivate(sCurrentGLContextTLS, this);
+    bool MakeCurrent(bool aForce = false);
 
-    // XXX this assertion is disabled because it's triggering on Mac;
-    // we need to figure out why and reenable it.
-#if 0
-        // IsOwningThreadCurrent is a bit of a misnomer;
-        // the "owning thread" is the creation thread,
-        // and the only thread that can own this.  We don't
-        // support contexts used on multiple threads.
-        NS_ASSERTION(IsOwningThreadCurrent(),
-                     "MakeCurrent() called on different thread than this context was created on!");
-#endif
-#endif
-        return MakeCurrentImpl(aForce);
-    }
-    
     virtual bool Init() = 0;
 
     virtual bool SetupLookupFunction() = 0;

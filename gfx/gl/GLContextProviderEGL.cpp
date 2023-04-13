@@ -159,7 +159,7 @@ CreateSurfaceForWindow(nsIWidget* widget, const EGLConfig& config) {
 GLContextEGL::GLContextEGL(CreateContextFlags flags, const SurfaceCaps& caps,
                            GLContext* shareContext, bool isOffscreen, EGLConfig config,
                            EGLSurface surface, EGLContext context)
-    : GLContext(flags, caps, shareContext, isOffscreen)
+    : GLContext(flags, caps, shareContext, isOffscreen, sEGLLibrary.IsANGLE())
     , mConfig(config)
     , mSurface(surface)
     , mContext(context)
