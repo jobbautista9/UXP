@@ -11,7 +11,7 @@ EXPORTS.vorbis += [
     'include/vorbis/vorbisenc.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'lib/vorbis_analysis.c',
     'lib/vorbis_bitrate.c',
     'lib/vorbis_block.c',
@@ -49,6 +49,9 @@ if CONFIG['OS_ARCH'] == 'SunOS':
 
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     NO_VISIBILITY_FLAGS = True
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 # We allow warnings for third-party code that can be updated from upstream.
 ALLOW_COMPILER_WARNINGS = True

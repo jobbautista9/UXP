@@ -12,6 +12,20 @@ EXPORTS.theora += [
     'include/theora/theoradec.h',
 ]
 
+deunified_sources = [
+    'lib/bitpack.c',
+    'lib/decinfo.c',
+    'lib/decode.c',
+    'lib/dequant.c',
+    'lib/fragment.c',
+    'lib/huffdec.c',
+    'lib/idct.c',
+    'lib/info.c',
+    'lib/internal.c',
+    'lib/quant.c',
+    'lib/state.c',
+]
+
 # We allow warnings for third-party code that can be updated from upstream.
 ALLOW_COMPILER_WARNINGS = True
 
@@ -19,6 +33,9 @@ FINAL_LIBRARY = 'gkmedias'
 
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     NO_VISIBILITY_FLAGS = True
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 # The encoder is currently not included.
 DEFINES['THEORA_DISABLE_ENCODE'] = True
@@ -36,20 +53,6 @@ if CONFIG['CC_TYPE'] == 'clang-cl':
         '-Wno-parentheses',
         '-Wno-pointer-sign',
     ]
-
-UNIFIED_SOURCES += [
-    'lib/bitpack.c',
-    'lib/decinfo.c',
-    'lib/decode.c',
-    'lib/dequant.c',
-    'lib/fragment.c',
-    'lib/huffdec.c',
-    'lib/idct.c',
-    'lib/info.c',
-    'lib/internal.c',
-    'lib/quant.c',
-    'lib/state.c',
-]
 
 LOCAL_INCLUDES += ['include']
 

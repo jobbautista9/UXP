@@ -55,7 +55,14 @@
   'target_defaults': {
     'include_dirs': [
       '.'
-    ]
+    ], # target_defaults
+    'conditions': [
+      ['OS == "WINNT"', {
+        'ldflags': [
+          '/LTCG',
+        ],
+      }],
+    ], # conditions
   },
   'variables': {
     'module': 'nss',

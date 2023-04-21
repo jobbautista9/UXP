@@ -3,10 +3,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# Harfbuzz upstream supports building everything as a single jumbo
-# file, so do that here.
-FILES_PER_UNIFIED_FILE = 100
-
 EXPORTS.harfbuzz += [
     'hb-aat-layout.h',
     'hb-aat.h',
@@ -39,7 +35,7 @@ EXPORTS.harfbuzz += [
     'hb.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'hb-aat-layout.cc',
     'hb-aat-map.cc',
     'hb-blob.cc',
@@ -94,7 +90,7 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
     EXPORTS.harfbuzz += [
         'hb-glib.h',
     ]
-    UNIFIED_SOURCES += [
+    deunified_sources += [
         'hb-glib.cc',
     ]
     CXXFLAGS += CONFIG['GLIB_CFLAGS']
@@ -103,6 +99,14 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'gtk':
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'gkmedias'
+
+if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
+    SOURCES += deunified_sources
+else:
+    # Harfbuzz upstream supports building everything as a single jumbo
+    # file, so do that here.
+    FILES_PER_UNIFIED_FILE = 100
+    UNIFIED_SOURCES += deunified_sources
 
 DEFINES['PACKAGE_VERSION'] = '"moz"'
 DEFINES['PACKAGE_BUGREPORT'] = '"http://bugzilla.mozilla.org/"'

@@ -12,7 +12,7 @@ EXPORTS.soundtouch += [
     'STTypes.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'AAFilter.cpp',
     'cpu_detect_x86.cpp',
     'FIFOSampleBuffer.cpp',
@@ -48,6 +48,11 @@ DEFINES['BUILDING_SOUNDTOUCH'] = 1
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'lgpllibs'
+
+if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 # Use abort() instead of exception in SoundTouch.
 DEFINES['ST_NO_EXCEPTION_HANDLING'] = 1

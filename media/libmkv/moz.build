@@ -10,7 +10,7 @@ EXPORTS.libmkv += [
     'WebMElement.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
 ]
 
 # These files can't be unified because of function redefinitions.
@@ -22,6 +22,9 @@ SOURCES += [
 
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     NO_VISIBILITY_FLAGS = True
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 FINAL_LIBRARY = 'gkmedias'
 

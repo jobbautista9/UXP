@@ -27,7 +27,15 @@ SOURCES += [
     'libavutil/x86/cpuid.asm',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = []
+
+# Dummy functions are required for windows NoOpt/PGO builds.
+if CONFIG['_MSC_VER']:
+    deunified_sources += [
+        'avfft_dummy_funcs.c'
+    ]
+
+deunified_sources += [
     'libavcodec/fft_float.c',
     'libavcodec/rdft.c',
     'libavcodec/x86/fft_init.c',
@@ -48,12 +56,6 @@ UNIFIED_SOURCES += [
     'libavutil/sha.c',
 ]
 
-# Dummy functions are required for windows NoOpt/PGO builds.
-if CONFIG['_MSC_VER']:
-    UNIFIED_SOURCES += [
-        'avfft_dummy_funcs.c'
-    ]
-
 # OS X requires a special header to make sure symbols are exported publicly in
 # the lgpl shared library, since it does not yet use system headers. This is
 # also used on linux for the time being, to avoid having to patch libav code.
@@ -64,6 +66,11 @@ if CONFIG['OS_ARCH'] != 'WINNT':
 
 # We allow warnings for third-party code that can be updated from upstream.
 ALLOW_COMPILER_WARNINGS = True
+
+if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 if CONFIG['MOZ_DEBUG']:
     # Enable all assertions in debug builds.

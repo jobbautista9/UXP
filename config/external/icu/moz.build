@@ -23,3 +23,6 @@ else:
             '/IGNORE:4217', # symbol defined in $1.obj is defined in $2.obj
             '/IGNORE:4286', # similar with LNK4217
         ]
+        # Explicitly enable LTCG if /GL is invoked
+        if CONFIG['UXP_LTO']:
+            LDFLAGS += [ '/LTCG' ]

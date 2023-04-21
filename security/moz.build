@@ -10,6 +10,10 @@ if CONFIG['MOZ_FOLD_LIBS']:
     # TODO: The library name can be changed when bug 845217 is fixed.
     SHARED_LIBRARY_NAME = 'nss3'
 
+    # Explicitly enable LTCG if /GL is invoked
+    if CONFIG['UXP_LTO'] and CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+        LDFLAGS += [ '/LTCG' ]
+
     SDK_LIBRARY = True
 
     USE_LIBS += [

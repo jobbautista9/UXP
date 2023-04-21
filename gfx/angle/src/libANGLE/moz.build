@@ -8,7 +8,7 @@
 #
 # WARNING WARNING WARNING
 #
-UNIFIED_SOURCES += [
+main_deunified_sources = [
     '../common/angleutils.cpp',
     '../common/debug.cpp',
     '../common/event_tracer.cpp',
@@ -269,7 +269,7 @@ SOURCES += [
     'renderer/d3d/HLSLCompiler.cpp',
 ]
 if CONFIG['MOZ_HAS_WINSDK_WITH_D3D']:
-    UNIFIED_SOURCES += [
+    d3d11_deunified_sources = [
         'renderer/d3d/d3d11/Blit11.cpp',
         'renderer/d3d/d3d11/Buffer11.cpp',
         'renderer/d3d/d3d11/Clear11.cpp',
@@ -367,6 +367,10 @@ else:
   ]
 
 Library('libANGLE')
+
+UNIFIED_SOURCES += main_deunified_sources
+if CONFIG['MOZ_HAS_WINSDK_WITH_D3D']:
+    UNIFIED_SOURCES += d3d11_deunified_sources
 
 
 SOURCES['renderer/d3d/HLSLCompiler.cpp'].flags += ['-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES=\'{ TEXT("d3dcompiler_47.dll"), TEXT("d3dcompiler_46.dll"), TEXT("d3dcompiler_43.dll") }\'']

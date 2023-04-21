@@ -75,6 +75,10 @@ if CONFIG['GNU_CXX']:
 if CONFIG['GNU_CC'] and CONFIG['CC_VERSION'] >= '10.0.0':
     CFLAGS += ['-fcommon']
 
+# Explicitly enable LTCG if /GL is invoked
+if CONFIG['UXP_LTO'] and CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+    LDFLAGS += [ '/LTCG' ]
+
 USE_LIBS += [
      'mozavutil'
 ]

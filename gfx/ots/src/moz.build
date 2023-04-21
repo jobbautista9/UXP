@@ -8,7 +8,7 @@ EXPORTS += [
     '../include/ots-memory-stream.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'avar.cc',
     'cff.cc',
     'cff_charstring.cc',
@@ -72,6 +72,9 @@ DEFINES['OTS_VARIATIONS'] = 1
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     DEFINES['OTS_DLL'] = True
     DEFINES['OTS_DLL_EXPORTS'] = True
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 USE_LIBS += [
     'brotli',

@@ -16,7 +16,7 @@ EXPORTS.ogg += [
     'include/ogg/os_types.h',
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'src/ogg_alloc.c',
     'src/ogg_bitwise.c',
     'src/ogg_framing.c',
@@ -24,5 +24,8 @@ UNIFIED_SOURCES += [
 
 if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     NO_VISIBILITY_FLAGS = True
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 FINAL_LIBRARY = 'gkmedias'

@@ -12,16 +12,16 @@ EXPORTS.graphite2 += [
 ]
 
 if CONFIG['GNU_CC']:
-    UNIFIED_SOURCES += [
+    compiler_check_deunified_sources = [
         'direct_machine.cpp'
     ]
 else:
-    UNIFIED_SOURCES += [
+    compiler_check_deunified_sources = [
         'call_machine.cpp'
     ]
 
 # This should contain all of the _SOURCES from files.mk, except *_machine.cpp
-UNIFIED_SOURCES += [
+main_deunified_sources = [
     'CachedFace.cpp',
     'CmapCache.cpp',
     'Code.cpp',
@@ -69,6 +69,13 @@ else:
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'gkmedias'
+
+if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
+    SOURCES += main_deunified_sources
+    SOURCES += compiler_check_deunified_sources
+else:
+    UNIFIED_SOURCES += main_deunified_sources
+    UNIFIED_SOURCES += compiler_check_deunified_sources
 
 DEFINES['PACKAGE_VERSION'] = '"moz"'
 DEFINES['PACKAGE_BUGREPORT'] = '"http://bugzilla.mozilla.org/"'

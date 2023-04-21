@@ -55,4 +55,8 @@ NO_VISIBILITY_FLAGS = True
 
 OS_LIBS += CONFIG['REALTIME_LIBS']
 
+# Explicitly enable LTCG if /GL is invoked
+if CONFIG['UXP_LTO'] and CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+    LDFLAGS += [ '/LTCG' ]
+
 include("../ffvpxcommon.mozbuild")

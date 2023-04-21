@@ -200,6 +200,7 @@ def old_configure_options(*options):
     '--enable-libproxy',
     '--enable-llvm-hacks',
     '--enable-logrefcnt',
+    '--enable-lto',
     '--enable-maintenance-service',
     '--enable-memory-sanitizer',
     '--enable-mozril-geoloc',

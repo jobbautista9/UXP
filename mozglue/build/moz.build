@@ -25,6 +25,9 @@ if CONFIG['OS_TARGET'] == 'WINNT':
         'user32.dll',
         'version.dll',
     ]
+    # Explicitly enable LTCG if /GL is invoked
+    if CONFIG['UXP_LTO'] and CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+        LDFLAGS += [ '/LTCG' ]
 
 if not CONFIG['JS_STANDALONE']:
 

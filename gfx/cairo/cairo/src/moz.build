@@ -106,7 +106,7 @@ SOURCES += [
     'cairo-surface-wrapper.c', #  redefinition of '_copy_transformed_pattern'
 ]
 
-UNIFIED_SOURCES += [
+deunified_sources = [
     'cairo-analysis-surface.c',
     'cairo-arc.c',
     'cairo-array.c',
@@ -179,6 +179,11 @@ UNIFIED_SOURCES += [
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'gkmedias'
+
+if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 DEFINES['PACKAGE_VERSION'] = '"moz"'
 DEFINES['PACKAGE_BUGREPORT'] = '"http://bugzilla.mozilla.org/"'

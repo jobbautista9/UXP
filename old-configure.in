@@ -729,6 +729,21 @@ AC_SUBST(MOZILLA_UAVERSION_U)
 MOZ_DOING_LTO(lto_is_enabled)
 
 dnl ========================================================
+dnl Link-time optimization support
+dnl ========================================================
+
+MOZ_ARG_ENABLE_BOOL(lto,
+[  --enable-lto           Enable link-time optimization],
+    UXP_LTO=1,
+    UXP_LTO=)
+
+if test -n "$UXP_LTO"; then
+    AC_DEFINE(UXP_LTO)
+fi
+
+AC_SUBST(UXP_LTO)
+
+dnl ========================================================
 dnl System overrides of the defaults for target
 dnl ========================================================
 

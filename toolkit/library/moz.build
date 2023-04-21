@@ -317,3 +317,10 @@ if CONFIG['COMPILE_ENVIRONMENT']:
 
 # This library needs to be last to make XPCOM module registration work.
 USE_LIBS += ['StaticXULComponentsEnd']
+
+# Explicitly disable link-time optimization in xul for now as it's unstable
+if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+    disable_wpo = [ '-GL-' ]
+    CFLAGS += disable_wpo
+    CXXFLAGS += disable_wpo
+    LDFLAGS += [ '/LTCG:OFF' ]

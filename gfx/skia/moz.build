@@ -18,11 +18,11 @@ skia_opt_flags = []
 
 if CONFIG['MOZ_OPTIMIZE']:
     if CONFIG['_MSC_VER']:
-        skia_opt_flags += ['-O2']
+        skia_opt_flags += ['-O2 -GL']
     elif CONFIG['GNU_CC']:
         skia_opt_flags += ['-O2']
 
-UNIFIED_SOURCES += [
+main_deunified_sources = [
     'skia/src/core/SkAAClip.cpp',
     'skia/src/core/SkAlphaRuns.cpp',
     'skia/src/core/SkAnnotation.cpp',
@@ -308,7 +308,7 @@ SOURCES['skia/src/core/SkSpriteBlitter4f.cpp'].flags += skia_opt_flags
 SOURCES['skia/src/core/SkSpriteBlitter_ARGB32.cpp'].flags += skia_opt_flags
 SOURCES['skia/src/core/SkSpriteBlitter_RGB16.cpp'].flags += skia_opt_flags
 if CONFIG['MOZ_ENABLE_SKIA_PDF']:
-    UNIFIED_SOURCES += [
+    pdf_deunified_sources += [
         'skia/src/core/SkMD5.cpp',
         'skia/src/pdf/SkDeflate.cpp',
         'skia/src/pdf/SkJpegInfo.cpp',
@@ -332,7 +332,7 @@ if CONFIG['MOZ_ENABLE_SKIA_PDF']:
         'skia/src/pdf/SkPDFFont.cpp',
     ]
 if CONFIG['MOZ_ENABLE_SKIA_GPU']:
-    UNIFIED_SOURCES += [
+    gpu_deunified_sources = [
         'skia/src/effects/gradients/SkTwoPointConicalGradient_gpu.cpp',
         'skia/src/gpu/batches/GrAnalyticRectBatch.cpp',
         'skia/src/gpu/batches/GrAtlasTextBatch.cpp',
@@ -517,7 +517,7 @@ if CONFIG['MOZ_ENABLE_SKIA_GPU']:
         'skia/src/image/SkImage_Gpu.cpp',
     ]
 if CONFIG['MOZ_WIDGET_TOOLKIT'] in {'cocoa', 'uikit'}:
-    UNIFIED_SOURCES += [
+    cocoa_deunified_sources = [
         'skia/src/ports/SkDebug_stdio.cpp',
         'skia/src/ports/SkOSFile_posix.cpp',
         'skia/src/ports/SkOSLibrary_posix.cpp',
@@ -530,7 +530,7 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in {'cocoa', 'uikit'}:
         'skia/src/ports/SkFontHost_mac.cpp',
     ]
 if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
-    UNIFIED_SOURCES += [
+    gtk_deunified_sources = [
         'skia/src/ports/SkDebug_stdio.cpp',
         'skia/src/ports/SkOSFile_posix.cpp',
         'skia/src/ports/SkOSLibrary_posix.cpp',
@@ -562,7 +562,7 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
         'skia/src/utils/win/SkIStream.cpp',
     ]
 if CONFIG['INTEL_ARCHITECTURE']:
-    UNIFIED_SOURCES += [
+    intel_deunified_sources = [
         'skia/src/opts/opts_check_x86.cpp',
     ]
     SOURCES += [
@@ -586,7 +586,7 @@ if CONFIG['INTEL_ARCHITECTURE']:
     SOURCES['skia/src/opts/SkOpts_sse42.cpp'].flags += skia_opt_flags
     SOURCES['skia/src/opts/SkOpts_ssse3.cpp'].flags += skia_opt_flags
 elif CONFIG['CPU_ARCH'] in ('arm', 'aarch64') and CONFIG['GNU_CC']:
-    UNIFIED_SOURCES += [
+    arm_gcc_deunified_sources = [
         'skia/src/core/SkUtilsArm.cpp',
     ]
     SOURCES += [
@@ -672,7 +672,7 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] in {
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
     DEFINES['UNICODE'] = True
     DEFINES['_UNICODE'] = True
-    UNIFIED_SOURCES += [
+    windows_deunified_sources = [
         'skia/src/fonts/SkFontMgr_indirect.cpp',
         'skia/src/fonts/SkRemotableFontMgr.cpp',
     ]
@@ -681,6 +681,37 @@ if CONFIG['GKMEDIAS_SHARED_LIBRARY']:
     DEFINES['SKIA_DLL'] = 1
     DEFINES['GR_DLL'] = 1
     DEFINES['SK_FONT_HOST_USE_SYSTEM_SETTINGS'] = 1
+    SOURCES += main_deunified_sources
+    if CONFIG['MOZ_ENABLE_SKIA_PDF']:
+        SOURCES += pdf_deunified_sources
+    if CONFIG['MOZ_ENABLE_SKIA_GPU']:
+        SOURCES += gpu_deunified_sources
+    if CONFIG['MOZ_WIDGET_TOOLKIT'] in {'cocoa', 'uikit'}:
+        SOURCES += cocoa_deunified_sources
+    if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
+        SOURCES += gtk_deunified_sources
+    if CONFIG['INTEL_ARCHITECTURE']:
+        SOURCES += intel_deunified_sources
+    if CONFIG['CPU_ARCH'] in ('arm', 'aarch64') and CONFIG['GNU_CC']:
+        SOURCES += arm_gcc_deunified_sources
+    if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
+        SOURCES += windows_deunified_sources
+else:
+    UNIFIED_SOURCES += main_deunified_sources
+    if CONFIG['MOZ_ENABLE_SKIA_PDF']:
+        UNIFIED_SOURCES += pdf_deunified_sources
+    if CONFIG['MOZ_ENABLE_SKIA_GPU']:
+        UNIFIED_SOURCES += gpu_deunified_sources
+    if CONFIG['MOZ_WIDGET_TOOLKIT'] in {'cocoa', 'uikit'}:
+        UNIFIED_SOURCES += cocoa_deunified_sources
+    if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
+        UNIFIED_SOURCES += gtk_deunified_sources
+    if CONFIG['INTEL_ARCHITECTURE']:
+        UNIFIED_SOURCES += intel_deunified_sources
+    if CONFIG['CPU_ARCH'] in ('arm', 'aarch64') and CONFIG['GNU_CC']:
+        UNIFIED_SOURCES += arm_gcc_deunified_sources
+    if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
+        UNIFIED_SOURCES += windows_deunified_sources
 
 # We should autogenerate these SSE related flags.
 

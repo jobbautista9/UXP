@@ -8,7 +8,7 @@
 #
 # WARNING WARNING WARNING
 #
-UNIFIED_SOURCES += [
+deunified_sources = [
     'entry_points_egl.cpp',
     'entry_points_egl_ext.cpp',
     'entry_points_gles_2_0.cpp',
@@ -80,6 +80,14 @@ else:
   ]
 
 GeckoSharedLibrary('libGLESv2', linkage=None)
+
+# Explicitly enable LTCG in MSVC and deunify sources if we're doing LTO
+if CONFIG['UXP_LTO']:
+    if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+        LDFLAGS += [ '/LTCG' ]
+    SOURCES += deunified_sources
+else:
+    UNIFIED_SOURCES += deunified_sources
 
 RCFILE = SRCDIR + '/libGLESv2.rc'
 DEFFILE = SRCDIR + '/libGLESv2.def'
