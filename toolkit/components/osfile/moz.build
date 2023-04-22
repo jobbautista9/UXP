@@ -16,3 +16,4 @@ SOURCES += ['NativeOSFileInternals.cpp']
 EXTRA_PP_JS_MODULES += ['osfile.jsm']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

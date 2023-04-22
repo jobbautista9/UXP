@@ -19,5 +19,6 @@ if 'gtk' in CONFIG['MOZ_WIDGET_TOOLKIT']:
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 CXXFLAGS += CONFIG['TK_CFLAGS']

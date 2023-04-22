@@ -737,6 +737,13 @@ MOZ_ARG_ENABLE_BOOL(lto,
     UXP_LTO=1,
     UXP_LTO=)
 
+case "$target" in
+*-mingw*)
+    CFLAGS="$CFLAGS -GL"
+    CXXFLAGS="$CXXFLAGS -GL"
+    ;;
+esac
+
 if test -n "$UXP_LTO"; then
     AC_DEFINE(UXP_LTO)
 fi

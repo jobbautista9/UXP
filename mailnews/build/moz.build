@@ -21,6 +21,7 @@ if CONFIG['MOZ_INCOMPLETE_EXTERNAL_LINKAGE']:
 else:
     Library('mail')
     FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 # js needs to come after xul for now, because it is an archive and its content
 # is discarded when it comes first.

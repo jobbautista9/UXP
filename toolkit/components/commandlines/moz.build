@@ -15,3 +15,4 @@ XPIDL_MODULE = 'commandlines'
 SOURCES += ['nsCommandLine.cpp']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

@@ -8,6 +8,7 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['MOZ_ENABLE_GNOMEUI']:
     CXXFLAGS += CONFIG['MOZ_GNOMEUI_CFLAGS']

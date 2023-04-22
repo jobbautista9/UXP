@@ -81,5 +81,6 @@ if CONFIG['MOZ_UPDATE_CHANNEL'] not in ('release') and \
     DEFINES['MOZ_ENABLE_BACKGROUND_HANG_MONITOR'] = 1
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 include('/ipc/chromium/chromium-config.mozbuild')

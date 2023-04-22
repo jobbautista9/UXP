@@ -25,3 +25,4 @@ LOCAL_INCLUDES += ['/dom/base/']
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

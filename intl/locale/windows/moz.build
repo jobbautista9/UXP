@@ -11,6 +11,7 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 GENERATED_FILES = [
     'wincharset.properties.h',

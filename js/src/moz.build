@@ -627,7 +627,6 @@ else:
 
 # Explicitly enable LTCG in MSVC, and deunify sources if we're doing LTO
 if CONFIG['UXP_LTO']:
-    include('/build/uxp_lto.mozbuild')
     if CONFIG['JS_SHARED_LIBRARY'] and CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
         LDFLAGS += [ '/LTCG' ]
     SOURCES += main_deunified_sources

@@ -38,6 +38,7 @@ SOURCES += [
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 DEFINES['OS_ARCH'] = CONFIG['OS_ARCH']
 DEFINES['MOZ_WIDGET_TOOLKIT'] = CONFIG['MOZ_WIDGET_TOOLKIT']

@@ -22,3 +22,4 @@ if CONFIG['MOZ_USERINFO']:
         SOURCES += ['nsUserInfoUnix.cpp']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

@@ -14,5 +14,6 @@ else:
     UNIFIED_SOURCES += ['VolatileBufferFallback.cpp']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 TEST_DIRS += ['tests']

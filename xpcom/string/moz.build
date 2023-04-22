@@ -58,3 +58,4 @@ if CONFIG['INTEL_ARCHITECTURE']:
     SOURCES['nsReadableUtilsSSE2.cpp'].flags += CONFIG['SSE2_FLAGS']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

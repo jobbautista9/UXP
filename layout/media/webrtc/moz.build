@@ -8,3 +8,4 @@ with Files('**'):
 
 Library('webrtc')
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

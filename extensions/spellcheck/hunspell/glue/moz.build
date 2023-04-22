@@ -11,6 +11,7 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['MOZ_SYSTEM_HUNSPELL']:
     CXXFLAGS += CONFIG['MOZ_HUNSPELL_CFLAGS']

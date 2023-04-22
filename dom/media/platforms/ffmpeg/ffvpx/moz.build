@@ -40,3 +40,4 @@ DEFINES['FFVPX_VERSION'] = 46465650
 DEFINES['USING_MOZFFVPX'] = True
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

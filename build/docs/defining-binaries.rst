@@ -93,6 +93,7 @@ be linked to that bigger library, with the ``FINAL_LIBRARY`` variable.
 .. code-block:: python
 
    FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 The ``FINAL_LIBRARY`` value must match a unique ``Library`` name somewhere
 in the tree.

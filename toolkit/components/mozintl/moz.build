@@ -10,3 +10,4 @@ XPIDL_MODULE = 'mozintl'
 SOURCES += ['MozIntl.cpp']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

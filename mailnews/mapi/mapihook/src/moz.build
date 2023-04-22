@@ -15,6 +15,7 @@ if CONFIG['MOZ_INCOMPLETE_EXTERNAL_LINKAGE']:
     XPCOMBinaryComponent('msgMapi')
 else:
     FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 OS_LIBS += [
     'ole32',

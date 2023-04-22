@@ -41,6 +41,7 @@ include('/ipc/chromium/chromium-config.mozbuild')
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     '/dom/base',

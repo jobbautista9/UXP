@@ -40,3 +40,4 @@ LOCAL_INCLUDES += [
 MOCHITEST_MANIFESTS += [ 'tests/mochitest.ini' ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

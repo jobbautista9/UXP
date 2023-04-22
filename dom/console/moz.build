@@ -42,3 +42,4 @@ MOCHITEST_MANIFESTS += [ 'tests/mochitest.ini' ]
 MOCHITEST_CHROME_MANIFESTS += [ 'tests/chrome.ini' ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

@@ -31,6 +31,7 @@ if CONFIG['MOZ_WEBM_ENCODER']:
     LOCAL_INCLUDES += ['/media/libyuv/include']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 # These includes are from Android JB, for use of MediaCodec.
 LOCAL_INCLUDES += ['/ipc/chromium/src']

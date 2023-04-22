@@ -12,6 +12,7 @@ UNIFIED_SOURCES += [
 LOCAL_INCLUDES += ['/dom/base']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']
 MOCHITEST_MANIFESTS += ['test/mochitest.ini']

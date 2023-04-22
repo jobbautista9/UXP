@@ -9,3 +9,4 @@ if CONFIG['OS_ARCH'] == 'Linux':
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

@@ -97,9 +97,6 @@ else:
     else:
         UNIFIED_SOURCES += silk_sources_fixed
 
-if CONFIG['UXP_LTO']:
-    include('/build/uxp_lto.mozbuild')
-
 if CONFIG['CPU_ARCH'] in ('x86', 'x86_64'):
     DEFINES['OPUS_HAVE_RTCD'] = True
     DEFINES['OPUS_X86_MAY_HAVE_SSE'] = True

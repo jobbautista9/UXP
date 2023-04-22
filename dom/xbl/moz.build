@@ -44,6 +44,7 @@ LOCAL_INCLUDES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 MOCHITEST_MANIFESTS += ['test/mochitest.ini']
 MOCHITEST_CHROME_MANIFESTS += ['test/chrome.ini']

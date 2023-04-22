@@ -21,3 +21,4 @@ if CONFIG['MOZ_INCOMPLETE_EXTERNAL_LINKAGE']:
 else:
     Library('mork')
     FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

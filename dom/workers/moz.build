@@ -102,6 +102,7 @@ LOCAL_INCLUDES += [
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 TEST_DIRS += [
     'test/extensions/bootstrap',

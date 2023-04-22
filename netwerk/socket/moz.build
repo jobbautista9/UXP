@@ -34,3 +34,4 @@ if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

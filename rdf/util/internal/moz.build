@@ -8,3 +8,4 @@ include('../objs.mozbuild')
 SOURCES += rdf_util_src_cppsrcs
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

@@ -37,6 +37,7 @@ else:
         SOURCES['xptcinvoke_asm_x86_msvc.asm'].flags += ['-safeseh']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     '../..',

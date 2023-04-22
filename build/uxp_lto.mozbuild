@@ -1,4 +1,5 @@
-if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
-    enable_wpo = [ '-GL' ]
-    CFLAGS += enable_wpo
-    CXXFLAGS += enable_wpo
+if CONFIG['UXP_LTO']:
+    if CONFIG['_MSC_VER'] and not CONFIG['CLANG_CL']:
+        disable_wpo = [ '-GL-' ]
+        CFLAGS += disable_wpo
+        CXXFLAGS += disable_wpo

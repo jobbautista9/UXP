@@ -77,6 +77,7 @@ if CONFIG['GNU_CC'] or CONFIG['CLANG_CL']:
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['_MSC_VER']:
     CXXFLAGS += [

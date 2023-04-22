@@ -12,3 +12,4 @@ EXTRA_COMPONENTS += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

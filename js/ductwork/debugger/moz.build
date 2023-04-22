@@ -20,3 +20,4 @@ EXTRA_JS_MODULES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

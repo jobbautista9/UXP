@@ -111,6 +111,7 @@ if CONFIG['MOZ_AUDIO_CHANNEL_MANAGER']:
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 SPHINX_TREES['webidl'] = 'docs'
 SPHINX_PYTHON_PACKAGE_DIRS += ['mozwebidlcodegen']

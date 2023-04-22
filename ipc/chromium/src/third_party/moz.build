@@ -56,3 +56,4 @@ if os_solaris:
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

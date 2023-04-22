@@ -91,6 +91,7 @@ SOURCES += [
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     # Because SVGDocumentWrapper.cpp includes "mozilla/dom/SVGSVGElement.h"

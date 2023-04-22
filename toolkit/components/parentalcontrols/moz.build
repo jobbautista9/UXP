@@ -16,3 +16,4 @@ if not CONFIG['MOZ_DISABLE_PARENTAL_CONTROLS']:
         SOURCES += ['nsParentalControlsServiceDefault.cpp']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

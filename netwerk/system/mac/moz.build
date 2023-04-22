@@ -8,6 +8,7 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['CLANG_CXX']:
     CXXFLAGS += ['-Wno-error=shadow']

@@ -129,6 +129,7 @@ TEST_DIRS += [
 ALLOW_COMPILER_WARNINGS = True
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 # Suppress warnings in third-party code.
 if CONFIG['_MSC_VER']:

@@ -11,6 +11,7 @@ UNIFIED_SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 FINAL_TARGET_FILES.defaults.autoconfig += [
     'prefcalls.js',

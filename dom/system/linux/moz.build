@@ -17,3 +17,4 @@ if CONFIG['MOZ_GPSD']:
     ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

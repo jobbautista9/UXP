@@ -83,6 +83,7 @@ if CONFIG['CPU_ARCH'] == 'arm' and CONFIG['BUILD_ARM_NEON']:
     DEFINES['BIG_FFT_TABLE'] = True
 
     FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
     if CONFIG['CLANG_CXX']:
         ASFLAGS += [

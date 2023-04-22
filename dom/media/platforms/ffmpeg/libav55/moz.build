@@ -25,3 +25,4 @@ if CONFIG['CLANG_CXX']:
   ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

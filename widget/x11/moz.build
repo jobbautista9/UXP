@@ -8,5 +8,6 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 CXXFLAGS += CONFIG['TK_CFLAGS']

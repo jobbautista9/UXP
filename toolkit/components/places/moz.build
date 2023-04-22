@@ -86,6 +86,7 @@ if CONFIG['MOZ_PLACES']:
     ]
 
     FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 include('/ipc/chromium/chromium-config.mozbuild')
 

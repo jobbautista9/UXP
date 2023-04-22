@@ -94,6 +94,7 @@ UNIFIED_SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 # DEFINES['ENABLE_VOID_MENUITEM'] = True
 

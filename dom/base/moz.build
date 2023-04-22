@@ -463,6 +463,7 @@ if CONFIG['MOZ_WEBRTC']:
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['MOZ_PHOENIX']:
     DEFINES['HAVE_SIDEBAR'] = True

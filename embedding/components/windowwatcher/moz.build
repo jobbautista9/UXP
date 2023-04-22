@@ -32,6 +32,7 @@ EXPORTS += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 # For nsJSUtils
 LOCAL_INCLUDES += [
     '/docshell/base',

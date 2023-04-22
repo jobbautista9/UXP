@@ -10,3 +10,4 @@ SOURCES += ['ctypes.cpp']
 EXTRA_JS_MODULES += ['ctypes.jsm']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

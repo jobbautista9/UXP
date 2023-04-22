@@ -144,6 +144,7 @@ DEFINES['GMP_SAFE_SHMEM'] = True
 include('/ipc/chromium/chromium-config.mozbuild')
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 # media/mtransport so we work with --disable-webrtc
 LOCAL_INCLUDES += [
     '/media/mtransport',

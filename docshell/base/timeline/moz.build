@@ -35,6 +35,7 @@ SOURCES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     '/docshell/base'

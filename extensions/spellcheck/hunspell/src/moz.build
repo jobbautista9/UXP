@@ -21,6 +21,7 @@ UNIFIED_SOURCES += [
 DEFINES['HUNSPELL_STATIC'] = True
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     '../glue',

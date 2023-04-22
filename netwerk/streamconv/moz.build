@@ -22,3 +22,4 @@ SOURCES += [
 XPIDL_MODULE = 'necko_strconv'
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

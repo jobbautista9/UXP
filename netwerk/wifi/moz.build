@@ -56,3 +56,4 @@ if CONFIG['NECKO_WIFI_DBUS']:
     CXXFLAGS += CONFIG['MOZ_DBUS_GLIB_CFLAGS']
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')

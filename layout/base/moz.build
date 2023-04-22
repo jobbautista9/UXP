@@ -199,6 +199,7 @@ LOCAL_INCLUDES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 BROWSER_CHROME_MANIFESTS += ['tests/browser.ini']
 MARIONETTE_LAYOUT_MANIFESTS += ['tests/marionette/manifest.ini']

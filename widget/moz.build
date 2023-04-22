@@ -270,6 +270,7 @@ LOCAL_INCLUDES += [
     '/widget/%s' % widget_dir,
 ]
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 if CONFIG['MOZ_ENABLE_D3D10_LAYER']:
     DEFINES['MOZ_ENABLE_D3D10_LAYER'] = True

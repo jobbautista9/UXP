@@ -12,6 +12,7 @@ include('../objs.mozbuild')
 UNIFIED_SOURCES += intl_unicharutil_util_cppsrcs
 
 FINAL_LIBRARY = 'xul'
+include('/build/uxp_lto.mozbuild')
 
 LOCAL_INCLUDES += [
     '..',
