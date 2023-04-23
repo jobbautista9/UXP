@@ -102,6 +102,7 @@ USE_LIBS += [
 ]
 
 USE_LIBS += [
+    'chromium',
     'gkmedias',
     'lgpllibs',
     'nspr',

@@ -26,7 +26,7 @@ namespace IPC {
 //------------------------------------------------------------------------------
 
 Message::~Message() {
-  MOZ_COUNT_DTOR(IPC::Message);
+  MOZ_COUNT_DTOR(Message);
 }
 
 Message::Message()

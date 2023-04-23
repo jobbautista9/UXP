@@ -6,9 +6,9 @@
 #include "base/shared_memory.h"
 
 #include "base/logging.h"
+#include "base/process_util.h"
 #include "base/win_util.h"
 #include "base/string_util.h"
-#include "mozilla/ipc/ProtocolUtils.h"
 
 namespace base {
 
@@ -106,6 +106,32 @@ bool SharedMemory::Unmap() {
   return true;
 }
 
+bool DuplicateHandle2(HANDLE aSourceHandle,
+                      DWORD aTargetProcessId,
+                      HANDLE* aTargetHandle,
+                      DWORD aDesiredAccess,
+                      DWORD aOptions) {
+  // If our process is the target just duplicate the handle.
+  if (aTargetProcessId == base::GetCurrentProcId()) {
+    return !!::DuplicateHandle(::GetCurrentProcess(), aSourceHandle,
+                               ::GetCurrentProcess(), aTargetHandle,
+                               aDesiredAccess, false, aOptions);
+
+  }
+
+  // Finally, see if we already have access to the process.
+  ProcessHandle targetProcess(OpenProcess(PROCESS_DUP_HANDLE,
+                                          FALSE,
+                                          aTargetProcessId));
+  if (!targetProcess) {
+    return false;
+  }
+
+  return !!::DuplicateHandle(::GetCurrentProcess(), aSourceHandle,
+                              targetProcess, aTargetHandle,
+                              aDesiredAccess, FALSE, aOptions);
+}
+
 bool SharedMemory::ShareToProcessCommon(ProcessId processId,
                                         SharedMemoryHandle *new_handle,
                                         bool close_self) {
@@ -128,8 +154,7 @@ bool SharedMemory::ShareToProcessCommon(ProcessId processId,
     return true;
   }
 
-  if (!mozilla::ipc::DuplicateHandle(mapped_file, processId, &result, access,
-                                     options)) {
+  if (!DuplicateHandle2(mapped_file, processId, &result, access, options)) {
     return false;
   }
 

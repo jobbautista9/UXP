@@ -10,7 +10,6 @@
 #include "base/message_loop.h"
 #include "base/histogram.h"
 #include "base/win_util.h"
-#include "WinUtils.h"
 
 using base::Time;
 
@@ -259,7 +258,43 @@ void MessagePumpForUI::WaitForWork() {
   if (delay < 0)  // Negative value means no timers waiting.
     delay = INFINITE;
 
-  mozilla::widget::WinUtils::WaitForMessage(delay);
+  const DWORD waitFlags = MWMO_INPUTAVAILABLE;
+
+  const DWORD waitStart = ::GetTickCount();
+  DWORD elapsed = 0;
+  while (true) {
+    if (delay != INFINITE) {
+      elapsed = ::GetTickCount() - waitStart;
+    }
+    if (elapsed >= delay) {
+      break;
+    }
+    DWORD result = ::MsgWaitForMultipleObjectsEx(0, NULL, delay - elapsed,
+                                                 QS_ALLINPUT, waitFlags);
+    NS_WARNING_ASSERTION(result != WAIT_FAILED, "Wait failed");
+    if (result == WAIT_TIMEOUT) {
+      break;
+    }
+
+    // Sent messages (via SendMessage and friends) are processed differently
+    // than queued messages (via PostMessage); the destination window procedure
+    // of the sent message is called during (Get|Peek)Message. Since PeekMessage
+    // does not tell us whether it processed any sent messages, we need to query
+    // this ahead of time.
+    bool haveSentMessagesPending =
+      (HIWORD(::GetQueueStatus(QS_SENDMESSAGE)) & QS_SENDMESSAGE) != 0;
+
+    MSG msg = {0};
+    if (haveSentMessagesPending ||
+        ::PeekMessageW(&msg, nullptr, 0, 0, PM_NOREMOVE)) {
+      break;
+    }
+    // The message is intended for another thread that has been synchronized
+    // with our input queue; yield to give other threads an opportunity to
+    // process the message. This should prevent busy waiting if resumed due
+    // to another thread's message.
+    ::SwitchToThread();
+  }
 }
 
 void MessagePumpForUI::HandleWorkMessage() {
