@@ -7,9 +7,6 @@
 # be found in the AUTHORS file in the root of the source tree.
 
 {
-  'includes': [
-    'libyuv.gypi',
-  ],
   # Make sure that if we are being compiled to an xcodeproj, nothing tries to
   # include a .pch.
   'xcode_settings': {
@@ -148,9 +145,6 @@
           }],
         ], #conditions
       },
-      'sources': [
-        '<@(libyuv_sources)',
-      ],
     },
   ], # targets.
 }

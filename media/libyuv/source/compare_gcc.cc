@@ -19,7 +19,8 @@ extern "C" {
 #endif
 
 // This module is for GCC x86 and x64.
-#if !defined(LIBYUV_DISABLE_X86) && (defined(__x86_64__) || defined(__i386__))
+#if !defined(LIBYUV_DISABLE_X86) && \
+    (defined(__x86_64__) || (defined(__i386__) && !defined(_MSC_VER)))
 
 #if defined(__x86_64__)
 uint32_t HammingDistance_SSE42(const uint8_t* src_a,
@@ -67,7 +68,7 @@ uint32_t HammingDistance_SSE42(const uint8_t* src_a,
       :
       : "memory", "cc", "rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10");
 
-  return (uint32_t)(diff);
+  return static_cast<uint32_t>(diff);
 }
 #else
 uint32_t HammingDistance_SSE42(const uint8_t* src_a,
