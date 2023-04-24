@@ -13,11 +13,6 @@ UNIFIED_SOURCES += [
     'nsHyphenator.cpp',
 ]
 
-# These files cannot be built in unified mode because they include hnjalloc.h.
-SOURCES += [
-    'hnjstdio.cpp',
-]
-
 LOCAL_INCLUDES += [
     '../hyphen',
 ]

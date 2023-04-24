@@ -103,6 +103,7 @@ USE_LIBS += [
 
 USE_LIBS += [
     'gkmedias',
+    'hyphen',
     'lgpllibs',
     'nspr',
     'nss',

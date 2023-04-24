@@ -13,6 +13,7 @@
 #include "nsNetUtil.h"
 #include "nsIInputStream.h"
 #include "nsIURI.h"
+#define HYPHEN_SHARED_LIBRARY 1
 #include "nsContentUtils.h"
 
 #define BUFSIZE 1024

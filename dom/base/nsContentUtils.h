@@ -156,8 +156,10 @@ extern const char kLoadAsData[];
 
 // Stolen from nsReadableUtils, but that's OK, since we can declare the same
 // name multiple times.
+#ifndef HYPHEN_SHARED_LIBRARY
 const nsAFlatString& EmptyString();
 const nsAFlatCString& EmptyCString();
+#endif
 
 enum EventNameType {
   EventNameType_None = 0x0000,
@@ -616,6 +618,7 @@ public:
    */
   static bool IsCustomElementName(nsIAtom* aName);
 
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult CheckQName(const nsAString& aQualifiedName,
                              bool aNamespaceAware = true,
                              const char16_t** aColon = nullptr);
@@ -629,6 +632,7 @@ public:
                                        nsNodeInfoManager* aNodeInfoManager,
                                        uint16_t aNodeType,
                                        mozilla::dom::NodeInfo** aNodeInfo);
+#endif
 
   static void SplitExpatName(const char16_t *aExpatName, nsIAtom **aPrefix,
                              nsIAtom **aTagName, int32_t *aNameSpaceID);
@@ -903,6 +907,8 @@ public:
     // Get location information from the currently executing script.
     eUSE_CALLING_LOCATION
   };
+
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult ReportToConsoleNonLocalized(const nsAString& aErrorText,
                                               uint32_t aErrorFlags,
                                               const nsACString& aCategory,
@@ -914,6 +920,7 @@ public:
                                               uint32_t aColumnNumber = 0,
                                               MissingErrorLocationMode aLocationMode
                                                 = eUSE_CALLING_LOCATION);
+#endif
 
   /**
    * Report a localized error message to the error console.
@@ -951,6 +958,8 @@ public:
     eNECKO_PROPERTIES,
     PropertiesFile_COUNT
   };
+
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult ReportToConsole(uint32_t aErrorFlags,
                                   const nsACString& aCategory,
                                   const nsIDocument* aDocument,
@@ -963,6 +972,7 @@ public:
                                     = EmptyString(),
                                   uint32_t aLineNumber = 0,
                                   uint32_t aColumnNumber = 0);
+#endif
 
   static void ReportEmptyGetElementByIdArg(const nsIDocument* aDoc);
 
@@ -971,9 +981,11 @@ public:
   /**
    * Get the localized string named |aKey| in properties file |aFile|.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult GetLocalizedString(PropertiesFile aFile,
                                      const char* aKey,
                                      nsXPIDLString& aResult);
+#endif
 
   /**
    * A helper function that parses a sandbox attribute (of an <iframe> or a CSP
@@ -1016,6 +1028,7 @@ public:
                                               size_t* aMaxBufferSize,
                                               size_t* aUsedBufferSize);
 
+#ifndef HYPHEN_SHARED_LIBRARY
 private:
   /**
    * Fill (with the parameters given) the localized string named |aKey| in
@@ -1026,6 +1039,7 @@ private:
                                         const char16_t** aParams,
                                         uint32_t aParamsLength,
                                         nsXPIDLString& aResult);
+
 
 public:
   template<uint32_t N>
@@ -1047,6 +1061,7 @@ public:
                                         const char* aKey,
                                         const nsTArray<nsString>& aParamArray,
                                         nsXPIDLString& aResult);
+#endif
 
   /**
    * Returns true if aDocument is a chrome document
@@ -1427,11 +1442,13 @@ public:
    * @return NS_ERROR_DOM_INVALID_STATE_ERR if a re-entrant attempt to parse
    *         fragments is made, a return code from the XML parser.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult ParseFragmentXML(const nsAString& aSourceBuffer,
                                    nsIDocument* aDocument,
                                    nsTArray<nsString>& aTagStack,
                                    bool aPreventScriptExecution,
                                    nsIDOMDocumentFragment** aReturn);
+#endif
 
   /**
    * Parse a string into a document using the HTML parser.
@@ -1613,6 +1630,7 @@ public:
    * @param aIsTrusted If false, JS Context will be pushed to stack
    *                   when the link is triggered.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static void TriggerLink(nsIContent *aContent, nsPresContext *aPresContext,
                           nsIURI *aLinkURI, const nsString& aTargetSpec,
                           bool aClick, bool aIsUserTriggered,
@@ -1623,6 +1641,7 @@ public:
    */
   static void GetLinkLocation(mozilla::dom::Element* aElement,
                               nsString& aLocationString);
+#endif
 
   /**
    * Return top-level widget in the parent chain.
@@ -1903,6 +1922,7 @@ public:
    * Strip all \n, \r and nulls from the given string
    * @param aString the string to remove newlines from [in/out]
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static void RemoveNewlines(nsString &aString);
 
   /**
@@ -1913,6 +1933,7 @@ public:
   MOZ_MUST_USE
   static bool PlatformToDOMLineBreaks(nsString &aString,
                                       const mozilla::fallible_t&);
+#endif
 
   /**
    * Populates aResultString with the contents of the string-buffer aBuf, up
@@ -1936,6 +1957,7 @@ public:
    * Utility method for getElementsByClassName.  aRootNode is the node (either
    * document or element), which getElementsByClassName was called on.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static already_AddRefed<nsContentList>
   GetElementsByClassName(nsINode* aRootNode, const nsAString& aClasses)
   {
@@ -1946,6 +1968,7 @@ public:
                                           AllocClassMatchingInfo,
                                           aClasses);
   }
+#endif
 
   /**
    * Returns a presshell for this document, if there is one. This will be
@@ -2356,6 +2379,7 @@ public:
    *         false if the attribute doesn't exist, or has a malformed
    *                  value, such as an unknown or unterminated entity.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static bool GetPseudoAttributeValue(const nsString& aSource, nsIAtom *aName,
                                       nsAString& aValue);
 
@@ -2364,6 +2388,7 @@ public:
    * false otherwise
    */
   static bool IsJavaScriptLanguage(const nsString& aName);
+
 
   /**
    * Returns the JSVersion for a string of the form '1.n', n = 0, ..., 8, and
@@ -2375,6 +2400,7 @@ public:
 
   static void SplitMimeType(const nsAString& aValue, nsString& aType,
                             nsString& aParams);
+#endif
 
   /**
    * Function checks if the user is idle.
@@ -2511,8 +2537,10 @@ public:
    * If the hostname for aURI is an IPv6 it encloses it in brackets,
    * otherwise it just outputs the hostname in aHost.
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsresult GetHostOrIPv6WithBrackets(nsIURI* aURI, nsAString& aHost);
   static nsresult GetHostOrIPv6WithBrackets(nsIURI* aURI, nsCString& aHost);
+#endif
 
   /*
    * Call the given callback on all remote children of the given top-level
@@ -2798,8 +2826,10 @@ public:
    * Detect whether a string is a (CSS) local-url.
    * https://drafts.csswg.org/css-values/#local-urls
    */
+#ifndef HYPHEN_SHARED_LIBRARY
   static bool
   IsLocalRefURL(const nsString& aString);
+#endif
 
   static bool
   IsWebComponentsEnabled() { return sIsWebComponentsEnabled; }
@@ -2860,8 +2890,10 @@ private:
                               int32_t aNamespaceID,
                               nsIAtom* aAtom, void* aData);
   static void DestroyClassNameArray(void* aData);
+#ifndef HYPHEN_SHARED_LIBRARY
   static void* AllocClassMatchingInfo(nsINode* aRootNode,
                                       const nsString* aClasses);
+#endif
 
   // Fills in aInfo with the tokens from the supplied autocomplete attribute.
   static AutocompleteAttrState InternalSerializeAutocompleteAttribute(const nsAttrValue* aAttrVal,
@@ -2955,12 +2987,14 @@ private:
    */
   static bool sFragmentParsingActive;
 
+#ifndef HYPHEN_SHARED_LIBRARY
   static nsString* sShiftText;
   static nsString* sControlText;
   static nsString* sMetaText;
   static nsString* sOSText;
   static nsString* sAltText;
   static nsString* sModifierSeparator;
+#endif
 
 #if !(defined(DEBUG) || defined(MOZ_ENABLE_JS_DUMP))
   static bool sDOMWindowDumpEnabled;

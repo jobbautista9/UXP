@@ -5,10 +5,15 @@
 
 # These files cannot be built in unified mode because they include hnjalloc.h.
 SOURCES += [
+    'hnjstdio.cpp',
     'hyphen.c',
 ]
 
-FINAL_LIBRARY = 'xul'
+SharedLibrary('hyphen')
+
+USE_LIBS += [
+    'mozglue'
+]
 
 LOCAL_INCLUDES += [
     '../glue',
