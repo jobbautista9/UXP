@@ -7,7 +7,7 @@ SOURCES += [
     'nsIconChannel.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'imgicon'
 
 if CONFIG['MOZ_ENABLE_GNOMEUI']:
     CXXFLAGS += CONFIG['MOZ_GNOMEUI_CFLAGS']

@@ -7,4 +7,4 @@ SOURCES += [
     'nsIconChannel.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'imgicon'

@@ -9,7 +9,8 @@ UNIFIED_SOURCES += [
     'nsIconURI.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+Library('imgicon')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
 
 include('/ipc/chromium/chromium-config.mozbuild')
 

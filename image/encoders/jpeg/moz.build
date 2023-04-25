@@ -7,4 +7,4 @@ SOURCES += [
     'nsJPEGEncoder.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'imglib2'

@@ -7,4 +7,4 @@ SOURCES += [
     'nsIconChannelCocoa.mm',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'imgicon'

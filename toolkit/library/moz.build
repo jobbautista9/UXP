@@ -104,6 +104,8 @@ USE_LIBS += [
 USE_LIBS += [
     'gklayout',
     'gkmedias',
+    'imgicon',
+    'imglib2',
     'lgpllibs',
     'nspr',
     'nss',
