@@ -16,4 +16,4 @@ if CONFIG['MOZ_GPSD']:
         '/dom/geolocation'
     ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

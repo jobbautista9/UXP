@@ -17,7 +17,7 @@ UNIFIED_SOURCES += [
     'TextEncoder.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 LOCAL_INCLUDES += ['/intl/locale']
 

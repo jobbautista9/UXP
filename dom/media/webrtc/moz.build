@@ -76,7 +76,7 @@ if CONFIG['GNU_CC'] or CONFIG['CLANG_CL']:
         '-Wno-error=shadow',
     ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 if CONFIG['_MSC_VER']:
     CXXFLAGS += [

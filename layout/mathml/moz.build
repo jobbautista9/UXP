@@ -43,7 +43,7 @@ EXPORTS += [
     'nsMathMLOperators.h'
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 LOCAL_INCLUDES += [
     '../base',
     '../generic',

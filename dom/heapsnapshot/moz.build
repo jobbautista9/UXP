@@ -45,7 +45,7 @@ SOURCES += [
 # Disable RTTI in google protocol buffer
 DEFINES['GOOGLE_PROTOBUF_NO_RTTI'] = True
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 if CONFIG['GNU_CXX']:
     CXXFLAGS += ['-Wno-error=shadow']

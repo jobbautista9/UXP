@@ -24,6 +24,6 @@ UNIFIED_SOURCES += [
     'FileSystemRootDirectoryReader.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 include('/ipc/chromium/chromium-config.mozbuild')

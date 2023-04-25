@@ -54,4 +54,4 @@ if CONFIG['ENABLE_TESTS']:
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

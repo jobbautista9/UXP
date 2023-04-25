@@ -93,7 +93,7 @@ UNIFIED_SOURCES += [
     'nsParserUtils.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 # DEFINES['ENABLE_VOID_MENUITEM'] = True
 

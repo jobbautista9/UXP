@@ -24,4 +24,4 @@ if CONFIG['CLANG_CXX']:
     '-Wno-unknown-attributes',
   ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

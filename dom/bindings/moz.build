@@ -110,7 +110,7 @@ if CONFIG['MOZ_AUDIO_CHANNEL_MANAGER']:
         '/dom/system/gonk',
     ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 SPHINX_TREES['webidl'] = 'docs'
 SPHINX_PYTHON_PACKAGE_DIRS += ['mozwebidlcodegen']
