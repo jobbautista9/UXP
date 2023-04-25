@@ -30,7 +30,7 @@ UNIFIED_SOURCES += [
     'XMLStylesheetProcessingInstruction.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 LOCAL_INCLUDES += [
     '/caps',

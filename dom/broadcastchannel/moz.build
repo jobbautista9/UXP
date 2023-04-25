@@ -23,4 +23,4 @@ BROWSER_CHROME_MANIFESTS += ['tests/browser.ini']
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

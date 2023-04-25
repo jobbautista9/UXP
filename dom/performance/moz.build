@@ -39,4 +39,4 @@ LOCAL_INCLUDES += [
 
 MOCHITEST_MANIFESTS += [ 'tests/mochitest.ini' ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

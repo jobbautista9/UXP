@@ -210,7 +210,7 @@ SOURCES += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 LOCAL_INCLUDES += [
     '../base',

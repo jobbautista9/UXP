@@ -7,4 +7,4 @@ with Files('**'):
     BUG_COMPONENT = ('Core', 'WebRTC')
 
 Library('webrtc')
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

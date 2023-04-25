@@ -11,7 +11,7 @@ UNIFIED_SOURCES += [
 
 LOCAL_INCLUDES += ['/dom/base']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']
 MOCHITEST_MANIFESTS += ['test/mochitest.ini']

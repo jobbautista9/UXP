@@ -14,7 +14,7 @@ LOCAL_INCLUDES += [
     'include',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 if CONFIG['CLANG_CXX']:
   CXXFLAGS += [

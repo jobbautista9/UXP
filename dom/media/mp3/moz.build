@@ -13,4 +13,4 @@ UNIFIED_SOURCES += [
     'MP3Demuxer.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

@@ -40,7 +40,7 @@ UNIFIED_SOURCES += [
     'nsTextControlFrame.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 LOCAL_INCLUDES += [
     '../../editor/txmgr',

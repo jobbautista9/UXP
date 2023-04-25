@@ -43,7 +43,7 @@ LOCAL_INCLUDES += [
     '/layout/style',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 MOCHITEST_MANIFESTS += ['test/mochitest.ini']
 MOCHITEST_CHROME_MANIFESTS += ['test/chrome.ini']

@@ -310,4 +310,4 @@ if CONFIG['_MSC_VER']:
     # on VS2015 in warnings as errors mode.
     CXXFLAGS += ['-wd4312']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'

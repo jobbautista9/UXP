@@ -13,7 +13,7 @@ UNIFIED_SOURCES += [
     'WaveDemuxer.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 
 if CONFIG['GNU_CXX']:
     CXXFLAGS += ['-Wno-error=shadow']

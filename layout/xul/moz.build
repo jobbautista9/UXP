@@ -83,7 +83,7 @@ UNIFIED_SOURCES += [
 
 DIRS += ['tree', 'grid']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'gklayout'
 LOCAL_INCLUDES += [
     '../base',
     '../generic',
