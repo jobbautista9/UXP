@@ -80,6 +80,6 @@ if CONFIG['MOZ_UPDATE_CHANNEL'] not in ('release') and \
    not CONFIG['MOZ_TSAN']:
     DEFINES['MOZ_ENABLE_BACKGROUND_HANG_MONITOR'] = 1
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'xpcom_core'
 
 include('/ipc/chromium/chromium-config.mozbuild')

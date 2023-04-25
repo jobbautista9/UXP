@@ -38,7 +38,7 @@ UNIFIED_SOURCES += [
     'nsNativeModuleLoader.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'xpcom_core'
 
 LOCAL_INCLUDES += [
     '!..',

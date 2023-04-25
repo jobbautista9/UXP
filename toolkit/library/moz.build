@@ -109,6 +109,7 @@ USE_LIBS += [
     'nss',
     'psshparser',
     'sqlite',
+    'xpcom_core',
     'zlib',
 ]
 

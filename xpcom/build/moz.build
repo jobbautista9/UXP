@@ -72,7 +72,9 @@ SOURCES += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+Library('xpcom_core')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
+LIBRARY_DEFINES['IMPL_LIBXUL'] = True
 
 DEFINES['_IMPL_NS_STRINGAPI'] = True
 DEFINES['OMNIJAR_NAME'] = CONFIG['OMNIJAR_NAME']

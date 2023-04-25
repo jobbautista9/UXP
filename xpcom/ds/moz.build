@@ -101,4 +101,4 @@ LOCAL_INCLUDES += [
     '../io',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'xpcom_core'
