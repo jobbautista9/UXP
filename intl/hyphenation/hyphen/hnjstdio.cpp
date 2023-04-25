@@ -26,6 +26,8 @@ struct hnjFile_ {
     bool                     mEOF;
 };
 
+nsIPrincipal *nsContentUtils::sSystemPrincipal;
+
 // replacement for fopen()
 // (not a full substitute: only supports read access)
 hnjFile*

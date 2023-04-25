@@ -5140,13 +5140,6 @@ nsContentUtils::IsExpandedPrincipal(nsIPrincipal* aPrincipal)
   return !!ep;
 }
 
-nsIPrincipal*
-nsContentUtils::GetSystemPrincipal()
-{
-  MOZ_ASSERT(IsInitialized());
-  return sSystemPrincipal;
-}
-
 bool
 nsContentUtils::CombineResourcePrincipals(nsCOMPtr<nsIPrincipal>* aResourcePrincipal,
                                           nsIPrincipal* aExtraPrincipal)

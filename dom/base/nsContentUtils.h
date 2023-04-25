@@ -1588,7 +1588,11 @@ public:
   /**
    * Gets the system principal from the security manager.
    */
-  static nsIPrincipal* GetSystemPrincipal();
+  static nsIPrincipal* GetSystemPrincipal()
+  {
+    MOZ_ASSERT(IsInitialized());
+    return sSystemPrincipal;
+  }
 
   /**
    * Gets the null subject principal singleton. This is only useful for
