@@ -103,6 +103,7 @@ USE_LIBS += [
 
 USE_LIBS += [
     'appcomps',
+    'certverifier',
     'embedcomponents',
     'gklayout',
     'gkmedias',
