@@ -47,7 +47,8 @@ UNIFIED_SOURCES += [
     'nsScannerString.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+Library('htmlpars')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
 
 if CONFIG['GNU_CXX']:
     CXXFLAGS += ['-Wno-error=shadow']

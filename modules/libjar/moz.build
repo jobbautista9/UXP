@@ -43,4 +43,5 @@ SOURCES += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+Library('jar_xpc')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
