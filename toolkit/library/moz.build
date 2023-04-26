@@ -124,6 +124,7 @@ USE_LIBS += [
     'toolkitcomps',
     'universalchardet',
     'webbrwsr',
+    'widget',
     'xpcom_core',
     'zlib',
 ]

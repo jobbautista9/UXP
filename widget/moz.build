@@ -269,7 +269,9 @@ if widget_dir in ('gtk3', 'gtk2'):
 LOCAL_INCLUDES += [
     '/widget/%s' % widget_dir,
 ]
-FINAL_LIBRARY = 'xul'
+
+Library('widget')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
 
 if CONFIG['MOZ_ENABLE_D3D10_LAYER']:
     DEFINES['MOZ_ENABLE_D3D10_LAYER'] = True

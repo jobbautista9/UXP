@@ -81,7 +81,7 @@ include('/ipc/chromium/chromium-config.mozbuild')
 # XXX: We should fix these warnings.
 ALLOW_COMPILER_WARNINGS = True
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'widget'
 LOCAL_INCLUDES += [
     '/layout/forms',
     '/layout/generic',
