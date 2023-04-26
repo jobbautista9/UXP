@@ -111,6 +111,7 @@ USE_LIBS += [
     'nss',
     'psshparser',
     'sqlite',
+    'thebes',
     'xpcom_core',
     'zlib',
 ]

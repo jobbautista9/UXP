@@ -401,7 +401,7 @@ LOCAL_INCLUDES += [
     '/media/libyuv/include', # for libyuv.h
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'thebes'
 
 if CONFIG['MOZ_DEBUG']:
     DEFINES['D3D_DEBUG_INFO'] = True

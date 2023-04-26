@@ -207,7 +207,8 @@ USE_LIBS += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+Library('thebes')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
 
 GENERATED_FILES = [
     'DeprecatedPremultiplyTables.h',
