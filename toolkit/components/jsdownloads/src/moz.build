@@ -25,6 +25,6 @@ EXTRA_PP_JS_MODULES += [
     'DownloadUIHelper.jsm',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'toolkitcomps'
 
 CXXFLAGS += CONFIG['TK_CFLAGS']

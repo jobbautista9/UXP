@@ -21,4 +21,4 @@ if CONFIG['MOZ_USERINFO']:
     else:
         SOURCES += ['nsUserInfoUnix.cpp']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'toolkitcomps'

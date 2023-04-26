@@ -15,4 +15,4 @@ SOURCES += ['NativeOSFileInternals.cpp']
 
 EXTRA_PP_JS_MODULES += ['osfile.jsm']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'toolkitcomps'

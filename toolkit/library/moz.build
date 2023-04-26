@@ -120,6 +120,7 @@ USE_LIBS += [
     'sqlite',
     'storagecomps',
     'thebes',
+    'toolkitcomps',
     'universalchardet',
     'webbrwsr',
     'xpcom_core',
