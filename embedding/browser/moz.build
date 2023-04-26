@@ -44,7 +44,7 @@ UNIFIED_SOURCES += [
     'nsWebBrowserContentPolicy.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'webbrwsr'
 LOCAL_INCLUDES += [
     '/docshell/base',
     '/dom/base',

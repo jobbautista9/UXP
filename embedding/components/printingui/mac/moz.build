@@ -12,4 +12,4 @@ SOURCES += [
     'nsPrintingPromptServiceX.mm',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'embedcomponents'

@@ -7,7 +7,9 @@ SOURCES += [
     'nsWebBrowserModule.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+Library('webbrwsr')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
+
 LOCAL_INCLUDES += [
     '..',
 ]

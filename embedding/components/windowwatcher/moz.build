@@ -31,7 +31,7 @@ EXPORTS += [
     'nsWindowWatcher.h',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'embedcomponents'
 # For nsJSUtils
 LOCAL_INCLUDES += [
     '/docshell/base',

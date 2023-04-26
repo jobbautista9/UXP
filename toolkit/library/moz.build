@@ -102,6 +102,7 @@ USE_LIBS += [
 ]
 
 USE_LIBS += [
+    'embedcomponents',
     'gklayout',
     'gkmedias',
     'imgicon',
@@ -112,6 +113,7 @@ USE_LIBS += [
     'psshparser',
     'sqlite',
     'thebes',
+    'webbrwsr',
     'xpcom_core',
     'zlib',
 ]
