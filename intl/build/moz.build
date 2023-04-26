@@ -7,7 +7,9 @@ SOURCES += [
     'nsI18nModule.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+Library('i18n')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
+
 LOCAL_INCLUDES += [
     '../locale',
     '../lwbrk',

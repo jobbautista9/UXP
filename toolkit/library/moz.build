@@ -105,6 +105,7 @@ USE_LIBS += [
     'embedcomponents',
     'gklayout',
     'gkmedias',
+    'i18n',
     'imgicon',
     'imglib2',
     'lgpllibs',

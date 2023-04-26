@@ -8,7 +8,7 @@ SOURCES += [
     'hyphen.c',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'i18n'
 
 LOCAL_INCLUDES += [
     '../glue',

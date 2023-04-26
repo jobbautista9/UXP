@@ -19,7 +19,7 @@ unixcharset = GENERATED_FILES['unixcharset.properties.h']
 unixcharset.script = '../props2arrays.py'
 unixcharset.inputs = ['unixcharset.properties']
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'i18n'
 
 LOCAL_INCLUDES += [
     '..',
