@@ -7,7 +7,7 @@ SOURCES += [
     'nsNetworkLinkService.mm',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'necko'
 
 if CONFIG['CLANG_CXX']:
     CXXFLAGS += ['-Wno-error=shadow']

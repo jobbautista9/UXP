@@ -21,4 +21,4 @@ SOURCES += [
 
 XPIDL_MODULE = 'necko_strconv'
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'necko'

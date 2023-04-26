@@ -14,7 +14,7 @@ UNIFIED_SOURCES += [
     'nsViewSourceHandler.cpp',
 ]
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'necko'
 LOCAL_INCLUDES += [
     '/netwerk/base',
 ]

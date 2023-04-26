@@ -108,6 +108,7 @@ USE_LIBS += [
     'imgicon',
     'imglib2',
     'lgpllibs',
+    'necko',
     'nspr',
     'nss',
     'psshparser',

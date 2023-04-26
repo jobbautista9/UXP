@@ -104,7 +104,7 @@ EXTRA_PP_JS_MODULES += ['UserAgentOverrides.jsm']
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'necko'
 
 LOCAL_INCLUDES += [
     '/dom/base',

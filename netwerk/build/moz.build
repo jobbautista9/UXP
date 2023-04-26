@@ -13,7 +13,8 @@ SOURCES += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+Library('necko')
+LIBRARY_DEFINES['MOZILLA_INTERNAL_API'] = True
 
 LOCAL_INCLUDES += [
     '/netwerk/base',

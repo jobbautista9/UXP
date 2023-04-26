@@ -287,7 +287,7 @@ EXTRA_JS_MODULES += [
 
 include('/ipc/chromium/chromium-config.mozbuild')
 
-FINAL_LIBRARY = 'xul'
+FINAL_LIBRARY = 'necko'
 
 LOCAL_INCLUDES += [
     '/docshell/base',
