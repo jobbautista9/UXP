@@ -346,6 +346,7 @@ js::XDRScript(XDRState<mode>* xdr, HandleScope scriptEnclosingScope,
         TreatAsRunOnce,
         HasLazyScript,
         HasNonSyntacticScope,
+        HasModuleGoal,
         HasInnerFunctions,
         NeedsHomeObject,
         IsDerivedClassConstructor,
@@ -467,6 +468,8 @@ js::XDRScript(XDRState<mode>* xdr, HandleScope scriptEnclosingScope,
             scriptBits |= (1 << HasLazyScript);
         if (script->hasNonSyntacticScope())
             scriptBits |= (1 << HasNonSyntacticScope);
+        if (script->hasModuleGoal())
+            scriptBits |= (1 << HasModuleGoal);
         if (script->hasInnerFunctions())
             scriptBits |= (1 << HasInnerFunctions);
         if (script->needsHomeObject())
@@ -615,6 +618,8 @@ js::XDRScript(XDRState<mode>* xdr, HandleScope scriptEnclosingScope,
             script->treatAsRunOnce_ = true;
         if (scriptBits & (1 << HasNonSyntacticScope))
             script->hasNonSyntacticScope_ = true;
+        if (scriptBits & (1 << HasModuleGoal))
+            script->hasModuleGoal_ = true;
         if (scriptBits & (1 << HasInnerFunctions))
             script->hasInnerFunctions_ = true;
         if (scriptBits & (1 << NeedsHomeObject))
@@ -2925,6 +2930,7 @@ JSScript::fullyInitFromEmitter(ExclusiveContext* cx, HandleScript script, Byteco
     script->nslots_ = nslots;
     script->bodyScopeIndex_ = bce->bodyScopeIndex;
     script->hasNonSyntacticScope_ = bce->outermostScope()->hasOnChain(ScopeKind::NonSyntactic);
+    script->hasModuleGoal_ = bce->outermostScope()->hasOnChain(ScopeKind::Module);
 
     if (bce->sc->isFunctionBox())
         initFromFunctionBox(cx, script, bce->sc->asFunctionBox());
@@ -3482,6 +3488,7 @@ js::detail::CopyScript(JSContext* cx, HandleScript src, HandleScript dst,
     dst->strict_ = src->strict();
     dst->explicitUseStrict_ = src->explicitUseStrict();
     dst->hasNonSyntacticScope_ = scopes[0]->hasOnChain(ScopeKind::NonSyntactic);
+    dst->hasModuleGoal_ = src->hasModuleGoal();
     dst->bindingsAccessedDynamically_ = src->bindingsAccessedDynamically();
     dst->funHasExtensibleScope_ = src->funHasExtensibleScope();
     dst->funHasAnyAliasedFormal_ = src->funHasAnyAliasedFormal();
@@ -4231,8 +4238,7 @@ LazyScript::Create(ExclusiveContext* cx, HandleFunction fun,
                    Handle<GCVector<JSFunction*, 8>> innerFunctions,
                    JSVersion version,
                    uint32_t begin, uint32_t end,
-                   uint32_t toStringStart, uint32_t lineno, uint32_t column,
-                   frontend::ParseGoal parseGoal)
+                   uint32_t toStringStart, uint32_t lineno, uint32_t column)
 {
     union {
         PackedView p;
@@ -4255,7 +4261,6 @@ LazyScript::Create(ExclusiveContext* cx, HandleFunction fun,
     p.isLikelyConstructorWrapper = false;
     p.isDerivedClassConstructor = false;
     p.needsHomeObject = false;
-    p.parseGoal = uint32_t(parseGoal);
 
     LazyScript* res = LazyScript::CreateRaw(cx, fun, packedFields, begin, end, toStringStart,
                                             lineno, column);

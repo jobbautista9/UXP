@@ -96,12 +96,16 @@ class AnyContextFlags
     // A direct eval occurs in the body of the script.
     bool hasDirectEval:1;
 
+    // Script is being parsed with a goal of Module.
+    bool hasModuleGoal:1;
+
   public:
     AnyContextFlags()
      :  hasExplicitUseStrict(false),
         bindingsAccessedDynamically(false),
         hasDebuggerStatement(false),
-        hasDirectEval(false)
+        hasDirectEval(false),
+        hasModuleGoal(false)
     { }
 };
 
@@ -298,11 +302,13 @@ class SharedContext
     bool bindingsAccessedDynamically() const { return anyCxFlags.bindingsAccessedDynamically; }
     bool hasDebuggerStatement()        const { return anyCxFlags.hasDebuggerStatement; }
     bool hasDirectEval()               const { return anyCxFlags.hasDirectEval; }
+    bool hasModuleGoal()               const { return anyCxFlags.hasModuleGoal; }
 
     void setExplicitUseStrict()           { anyCxFlags.hasExplicitUseStrict        = true; }
     void setBindingsAccessedDynamically() { anyCxFlags.bindingsAccessedDynamically = true; }
     void setHasDebuggerStatement()        { anyCxFlags.hasDebuggerStatement        = true; }
     void setHasDirectEval()               { anyCxFlags.hasDirectEval               = true; }
+    void setHasModuleGoal()               { anyCxFlags.hasModuleGoal               = true; }
 
     inline bool allBindingsClosedOver();
 

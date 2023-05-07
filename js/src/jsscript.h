@@ -1023,6 +1023,10 @@ class JSScript : public js::gc::TenuredCell
     // outermost syntactic scope and the global.
     bool hasNonSyntacticScope_:1;
 
+    // Script is parsed with a top-level goal of Module. This may be a top-level
+    // or an inner-function script.
+    bool hasModuleGoal_:1;
+
     // see Parser::selfHostingMode.
     bool selfHosted_:1;
 
@@ -1313,6 +1317,14 @@ class JSScript : public js::gc::TenuredCell
 
     bool hasNonSyntacticScope() const {
         return hasNonSyntacticScope_;
+    }
+
+    bool hasModuleGoal() const {
+        return hasModuleGoal_;
+    }
+
+    void setHasModuleGoal() {
+        hasModuleGoal_ = true;
     }
 
     bool selfHosted() const { return selfHosted_; }
@@ -2067,6 +2079,10 @@ class LazyScript : public gc::TenuredCell
     // Heap allocated table with any free variables or inner functions.
     void* table_;
 
+    // Script is parsed with a top-level goal of Module. This may be a top-level
+    // or an inner-function script.
+    bool hasModuleGoal_:1;
+
     // Add padding so LazyScript is gc::Cell aligned. Make padding protected
     // instead of private to suppress -Wunused-private-field compiler warnings.
   protected:
@@ -2108,7 +2124,6 @@ class LazyScript : public gc::TenuredCell
         uint32_t isFieldInitializer : 1;
         uint32_t needsHomeObject : 1;
         uint32_t hasRest : 1;
-        uint32_t parseGoal : 1;
     };
 
     union {
@@ -2150,8 +2165,7 @@ class LazyScript : public gc::TenuredCell
                               const frontend::AtomVector& closedOverBindings,
                               Handle<GCVector<JSFunction*, 8>> innerFunctions,
                               JSVersion version, uint32_t begin, uint32_t end,
-                              uint32_t toStringStart, uint32_t lineno, uint32_t column,
-                              frontend::ParseGoal parseGoal);
+                              uint32_t toStringStart, uint32_t lineno, uint32_t column);
 
     // Create a LazyScript and initialize the closedOverBindings and the
     // innerFunctions with dummy values to be replaced in a later initialization
@@ -2262,8 +2276,17 @@ class LazyScript : public gc::TenuredCell
         p_.isExprBody = true;
     }
 
+    bool hasModuleGoal() const {
+        return hasModuleGoal_;
+    }
+
+    void setHasModuleGoal() {
+        hasModuleGoal_ = true;
+    }
+
     frontend::ParseGoal parseGoal() const {
-        return frontend::ParseGoal(p_.parseGoal);
+        return hasModuleGoal() ? frontend::ParseGoal::Module
+                               : frontend::ParseGoal::Script;
     }
 
     bool strict() const {
