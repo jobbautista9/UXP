@@ -34,6 +34,7 @@
 #include "builtin/ModuleObject.h"
 #include "builtin/SelfHostingDefines.h"
 #include "frontend/BytecodeCompiler.h"
+#include "frontend/BytecodeEmitter.h"
 #include "frontend/FoldConstants.h"
 #include "frontend/TokenStream.h"
 #include "wasm/AsmJS.h"
@@ -11348,7 +11349,8 @@ Parser<ParseHandler>::importExpr(YieldHandling yieldHandling, bool allowCallSynt
             return null();
         }
 
-        if (parseGoal() != ParseGoal::Module) {
+        BytecodeEmitter* bce;
+        if (!bce->outermostScope()->hasOnChain(ScopeKind::Module)) {
             errorAt(pos().begin, JSMSG_IMPORT_META_OUTSIDE_MODULE);
             return null();
         }
