@@ -8,6 +8,7 @@
 
 #include "gfxRect.h"
 #include "nsQueryFrame.h"
+#include "mozilla/gfx/MatrixFwd.h"
 #include "imgIContainer.h"
 
 class gfxContext;
@@ -24,9 +25,6 @@ class SVGLengthList;
 class SVGNumberList;
 class SVGUserUnitList;
 
-namespace gfx {
-class Matrix;
-} // namespace gfx
 } // namespace mozilla
 
 /**

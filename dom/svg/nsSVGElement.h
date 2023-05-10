@@ -20,6 +20,7 @@
 #include "nsError.h"
 #include "mozilla/dom/DOMRect.h"
 #include "mozilla/dom/ElementInlines.h"
+#include "mozilla/gfx/MatrixFwd.h"
 #include "nsISupportsImpl.h"
 #include "nsStyledElement.h"
 #include "nsSVGClass.h"
@@ -57,10 +58,6 @@ class SVGAnimatedPreserveAspectRatio;
 class nsSVGAnimatedTransformList;
 class SVGStringList;
 class DOMSVGStringList;
-
-namespace gfx {
-class Matrix;
-} // namespace gfx
 
 } // namespace mozilla
 

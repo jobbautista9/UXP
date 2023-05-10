@@ -22,7 +22,7 @@ include PTabContext;
 
 
 using class IPC::Principal from "mozilla/dom/PermissionMessageUtils.h";
-using class mozilla::gfx::Matrix from "mozilla/gfx/Matrix.h";
+using mozilla::gfx::Matrix from "mozilla/gfx/Matrix.h";
 using CSSRect from "Units.h";
 using CSSSize from "Units.h";
 using mozilla::LayoutDeviceIntRect from "Units.h";
