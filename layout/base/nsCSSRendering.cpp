@@ -1403,7 +1403,7 @@ nsCSSRendering::PaintBoxShadowOuter(nsPresContext* aPresContext,
                                                shadowItem->mYOffset),
                                        aPresContext->AppUnitsPerDevPixel());
       shadowContext->SetMatrix(
-        shadowContext->CurrentMatrix().Translate(devPixelOffset));
+        shadowContext->CurrentMatrix().PreTranslate(devPixelOffset));
 
       nsRect nativeRect = aDirtyRect;
       nativeRect.MoveBy(-nsPoint(shadowItem->mXOffset, shadowItem->mYOffset));
@@ -2419,13 +2419,13 @@ RectIsBeyondLinearGradientEdge(const gfxRect& aRect,
                                Color* aOutEdgeColor)
 {
   gfxFloat topLeft = LinearGradientStopPositionForPoint(
-    aGradientStart, aGradientEnd, aPatternMatrix.Transform(aRect.TopLeft()));
+    aGradientStart, aGradientEnd, aPatternMatrix.TransformPoint(aRect.TopLeft()));
   gfxFloat topRight = LinearGradientStopPositionForPoint(
-    aGradientStart, aGradientEnd, aPatternMatrix.Transform(aRect.TopRight()));
+    aGradientStart, aGradientEnd, aPatternMatrix.TransformPoint(aRect.TopRight()));
   gfxFloat bottomLeft = LinearGradientStopPositionForPoint(
-    aGradientStart, aGradientEnd, aPatternMatrix.Transform(aRect.BottomLeft()));
+    aGradientStart, aGradientEnd, aPatternMatrix.TransformPoint(aRect.BottomLeft()));
   gfxFloat bottomRight = LinearGradientStopPositionForPoint(
-    aGradientStart, aGradientEnd, aPatternMatrix.Transform(aRect.BottomRight()));
+    aGradientStart, aGradientEnd, aPatternMatrix.TransformPoint(aRect.BottomRight()));
 
   const ColorStop& firstStop = aStops[0];
   if (topLeft < firstStop.mPosition && topRight < firstStop.mPosition &&
@@ -2729,7 +2729,7 @@ nsCSSRendering::PaintGradient(nsPresContext* aPresContext,
     // right way up.
     if (lineStart.x > lineEnd.x || lineStart.y > lineEnd.y) {
       std::swap(lineStart, lineEnd);
-      matrix.Scale(-1, -1);
+      matrix.PreScale(-1, -1);
     }
 
     // Fit the gradient line exactly into the source rect.
@@ -2943,16 +2943,16 @@ nsCSSRendering::PaintGradient(nsPresContext* aPresContext,
       // Recall that this is the transform from user space to pattern space.
       // So to stretch the ellipse by factor of P vertically, we scale
       // user coordinates by 1/P.
-      matrix.Translate(lineStart);
-      matrix.Scale(1.0, radiusX/radiusY);
-      matrix.Translate(-lineStart);
+      matrix.PreTranslate(lineStart);
+      matrix.PreScale(1.0, radiusX/radiusY);
+      matrix.PreTranslate(-lineStart);
     }
   }
   // Use a pattern transform to take account of source and dest rects
-  matrix.Translate(gfxPoint(aPresContext->CSSPixelsToDevPixels(aSrc.x),
-                            aPresContext->CSSPixelsToDevPixels(aSrc.y)));
-  matrix.Scale(gfxFloat(aPresContext->CSSPixelsToAppUnits(aSrc.width))/aDest.width,
-               gfxFloat(aPresContext->CSSPixelsToAppUnits(aSrc.height))/aDest.height);
+  matrix.PreTranslate(gfxPoint(aPresContext->CSSPixelsToDevPixels(aSrc.x),
+                               aPresContext->CSSPixelsToDevPixels(aSrc.y)));
+  matrix.PreScale(gfxFloat(aPresContext->CSSPixelsToAppUnits(aSrc.width))/aDest.width,
+                  gfxFloat(aPresContext->CSSPixelsToAppUnits(aSrc.height))/aDest.height);
   gradientPattern->SetMatrix(matrix);
 
   if (gradientPattern->CairoStatus())
@@ -3067,7 +3067,7 @@ nsCSSRendering::PaintGradient(nsPresContext* aPresContext,
         ctx->SetColor(edgeColor);
       } else {
         ctx->SetMatrix(
-          ctx->CurrentMatrix().Copy().Translate(tileRect.TopLeft()));
+          ctx->CurrentMatrix().Copy().PreTranslate(tileRect.TopLeft()));
         ctx->SetPattern(gradientPattern);
       }
       ctx->Fill();
@@ -6016,14 +6016,15 @@ nsContextBoxBlur::Init(const nsRect& aRect, nscoord aSpreadRadius,
   dirtyRect.RoundOut();
 
   gfxMatrix transform = aDestinationCtx->CurrentMatrix();
-  rect = transform.TransformBounds(rect);
+  rect.TransformBoundsBy(transform);
 
   mPreTransformed = !transform.IsIdentity();
 
   // Create the temporary surface for blurring
-  dirtyRect = transform.TransformBounds(dirtyRect);
+  dirtyRect.TransformBoundsBy(transform);
   if (aSkipRect) {
-    gfxRect skipRect = transform.TransformBounds(*aSkipRect);
+    gfxRect skipRect = *aSkipRect;
+    skipRect.TransformBoundsBy(transform);
     mContext = mAlphaBoxBlur.Init(rect, spreadRadius,
                                   blurRadius, &dirtyRect, &skipRect);
   } else {
@@ -6126,9 +6127,11 @@ nsContextBoxBlur::BlurRectangle(gfxContext* aDestinationCtx,
     nsLayoutUtils::RectToGfxRect(aDirtyRect, aAppUnitsPerDevPixel);
   dirtyRect.RoundOut();
 
-  gfxRect shadowThebesRect = transform.TransformBounds(ThebesRect(shadowGfxRect));
-  dirtyRect = transform.TransformBounds(dirtyRect);
-  gfxRect skipRect = transform.TransformBounds(aSkipRect);
+  gfxRect shadowThebesRect = ThebesRect(shadowGfxRect);
+  shadowThebesRect.TransformBoundsBy(transform);
+  dirtyRect.TransformBoundsBy(transform);
+  gfxRect skipRect = aSkipRect;
+  skipRect.TransformBoundsBy(transform);
 
   if (aCornerRadii) {
     aCornerRadii->Scale(scaleX, scaleY);

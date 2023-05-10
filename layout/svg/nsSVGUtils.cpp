@@ -475,8 +475,9 @@ public:
       if (userToDeviceSpace.IsSingular()) {
         return DrawResult::SUCCESS;
       }
-      gfxRect dirtyBounds = userToDeviceSpace.TransformBounds(
-        gfxRect(aDirtyRect->x, aDirtyRect->y, aDirtyRect->width, aDirtyRect->height));
+      gfxRect dirtyBounds =
+        gfxRect(aDirtyRect->x, aDirtyRect->y, aDirtyRect->width, aDirtyRect->height);
+      dirtyBounds.TransformBoundsBy(userToDeviceSpace);
       dirtyBounds.RoundOut();
       if (gfxUtils::GfxRectToIntRect(dirtyBounds, &tmpDirtyRect)) {
         dirtyRect = &tmpDirtyRect;
@@ -794,9 +795,9 @@ nsSVGUtils::PaintFrameWithEffects(nsIFrame *aFrame,
       }
       gfxMatrix deviceToUserSpace = userToDeviceSpace;
       deviceToUserSpace.Invert();
-      gfxRect dirtyBounds = deviceToUserSpace.TransformBounds(
-                              gfxRect(aDirtyRect->x, aDirtyRect->y,
-                                      aDirtyRect->width, aDirtyRect->height));
+      gfxRect dirtyBounds = gfxRect(aDirtyRect->x, aDirtyRect->y,
+                                    aDirtyRect->width, aDirtyRect->height);
+      dirtyBounds.TransformBoundsBy(deviceToUserSpace);
       tmpDirtyRegion =
         nsLayoutUtils::RoundGfxRectToAppRect(
           dirtyBounds, aFrame->PresContext()->AppUnitsPerCSSPixel()) -
@@ -870,7 +871,7 @@ nsSVGUtils::HitTestChildren(nsSVGDisplayContainerFrame* aFrame,
       if (!m.Invert()) {
         return nullptr;
       }
-      point = m.Transform(point);
+      point = m.TransformPoint(point);
     }
   }
 
@@ -898,7 +899,7 @@ nsSVGUtils::HitTestChildren(nsSVGDisplayContainerFrame* aFrame,
           if (!m.Invert()) {
             continue;
           }
-          p = m.Transform(p);
+          p = m.TransformPoint(p);
         }
       }
       result = SVGFrame->GetFrameForPoint(p);
@@ -938,8 +939,8 @@ nsSVGUtils::TransformFrameRectToOuterSVG(const nsRect& aRect,
 {
   gfxRect r(aRect.x, aRect.y, aRect.width, aRect.height);
   r.Scale(1.0 / nsPresContext::AppUnitsPerCSSPixel());
-  return nsLayoutUtils::RoundGfxRectToAppRect(
-    aMatrix.TransformBounds(r), aPresContext->AppUnitsPerDevPixel());
+  r.TransformBoundsBy(aMatrix);
+  return nsLayoutUtils::RoundGfxRectToAppRect(r, aPresContext->AppUnitsPerDevPixel());
 }
 
 IntSize
@@ -1100,7 +1101,7 @@ nsSVGUtils::GetBBox(nsIFrame *aFrame, uint32_t aFlags)
           nsSVGUtils::GetClipRectForFrame(aFrame, x, y, width, height);
           if (aFrame->GetType() == nsGkAtoms::svgForeignObjectFrame ||
               aFrame->GetType() == nsGkAtoms::svgUseFrame) {
-            clipRect = matrix.TransformBounds(clipRect);
+            clipRect.TransformBoundsBy(matrix);
           }
       }
       nsSVGEffects::EffectProperties effectProperties =
@@ -1112,10 +1113,10 @@ nsSVGUtils::GetBBox(nsIFrame *aFrame, uint32_t aFlags)
         SVGClipPathElement *clipContent = 
           static_cast<SVGClipPathElement*>(clipPathFrame->GetContent());
         if (clipContent->IsUnitsObjectBoundingBox()) {
-          matrix.Translate(gfxPoint(x, y));
-          matrix.Scale(width, height);
+          matrix.PreTranslate(gfxPoint(x, y));
+          matrix.PreScale(width, height);
         } else if (aFrame->GetType() == nsGkAtoms::svgForeignObjectFrame) {
-          matrix.Reset();
+          matrix = gfxMatrix();
         }
         bbox = 
           clipPathFrame->GetBBoxForClipPathFrame(bbox, matrix).ToThebesRect();
@@ -1252,8 +1253,8 @@ nsSVGUtils::AdjustMatrixForUnits(const gfxMatrix &aMatrix,
       aUnits->GetAnimValue() == SVG_UNIT_TYPE_OBJECTBOUNDINGBOX) {
     gfxRect bbox = GetBBox(aFrame);
     gfxMatrix tm = aMatrix;
-    tm.Translate(gfxPoint(bbox.X(), bbox.Y()));
-    tm.Scale(bbox.Width(), bbox.Height());
+    tm.PreTranslate(gfxPoint(bbox.X(), bbox.Y()));
+    tm.PreScale(bbox.Width(), bbox.Height());
     return tm;
   }
   return aMatrix;
@@ -1806,7 +1807,9 @@ nsSVGUtils::ToCanvasBounds(const gfxRect &aUserspaceRect,
                            const gfxMatrix &aToCanvas,
                            const nsPresContext *presContext)
 {
+  gfxRect userspaceRect = aUserspaceRect;
+  userspaceRect.TransformBoundsBy(aToCanvas);
   return nsLayoutUtils::RoundGfxRectToAppRect(
-                          aToCanvas.TransformBounds(aUserspaceRect),
+                          userspaceRect,
                           presContext->AppUnitsPerDevPixel());
 }

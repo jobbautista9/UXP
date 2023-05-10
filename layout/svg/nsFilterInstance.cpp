@@ -570,8 +570,8 @@ nsFilterInstance::FrameSpaceToFilterSpace(const nsRect* aRect) const
     }
     gfxRect rectInCSSPx =
       nsLayoutUtils::RectToGfxRect(*aRect, nsPresContext::AppUnitsPerCSSPixel());
-    gfxRect rectInFilterSpace =
-      mFrameSpaceInCSSPxToFilterSpaceTransform.TransformBounds(rectInCSSPx);
+    gfxRect rectInFilterSpace = rectInCSSPx;
+    rectInFilterSpace.TransformBoundsBy(mFrameSpaceInCSSPxToFilterSpaceTransform);
     rectInFilterSpace.RoundOut();
     nsIntRect intRect;
     if (gfxUtils::GfxRectToIntRect(rectInFilterSpace, &intRect)) {
@@ -588,7 +588,7 @@ nsFilterInstance::FilterSpaceToFrameSpace(const nsIntRect& aRect) const
     return nsRect();
   }
   gfxRect r(aRect.x, aRect.y, aRect.width, aRect.height);
-  r = mFilterSpaceToFrameSpaceInCSSPxTransform.TransformBounds(r);
+  r.TransformBoundsBy(mFilterSpaceToFrameSpaceInCSSPxTransform);
   // nsLayoutUtils::RoundGfxRectToAppRect rounds out.
   return nsLayoutUtils::RoundGfxRectToAppRect(r, nsPresContext::AppUnitsPerCSSPixel());
 }

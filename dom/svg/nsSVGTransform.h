@@ -7,6 +7,7 @@
 #define MOZILLA_SVGTRANSFORM_H__
 
 #include "gfxMatrix.h"
+#include "mozilla/gfx/Matrix.h"
 #include "nsDebug.h"
 
 namespace mozilla {

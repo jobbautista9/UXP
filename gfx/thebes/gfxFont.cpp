@@ -2056,9 +2056,9 @@ gfxFont::Draw(const gfxTextRun *aTextRun, uint32_t aStart, uint32_t aEnd,
                        ? -M_PI / 2.0 : M_PI / 2.0;
         gfxMatrix mat =
             aRunParams.context->CurrentMatrix().
-            Translate(p).     // translate origin for rotation
-            Rotate(rotation). // turn 90deg CCW (sideways-left) or CW (*-right)
-            Translate(-p);    // undo the translation
+            PreTranslate(p).     // translate origin for rotation
+            PreRotate(rotation). // turn 90deg CCW (sideways-left) or CW (*-right)
+            PreTranslate(-p);    // undo the translation
 
         // If we're drawing rotated horizontal text for an element styled
         // text-orientation:mixed, the dominant baseline will be vertical-
@@ -2071,7 +2071,7 @@ gfxFont::Draw(const gfxTextRun *aTextRun, uint32_t aStart, uint32_t aEnd,
         // [1] See http://www.microsoft.com/typography/otspec/base.htm
         if (aTextRun->UseCenterBaseline()) {
             gfxPoint baseAdj(0, (metrics.emAscent - metrics.emDescent) / 2);
-            mat.Translate(baseAdj);
+            mat.PreTranslate(baseAdj);
         }
 
         aRunParams.context->SetMatrix(mat);
@@ -2195,7 +2195,7 @@ gfxFont::RenderSVGGlyph(gfxContext *aContext, gfxPoint aPoint,
 
     aContext->Save();
     aContext->SetMatrix(
-      aContext->CurrentMatrix().Translate(aPoint.x, aPoint.y).
+      aContext->CurrentMatrix().PreTranslate(aPoint.x, aPoint.y).
                                 Scale(devUnitsPerSVGUnit, devUnitsPerSVGUnit));
 
     aContextPaint->InitStrokeGeometry(aContext, devUnitsPerSVGUnit);

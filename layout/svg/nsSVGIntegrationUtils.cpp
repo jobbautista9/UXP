@@ -376,7 +376,7 @@ public:
                                      aTarget->PresContext()->AppUnitsPerDevPixel());
 
     gfxContextMatrixAutoSaveRestore autoSR(&aContext);
-    aContext.SetMatrix(aContext.CurrentMatrix().Translate(devPixelOffset));
+    aContext.SetMatrix(aContext.CurrentMatrix().PreTranslate(devPixelOffset));
 
     mLayerManager->EndTransaction(FrameLayerBuilder::DrawPaintedLayer, mBuilder);
     return DrawResult::SUCCESS;
@@ -672,7 +672,7 @@ SetupContextMatrix(nsIFrame* aFrame, const PaintFramesParams& aParams,
     nsLayoutUtils::PointToGfxPoint(aOffsetToUserSpace,
                                    aFrame->PresContext()->AppUnitsPerDevPixel());
   gfxContext& context = aParams.ctx;
-  context.SetMatrix(context.CurrentMatrix().Translate(devPixelOffsetToUserSpace));
+  context.SetMatrix(context.CurrentMatrix().PreTranslate(devPixelOffsetToUserSpace));
 }
 
 bool

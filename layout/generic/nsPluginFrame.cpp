@@ -872,7 +872,7 @@ nsPluginFrame::PaintPrintPlugin(nsIFrame* aFrame, nsRenderingContext* aCtx,
     nsLayoutUtils::PointToGfxPoint(pt, aFrame->PresContext()->AppUnitsPerDevPixel());
 
   gfxContextMatrixAutoSaveRestore autoSR(ctx);
-  ctx->SetMatrix(ctx->CurrentMatrix().Translate(devPixelPt));
+  ctx->SetMatrix(ctx->CurrentMatrix().PreTranslate(devPixelPt));
 
   // FIXME - Bug 385435: Doesn't aDirtyRect need translating too?
 

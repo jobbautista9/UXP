@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <mozilla/UniquePtr.h>
 #include "gfxMatrix.h"
+#include "mozilla/gfx/Rect.h"
 
 namespace mozilla {
 
