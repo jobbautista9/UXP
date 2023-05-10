@@ -555,7 +555,7 @@ nsFilterInstance::OutputFilterSpaceBounds() const
     mPrimitiveDescriptions[numPrimitives - 1].PrimitiveSubregion();
   bool overflow;
   IntSize surfaceSize =
-    nsSVGUtils::ConvertToSurfaceSize(bounds.Size(), &overflow);
+    nsSVGUtils::ConvertToSurfaceSize(SizeDouble(bounds.Size()), &overflow);
   bounds.SizeTo(surfaceSize);
   return bounds;
 }
