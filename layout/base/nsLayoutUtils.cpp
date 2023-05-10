@@ -2540,7 +2540,7 @@ nsLayoutUtils::MatrixTransformPoint(const nsPoint &aPoint,
 {
   gfxPoint image = gfxPoint(NSAppUnitsToFloatPixels(aPoint.x, aFactor),
                             NSAppUnitsToFloatPixels(aPoint.y, aFactor));
-  image.Transform(aMatrix);
+  image = aMatrix.TransformPoint(image);
   return nsPoint(NSFloatPixelsToAppUnits(float(image.x), aFactor),
                  NSFloatPixelsToAppUnits(float(image.y), aFactor));
 }

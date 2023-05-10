@@ -35,6 +35,7 @@
 
 #include <limits>
 #include <algorithm>
+#include "gfxPoint.h"
 
 class nsPresContext;
 class nsIContent;
@@ -59,7 +60,6 @@ class gfxContext;
 class nsPIDOMWindowOuter;
 class imgIRequest;
 class nsIDocument;
-struct gfxPoint;
 struct nsStyleFont;
 struct nsStyleImageOrientation;
 struct nsOverflowAreas;
