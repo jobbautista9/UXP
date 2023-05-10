@@ -20,6 +20,9 @@ class BaseMatrix;
 typedef float Float;
 typedef BaseMatrix<Float> Matrix;
 
+typedef double Double;
+typedef BaseMatrix<Double> MatrixDouble;
+
 struct UnknownUnits;
 
 template<class SourceUnits, class TargetUnits>
