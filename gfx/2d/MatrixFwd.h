@@ -25,10 +25,11 @@ typedef BaseMatrix<Double> MatrixDouble;
 
 struct UnknownUnits;
 
-template<class SourceUnits, class TargetUnits>
+template<class SourceUnits, class TargetUnits, class T = Float>
 class Matrix4x4Typed;
 
 typedef Matrix4x4Typed<UnknownUnits, UnknownUnits> Matrix4x4;
+typedef Matrix4x4Typed<UnknownUnits, UnknownUnits, double> Matrix4x4Double;
 
 } // namespace gfx
 } // namespace mozilla
