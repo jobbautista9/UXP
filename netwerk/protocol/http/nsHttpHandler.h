@@ -135,6 +135,7 @@ public:
     bool           AllowAltSvc() { return mEnableAltSvc; }
     bool           AllowAltSvcOE() { return mEnableAltSvcOE; }
     uint32_t       ConnectTimeout()  { return mConnectTimeout; }
+    uint32_t       TLSHandshakeTimeout()  { return mTLSHandshakeTimeout; }
     uint32_t       ParallelSpeculativeConnectLimit() { return mParallelSpeculativeConnectLimit; }
     bool           CriticalRequestPrioritization() { return mCriticalRequestPrioritization; }
     bool           UseH2Deps() { return mUseH2Deps; }
@@ -555,6 +556,10 @@ private:
     // The maximum amount of time to wait for socket transport to be
     // established. In milliseconds.
     uint32_t       mConnectTimeout;
+
+    // The maximum amount of time to wait for a tls handshake to be
+    // established. In milliseconds.
+    uint32_t       mTLSHandshakeTimeout;
 
     // The maximum number of current global half open sockets allowable
     // when starting a new speculative connection.
