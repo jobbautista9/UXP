@@ -1570,10 +1570,14 @@ public:
         : mPrevVsync(TimeStamp::Now())
         , mVsyncEnabledLock("D3DVsyncEnabledLock")
         , mVsyncEnabled(false)
+        , mWaitVBlankMonitor(NULL)
+        , mIsWindows10OrLater(false)
       {
         mVsyncThread = new base::Thread("WindowsVsyncThread");
         MOZ_RELEASE_ASSERT(mVsyncThread->Start(), "GFX: Could not start Windows vsync thread");
         SetVsyncRate();
+
+        mIsWindows10OrLater = IsWin10OrLater();
       }
 
       void SetVsyncRate()
@@ -1751,9 +1755,35 @@ public:
             return;
           }
 
-          // Using WaitForVBlank, the whole system dies because WaitForVBlank
-          // only works if it's run on the same thread as the Present();
-          HRESULT hr = DwmFlush();
+          HRESULT hr = E_FAIL;
+          if (mIsWindows10OrLater &&
+              !gfxPrefs::WaitForVBlankForceDisable()) {
+            UpdateVBlankOutput();
+            if (mWaitVBlankOutput) {
+              const TimeStamp vblank_begin_wait = TimeStamp::Now();
+              hr = mWaitVBlankOutput->WaitForVBlank();
+
+              if (SUCCEEDED(hr)) {
+                // vblank might return instantly when running headless,
+                // monitor powering off, etc. Since we're on a dedicated
+                // thread, instant-return should not happen in the normal
+                // case, so catch any odd behavior with a time cutoff:
+                TimeDuration vblank_wait = TimeStamp::Now() - vblank_begin_wait;
+                if (vblank_wait.ToMilliseconds() < 1.0) {
+                  hr = E_FAIL;  // fall back on old behavior
+                }
+              }
+
+            }
+          } else {
+            // In Win7, we only want to use DwmFlush because
+            // the whole system dies when using WaitForVBlank,
+            // which only works if it's run on the same thread
+            // as the Present();
+            // Also if WaitForVBlank is force-disabled, we fall
+            // back to DwmFlush to mitigate Mozilla bug 1924932.
+            hr = DwmFlush();
+          }
           if (!SUCCEEDED(hr)) {
             // DWMFlush isn't working, fallback to software vsync.
             ScheduleSoftwareVsync(TimeStamp::Now());
@@ -1805,11 +1835,36 @@ public:
         return mVsyncThread->thread_id() == PlatformThread::CurrentId();
       }
 
+      void UpdateVBlankOutput() {
+        HMONITOR primary_monitor =
+            MonitorFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+        if (primary_monitor == mWaitVBlankMonitor && mWaitVBlankOutput) {
+          return;
+        }
+
+        mWaitVBlankMonitor = primary_monitor;
+
+        RefPtr<IDXGIOutput> output = nullptr;
+        if (DeviceManagerDx* dx = DeviceManagerDx::Get()) {
+          if (dx->GetOutputFromMonitor(mWaitVBlankMonitor, &output)) {
+            mWaitVBlankOutput = output;
+            return;
+          }
+        }
+
+        // failed to convert a monitor to an output so keep trying
+        mWaitVBlankOutput = nullptr;
+      }
+
       TimeStamp mPrevVsync;
       Monitor mVsyncEnabledLock;
       base::Thread* mVsyncThread;
       TimeDuration mVsyncRate;
       bool mVsyncEnabled;
+
+      HMONITOR mWaitVBlankMonitor;
+      RefPtr<IDXGIOutput> mWaitVBlankOutput;
+      bool mIsWindows10OrLater;
   }; // end d3dvsyncdisplay
 
   D3DVsyncSource()

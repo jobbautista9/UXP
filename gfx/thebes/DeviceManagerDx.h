@@ -66,6 +66,12 @@ public:
   // need to avoid it.
   bool CanInitializeKeyedMutexTextures();
 
+  // Find the IDXGIOutput with a description.Monitor
+  // matching 'monitor'; returns false if not found
+  // or some error occurred.
+  bool GetOutputFromMonitor(HMONITOR monitor,
+                            RefPtr<IDXGIOutput>* aOutOutput);
+
   bool CreateCompositorDevices();
   void CreateContentDevices();
 

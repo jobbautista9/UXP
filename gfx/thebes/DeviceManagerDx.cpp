@@ -100,6 +100,37 @@ DeviceManagerDx::ReleaseD3D11()
   sD3D11CreateDeviceFn = nullptr;
 }
 
+bool
+DeviceManagerDx::GetOutputFromMonitor(HMONITOR monitor,
+                                      RefPtr<IDXGIOutput>* aOutOutput)
+{
+  RefPtr<IDXGIAdapter> adapter = GetDXGIAdapter();
+
+  if (!adapter) {
+    NS_WARNING("Failed to acquire a DXGI adapter for GetOutputFromMonitor.");
+    return false;
+  }
+
+  for (UINT i = 0;; ++i) {
+    RefPtr<IDXGIOutput> output = nullptr;
+    if (FAILED(adapter->EnumOutputs(i, getter_AddRefs(output)))) {
+      break;
+    }
+
+    DXGI_OUTPUT_DESC desc;
+    if (FAILED(output->GetDesc(&desc))) {
+      continue;
+    }
+
+    if (desc.Monitor == monitor) {
+      *aOutOutput = output;
+      return true;
+    }
+  }
+  return false;
+
+}
+
 static inline bool
 ProcessOwnsCompositor()
 {
